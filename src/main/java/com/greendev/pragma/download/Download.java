@@ -8,12 +8,12 @@ package main.java.com.greendev.pragma.download;
 public class Download {
 		
 		/**
-		 * The url to download
+		 * Name of url to download
 		 */
 		private String url;
 		
 		/**
-		 * location to store the download
+		 * Location to store the download
 		 */
 		private String saveLocation;
 		
@@ -23,7 +23,7 @@ public class Download {
 		private int dateOffset;
 		
 		/**
-		 * Indicates the type of download 
+		 * Name of download type
 		 */
 		private String downloadType;
 		
