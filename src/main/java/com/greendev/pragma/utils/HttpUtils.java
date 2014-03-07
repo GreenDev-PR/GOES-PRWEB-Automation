@@ -48,7 +48,7 @@ public class HttpUtils {
 				conn.disconnect(); //close connection
 			}
 		}
-		return code == HttpURLConnection.HTTP_OK;
+		return code == HttpURLConnection.HTTP_OK; 
 		
 	}
 	

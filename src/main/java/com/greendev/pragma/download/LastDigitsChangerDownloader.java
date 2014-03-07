@@ -91,14 +91,12 @@ public class LastDigitsChangerDownloader implements Downloader {
 
 	@Override
 	public void setDownload(Download download) {
-		// TODO Auto-generated method stub
-
+		this.download = download;
 	}
 
 	@Override
 	public Download getDownload() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.download;
 	}
 
 }
