@@ -145,8 +145,15 @@ public class Degribber {
 	 * @param variable name of variable to search for
 	 * @return collection of files that match the given variable name
 	 */
-	private Collection<File> getGribFiles(DegribVariable variable) {
+	public Collection<File> getGribFiles(DegribVariable variable) {
 		return FileUtils.listFiles(degribDirectory, new WildcardFileFilter(variable.getName()), null);
+	}
+
+	@Override
+	public String toString() {
+		return "Degribber [variables=" + variables + ", executeLocation="
+				+ executeLocation + ", outputDirectory=" + outputDirectory
+				+ ", degribDirectory=" + degribDirectory + ", map=" + map + "]";
 	};
 
 
