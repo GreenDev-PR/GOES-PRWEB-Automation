@@ -74,7 +74,7 @@ public class LastDigitsChangerDownloader implements Downloader {
 		LogMF.info(logger, "Downloading from url {0}", url.toExternalForm());
 		HttpUtils.downloadToFile(url, destination);
 		this.url = null;
-		System.out.println("Currently Downloading: "+url );
+		//System.out.println("Currently Downloading: "+url );
 		return destination;
 	}
 	
@@ -95,7 +95,7 @@ public class LastDigitsChangerDownloader implements Downloader {
 			//Check which minute is iteratively 
 			
 			String tempUrl = url + String.format("%02d", i); //Append minute URL portion of the string.
-			System.out.println(tempUrl);
+			//System.out.println(tempUrl);
 			try{
 				workingUrl = new URL(tempUrl);
 			}catch(MalformedURLException e){
@@ -105,7 +105,7 @@ public class LastDigitsChangerDownloader implements Downloader {
 			
 			//verify that the current, not malformed, URL actually exists
 			if(HttpUtils.urlExists(workingUrl)){ 
-				System.out.println("Printing working URL: "+workingUrl);
+				//System.out.println("Printing working URL: "+workingUrl);
 				return workingUrl;
 			}
 		}

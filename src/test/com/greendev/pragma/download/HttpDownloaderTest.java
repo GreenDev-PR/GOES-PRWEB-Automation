@@ -40,8 +40,8 @@ public class HttpDownloaderTest extends DownloaderTest {
 	
 	@Test
 	public void testExists() throws IOException {
-		setDownload("download.json");
 		System.out.println("Executing @TestExists Annotation");
+		setDownload("download.json");
 		assertTrue(downloader.exists());
 	}
 	
