@@ -1,11 +1,11 @@
-package main.java.com.greendev.pragma.download;
+package main.com.greendev.pragma.download;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import main.java.com.greendev.pragma.utils.HttpUtils;
+import main.com.greendev.pragma.utils.HttpUtils;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.LogMF;
@@ -23,36 +23,37 @@ public class HttpDownloader implements Downloader {
 	 */
 	private Download download;
 	
-	//Create log for this class
+	/**
+	 * Log 
+	 */
 	private static Logger logger = Logger.getLogger(HttpDownloader.class);
 	
 	/**
 	 * Default Constructor
 	 */
-	public HttpDownloader(){
-		
+	public HttpDownloader(){	
 	}
 	
 	/**
-	 * Constructs an http downloader based on specified download
-	 * @param download - http download to perform
+	 * Constructs an HTTP downloader based on specified download
+	 * @param download - HTTP download to perform
 	 */
 	public HttpDownloader(Download download){
 		this.download = download;
 	}
 	
-	//Check if the url exits
+	//Check if the URL exits
 	@Override
 	public boolean exists() {
 		URL url = null;
-		boolean exists = false; //By default the url is presummed to not exist
+		boolean exists = false; //By default the URL is presummed to not exist
 		try{
 			url = new URL(download.getUrl());
 			LogMF.debug(logger,"Going to verify if the following url exists {0}",url);
-			//verify if url exists
+			//verify if URL exists
 			exists = HttpUtils.urlExists(url);
 		} catch (MalformedURLException e){
-			//url does not exist
+			//URL does not exist
 			LogMF.debug(logger,"Malformed url {0}",url);
 		}
 		return exists;
@@ -66,7 +67,7 @@ public class HttpDownloader implements Downloader {
 				logger,
 				"Going to download the following url {0} saving it in {1}",
 				url, destination.getAbsolutePath());
-		//download the url to specified file path
+		//download the URL to specified file path
 		FileUtils.copyURLToFile(url, destination);
 		return destination;
 	}

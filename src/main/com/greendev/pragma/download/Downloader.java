@@ -1,4 +1,4 @@
-package main.java.com.greendev.pragma.download;
+package main.com.greendev.pragma.download;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +17,7 @@ public interface Downloader {
 	public boolean exists();
 	/**
 	 * Perform a download
-	 * @return the file download
+	 * @return the file download 
 	 * @throws IOException
 	 */
 	public File download() throws IOException;

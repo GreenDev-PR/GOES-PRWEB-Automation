@@ -1,4 +1,4 @@
-package main.java.com.greendev.pragma.download;
+package main.com.greendev.pragma.download;
 
 import org.apache.log4j.Logger;
 

@@ -1,4 +1,4 @@
-package main.java.com.greendev.pragma.download;
+package main.com.greendev.pragma.download;
 
 /**
  * This class represents an instance of a download.
