@@ -1,4 +1,4 @@
-package main.java.com.greendev.pragma.degrib;
+package main.com.greendev.pragma.degrib;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -28,7 +28,7 @@ public class Degribber {
  */
 	
 	private List<DegribVariable> variables;
-	private String executeLocation;
+	private String executable;
 	private File outputDirectory;
 	private File degribDirectory;
 	private Map map = new HashMap();
@@ -49,7 +49,7 @@ public class Degribber {
 	};
 
 	public Degribber(){
-
+		
 	}
 
 	public List<DegribVariable> getVariables() {
@@ -74,6 +74,14 @@ public class Degribber {
 
 	public void setDegribDirectory(File degribDirectory) {
 		this.degribDirectory = degribDirectory;
+	}
+
+	public String getExecutable() {
+		return executable;
+	}
+
+	public void setExecutable(String executable) {
+		this.executable = executable;
 	}
 
 	public void degribVariables(){		
@@ -120,7 +128,7 @@ public class Degribber {
 		map.put(OUTPUT_FILE, outputFile);
 		
 		//Creates the command line to execute GRIB executable
-		CommandLine cmd = new CommandLine(executeLocation);
+		CommandLine cmd = new CommandLine(executable);
 		//Passes arguments array to the command line
 		cmd.addArguments(ARGUMENTS);
 		//Expands input, message and output arguments in the command line
@@ -141,7 +149,7 @@ public class Degribber {
 	}
 
 	/**
-	 * Gets the GRIB files for the specified variables
+	 * Gets the GRIB file(s) for the specified variables using wildcard (e.g. *wind)
 	 * @param variable name of variable to search for
 	 * @return collection of files that match the given variable name
 	 */
@@ -152,13 +160,8 @@ public class Degribber {
 	@Override
 	public String toString() {
 		return "Degribber [variables=" + variables + ", executeLocation="
-				+ executeLocation + ", outputDirectory=" + outputDirectory
+				+ executable + ", outputDirectory=" + outputDirectory
 				+ ", degribDirectory=" + degribDirectory + ", map=" + map + "]";
 	};
-
-
-
-
-
 
 }

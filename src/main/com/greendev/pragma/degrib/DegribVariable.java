@@ -1,4 +1,4 @@
-package main.java.com.greendev.pragma.degrib;
+package main.com.greendev.pragma.degrib;
 
 import java.util.List;
 
