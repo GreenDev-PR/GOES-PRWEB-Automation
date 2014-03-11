@@ -6,6 +6,7 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -67,14 +68,22 @@ public class DegribTest {
 		Collection<File> result = FileUtils.listFiles(outputDirectory, extensions, false);
 		int actualCount = result.size();
 		//System.out.println("Count of csv files: "+actualCount);
+		
 		assertEquals(messages.size(),actualCount);		
-		for(File file : result){
-			
+		for(Integer m : messages){
+			String currentFile = outputDirectory.getPath()+"/"+variableOutputName+m+".csv";
+			System.out.println(currentFile);
+			try {
+				assert(FileUtils.directoryContains(outputDirectory, new File(outputDirectory,variableOutputName+m+".csv")));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 	}
 
-	
+
 	@After
 	public void cleanUp(){
 		String[] extensions = {"csv", "txt"};
