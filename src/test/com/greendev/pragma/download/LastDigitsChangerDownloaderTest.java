@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import main.com.greendev.pragma.download.LastDigitsChangerDownloader;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -17,32 +18,42 @@ import org.junit.Test;
 
 public class LastDigitsChangerDownloaderTest extends DownloaderTest {
 
+	private static File downloaded;
+	
 	@Before
 	public void setUp() throws Exception {
+		System.out.println("@Before annotation execution");
 		this.downloader = this.getDownloader(LastDigitsChangerDownloader.class);
 	}
 
-	@After
-	public void tearDown() throws Exception {
-		
+	@AfterClass
+	public static void tearDown() throws Exception{
+		FileUtils.deleteQuietly(downloaded);
 	}
 	
 	@Test
 	public void testIfExists(){
+		System.out.println("@TestIfExists annotation execution");
 		setDownload("lastdigitschangerdownload.json");
 	}
 	
 	@Test
 	public void testNotExists(){
+		System.out.println("@TestNotExists annotation execution");
 		setDownload("downloadNotExists.json");
 		assertFalse(downloader.exists());
 	}
 	@Test
 	public void testDownload() throws IOException{
+		System.out.println("@TestDownload annotation execution");
 		setDownload("lastdigitschangerdownload.json");
 		downloader.download();
-		File downloaded = new File(download.getSaveLocation());
+		downloaded = new File(download.getSaveLocation());
+		System.out.println(downloaded.toString());
 		assertTrue(downloaded.exists());
 	}
-
+	
+	
+	
+	
 }

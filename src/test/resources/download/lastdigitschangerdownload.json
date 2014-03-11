@@ -1,7 +1,7 @@
 {
-	"url":"http://nomads.ncdc.noaa.gov/data/ndfd/201301/20130111/YCAZ98_KWBN_2013011100",
-	"saveIn":"src/test/resources/download/lastdigitchangerdownload",
-	"replaceUrl":true,
+	
+	"url":"http://nomads.ncdc.noaa.gov/data/ndfd/201403/20140310/LABZ97_KNHC_2014031003",
+	"saveLocation":"src/test/resources/download/lastdigitchangerdownload",
 	"dateOffset":1
 	
 }

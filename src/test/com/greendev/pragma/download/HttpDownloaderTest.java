@@ -10,8 +10,9 @@ import java.io.IOException;
 import main.com.greendev.pragma.download.HttpDownloader;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+
 import org.junit.Test;
 
 /**
@@ -20,28 +21,34 @@ import org.junit.Test;
  *
  */
 public class HttpDownloaderTest extends DownloaderTest {
-
+	
+	private static File expected;
+	private static File downloaded;
+	
 	@Before
 	public void setUp() throws Exception {
-		
 		downloader = getDownloader(HttpDownloader.class);
+		System.out.println("Executing @Before Annotation");
 	}
 
-	@After
-	public void tearDown() throws Exception {
-		download = null;
-		downloader = null;
+	@AfterClass
+	public static void tearDown() throws Exception {
+		System.out.println("Executing @AfterClass Annotation");
+		FileUtils.deleteQuietly(downloaded);
+		
 	}
-
+	
 	@Test
 	public void testExists() throws IOException {
 		setDownload("download.json");
+		System.out.println("Executing @TestExists Annotation");
 		assertTrue(downloader.exists());
 	}
 	
 	@Test
 	public void testNotExits() throws FileNotFoundException{
 		setDownload("downloadNotExists.json");
+		System.out.println("Executing @TestNotExists Annotation");
 		assertFalse(downloader.exists());
 	}
 	
@@ -53,12 +60,13 @@ public class HttpDownloaderTest extends DownloaderTest {
 		} catch (IOException e1){
 			e1.printStackTrace();
 		}
-		File expected = new File("src/test/resources/expecteddownload.txt");
-		File downloaded = new File("src/test/resources/outdownload.txt");
+		expected = new File("src/test/resources/expecteddownload.txt");
+		downloaded = new File("src/test/resources/outdownload.txt");
 		
 		boolean result = false;
 		try{
 			result = FileUtils.contentEquals(expected, downloaded);
+			System.out.println("Executing @TestDownload Annotation");
 		} catch (IOException e){
 			e.printStackTrace();
 		}
@@ -66,6 +74,8 @@ public class HttpDownloaderTest extends DownloaderTest {
 		assertTrue(result);
 		
 	}
+	
+	
 
 	
 

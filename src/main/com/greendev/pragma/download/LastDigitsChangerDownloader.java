@@ -50,17 +50,20 @@ public class LastDigitsChangerDownloader implements Downloader {
 	
 	@Override
 	public boolean exists() {
+		boolean exists = false;
 		URL url = getValidUrl();
 		if(url != null){
 			//URL is good
 			this.url = url;
+			exists = true;
 		}
 		//URL is null
-		return false;
+		return exists;
 	}
 	
 	@Override
 	public File download() throws IOException {
+		System.out.println("Executing LastDigitFinder download()");
 		//Check if URL exists 
 		if(this.url == null){
 			if(!exists()){ 
@@ -71,6 +74,7 @@ public class LastDigitsChangerDownloader implements Downloader {
 		LogMF.info(logger, "Downloading from url {0}", url.toExternalForm());
 		HttpUtils.downloadToFile(url, destination);
 		this.url = null;
+		System.out.println("Currently Downloading: "+url );
 		return destination;
 	}
 	
@@ -91,7 +95,7 @@ public class LastDigitsChangerDownloader implements Downloader {
 			//Check which minute is iteratively 
 			
 			String tempUrl = url + String.format("%02d", i); //Append minute URL portion of the string.
-			
+			System.out.println(tempUrl);
 			try{
 				workingUrl = new URL(tempUrl);
 			}catch(MalformedURLException e){
@@ -101,6 +105,7 @@ public class LastDigitsChangerDownloader implements Downloader {
 			
 			//verify that the current, not malformed, URL actually exists
 			if(HttpUtils.urlExists(workingUrl)){ 
+				System.out.println("Printing working URL: "+workingUrl);
 				return workingUrl;
 			}
 		}
