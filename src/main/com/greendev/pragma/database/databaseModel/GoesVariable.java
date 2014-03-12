@@ -1,7 +1,5 @@
 package main.com.greendev.pragma.database.databaseModel;
 
-import java.util.Date;
-
 /**
  * Single GOES-PRWEB variable (e.g. rainfall, ET, wind)
  * Includes the variable name, matrix of values corresponding to PR coordinates,
@@ -12,7 +10,7 @@ public class GoesVariable {
 
 	private String name;
 	private Double[][] values;
-	private Date date;
+	String date;
 	private String imagePath;
 		
 	public String getName() {
@@ -27,10 +25,10 @@ public class GoesVariable {
 	public void setValues(Double[][] values2) {
 		this.values = values2;
 	}
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 	public String getImagePath() {
