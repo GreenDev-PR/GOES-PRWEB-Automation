@@ -74,7 +74,7 @@ public class DegribTest {
 			String currentFile = outputDirectory.getPath()+"/"+variableOutputName+m+".csv";
 			System.out.println(currentFile);
 			try {
-				assert(FileUtils.directoryContains(outputDirectory, new File(outputDirectory,variableOutputName+m+".csv")));
+				assertTrue(FileUtils.directoryContains(outputDirectory, new File(outputDirectory,variableOutputName+m+".csv")));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
