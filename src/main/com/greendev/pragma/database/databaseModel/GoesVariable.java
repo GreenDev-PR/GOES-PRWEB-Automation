@@ -11,7 +11,7 @@ import java.util.Date;
 public class GoesVariable {
 
 	private String name;
-	private double[][] values;
+	private Double[][] values;
 	private Date date;
 	private String imagePath;
 		
@@ -21,11 +21,11 @@ public class GoesVariable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public double[][] getValues() {
+	public Double[][] getValues() {
 		return values;
 	}
-	public void setValues(double[][] values) {
-		this.values = values;
+	public void setValues(Double[][] values2) {
+		this.values = values2;
 	}
 	public Date getDate() {
 		return date;
