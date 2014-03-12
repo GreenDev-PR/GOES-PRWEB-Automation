@@ -70,7 +70,6 @@ public class CsvToModel {
 		//Setting the date
 		String date = csv.getName().substring(variableName.length());
 		date = date.substring(0, 8);
-		System.out.println(date);
 		out.setDate(date);
 		
 		//Extracting the map image path from the file name
