@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import org.apache.commons.dbutils.QueryRunner;
+import org.joda.time.DateTime;
 
 import main.com.greendev.pragma.database.databaseModel.GoesVariable;
 
@@ -64,7 +65,7 @@ public class DBManager {
 
 				try{
 					if(!Double.isNaN(var.getValues()[i][j])) //insert only values that are NOT NaN values
-						insertsCounter = run.update(this.conn,this.preparedStmt,var.getName(),i,j,var.getValues()[i][j]); 
+						insertsCounter = run.update(this.conn,this.preparedStmt,var.getName(),i,j,var.getValues()[i][j],DateTime.now(),DateTime.now()); 
 				}
 				catch(SQLException sqle){
 					sqle.printStackTrace();
