@@ -24,8 +24,7 @@ public class CsvToModelTest {
 		//assertEquals(result.getDate(), ) ToDo: validate date
 		//assertEquals(result.getValues()) ToDo: validate correct values
 		//assertEquals(result.getImagePath() ) Todo: validate correct map image path
-		
-		fail("Not yet implemented");
+	
 	}
 
 }
