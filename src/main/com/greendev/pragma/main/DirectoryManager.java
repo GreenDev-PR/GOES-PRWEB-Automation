@@ -34,7 +34,7 @@ public class DirectoryManager {
 	/**
 	 * Creates output directory for given date
 	 * @param date
-	 * @return
+	 * @return returns the output directory
 	 */
 	public File getOutputDirectory(Date date) {
 		File output = new File(getDirectory(date), "/OUTPUT");
@@ -45,7 +45,7 @@ public class DirectoryManager {
 	/**
 	 * Creates input directory for given date
 	 * @param date
-	 * @return
+	 * @return returns the input directory
 	 */
 	public File getInputDirectory(Date date) {
 		File dir = getDirectory(date);
@@ -75,7 +75,7 @@ public class DirectoryManager {
 	/**
 	 * Creates root directory
 	 * @param date
-	 * @return
+	 * @return returns the root directory based on date
 	 */
 	public File getDirectory(Date date) {
 		String str = DIRECTORY_FORMAT.replaceAll("%t", "%1\\$t");
