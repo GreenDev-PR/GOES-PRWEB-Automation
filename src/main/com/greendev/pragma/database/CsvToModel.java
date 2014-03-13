@@ -15,8 +15,8 @@ import main.com.greendev.pragma.database.databaseModel.GoesVariable;
 
 public class CsvToModel {
 
-	private static final int ROW_NUMBER = 101;
-	private static final int COLUMN_NUMBER = 210;
+	private static final int MAXIMUM_ROW_NUMBER = 101;
+	private static final int MAXIMUM_COLUMN_NUMBER = 210;
 	private static CSVReader reader;
 
 	
@@ -41,7 +41,7 @@ public class CsvToModel {
 		reader.setColumnSeparator(',');
 		
 		//Bi-dimensional array to store data values read from csv
-		Double[][] values = new Double[ROW_NUMBER][COLUMN_NUMBER];
+		Double[][] values = new Double[MAXIMUM_ROW_NUMBER][MAXIMUM_COLUMN_NUMBER];
 		
 		int rowNum = 0;
 		

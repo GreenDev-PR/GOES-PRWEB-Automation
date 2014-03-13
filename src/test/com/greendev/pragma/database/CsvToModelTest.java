@@ -23,7 +23,7 @@ public class CsvToModelTest {
 	 * @author miguelgd
 	 */
 
-	File inputCsv = new File("src/test/com/greendev/pragma/database/variable20140309.csv");
+	File inputCsv = new File("src/test/com/greendev/pragma/database/resources/variable20140309.csv");
 	private String variableName = "variable";
 	private String date = "20140309";
 	private int matrixSize = 210*101;
