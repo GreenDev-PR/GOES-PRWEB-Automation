@@ -5,49 +5,48 @@ package test.com.greendev.pragma.degrib;
 import static org.junit.Assert.*;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 import main.com.greendev.pragma.degrib.DegribVariable;
 import main.com.greendev.pragma.degrib.Degribber;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.gson.Gson;
 
 public class DegribTest {
 
 	private static final int COUNT_OF_WIND_FILES = 1;
-	Degribber degrib = new Degribber();
-	DegribVariable variable = new DegribVariable();
-	List<DegribVariable> variables = new ArrayList<DegribVariable>();
-	File degribDirectory = new File("src/test/com/greendev/pragma/degrib/");
-	File outputDirectory = degribDirectory;
-	String variableName = "wind*";
-	List<Integer> messages = new ArrayList<Integer>();
-	String variableOutputName = "wind";
-	String executable = "/Users/miguelgd/Downloads/degrib/bin/degrib";
+	private Degribber degrib;
+	private DegribVariable variable;
+	private List<DegribVariable> variables;
+	private File degribDirectory;
+	private File outputDirectory;
+	private final String VARIABLE_NAME = "wind*";
+	private List<Integer> messages;
+	private final String OUTPUT_VARIABLE_NAME = "wind";
+	private String executable = "/Users/miguelgd/Downloads/degrib/bin/degrib";
 
 	@Before
 	public void setUp() throws Exception {	
+		degrib = new Degribber();
+		variable = new DegribVariable();
+		degribDirectory = new File("src/test/com/greendev/pragma/degrib/resources/");
+		outputDirectory = degribDirectory;
+		messages = new ArrayList<Integer>();
+		variables = new ArrayList<DegribVariable>();
 		degrib.setDegribDirectory(degribDirectory);
 		degrib.setOutputDirectory(outputDirectory);
 		degrib.setExecutable(executable);
 		for(int i=1; i<5; i++)
 			messages.add(i);
-		variable.setName(variableName);
+		variable.setName(VARIABLE_NAME);
 		variable.setMessages(messages);
-		variable.setOutputName(variableOutputName);
+		variable.setOutputName(OUTPUT_VARIABLE_NAME);
 		variables.add(variable);
 		degrib.setVariables(variables);
 
@@ -67,14 +66,13 @@ public class DegribTest {
 		String[] extensions = {"csv"};
 		Collection<File> result = FileUtils.listFiles(outputDirectory, extensions, false);
 		int actualCount = result.size();
-		//System.out.println("Count of csv files: "+actualCount);
 		
 		assertEquals(messages.size(),actualCount);		
 		for(Integer m : messages){
-			String currentFile = outputDirectory.getPath()+"/"+variableOutputName+m+".csv";
+			String currentFile = outputDirectory.getPath()+"/"+OUTPUT_VARIABLE_NAME+m+".csv";
 			System.out.println(currentFile);
 			try {
-				assertTrue(FileUtils.directoryContains(outputDirectory, new File(outputDirectory,variableOutputName+m+".csv")));
+				assertTrue(FileUtils.directoryContains(outputDirectory, new File(outputDirectory,OUTPUT_VARIABLE_NAME+m+".csv")));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
