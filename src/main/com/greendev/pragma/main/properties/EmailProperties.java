@@ -1,5 +1,9 @@
-package main.com.greendev.pragma.properties;
-
+package main.com.greendev.pragma.main.properties;
+/**
+ * Email properties
+ * @author josediaz
+ *
+ */
 public class EmailProperties {
 
 	private String from;
