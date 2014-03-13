@@ -1,11 +1,16 @@
 package main.com.greendev.pragma.main.process;
 
-public class GoesProcess implements Runnable {
+import main.com.greendev.pragma.main.AutomateGoes;
 
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
+public abstract class GoesProcess implements Runnable {
 
+	protected AutomateGoes goes;
+
+	public GoesProcess(AutomateGoes goes){
+		this.goes = goes;
 	}
+	
+	@Override
+	public abstract void run();
 
 }
