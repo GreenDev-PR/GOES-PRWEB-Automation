@@ -8,7 +8,11 @@ import java.util.Date;
 import org.apache.commons.mail.EmailException;
 
 import main.com.greendev.pragma.main.properties.GoesProperties;
-
+/**
+ * Automate 
+ * @author josediaz
+ *
+ */
 public class AutomateGoes {
 	
 	private GoesProperties properties;

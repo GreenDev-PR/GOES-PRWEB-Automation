@@ -3,7 +3,7 @@ package main.com.greendev.pragma.email;
 import java.io.File;
 import java.net.MalformedURLException;
 
-import main.com.greendev.pragma.properties.EmailProperties;
+import main.com.greendev.pragma.main.properties.EmailProperties;
 
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;

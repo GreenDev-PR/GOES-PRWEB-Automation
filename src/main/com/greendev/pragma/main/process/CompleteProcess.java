@@ -4,6 +4,11 @@ import org.apache.log4j.Logger;
 
 import main.com.greendev.pragma.main.AutomateGoes;
 
+/**
+ * Goes process
+ * @author josediaz
+ *
+ */
 public class CompleteProcess extends GoesProcess {
 
 	public CompleteProcess(AutomateGoes goes){
