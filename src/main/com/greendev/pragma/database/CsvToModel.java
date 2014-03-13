@@ -42,7 +42,7 @@ public class CsvToModel {
 		
 		//Bi-dimensional array to store data values read from csv
 		Double[][] values = new Double[ROW_NUMBER][COLUMN_NUMBER];
-
+		
 		int rowNum = 0;
 		
 		//Read by row and then by column to obtain values from the matrix
