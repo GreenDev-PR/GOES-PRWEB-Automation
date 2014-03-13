@@ -19,20 +19,20 @@ import org.junit.Test;
  */
 public class DBManagerTest {
 	
-	private static DBManager manager;
+	private static DBManager dbManager;
 	private static String varName;
 	private static File csvFile;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		manager = new DBManager();
+		dbManager = new DBManager();
 		varName = "variable";
 		csvFile = new File("src/test/com/greendev/pragma/database/variable20140309.csv");
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		manager = null;
+		dbManager = null;
 		varName = null;
 		csvFile = null;
 	}
@@ -46,9 +46,16 @@ public class DBManagerTest {
 	}
 
 	@Test
-	public void test() {
-		assertTrue(manager.storeInDB(varName, csvFile));
+	public void storeInDbTest() {
+		long inserts = dbManager.storeInDB(varName, csvFile);
 		
+	}
+	
+	private long determineCsvValuesCount(){
+		long csvValues = 0;
+		
+		
+		return csvValues;
 	}
 	
 

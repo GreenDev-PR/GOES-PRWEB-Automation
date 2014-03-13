@@ -20,7 +20,9 @@ import main.com.greendev.pragma.database.databaseModel.GoesVariable;
  */
 public class DBManager {
 
-	private String preparedStmt = "insert into goesdata (variableName,matrixRow,matrixColumn,dataValue,createdAt,updatedAt) values(?,?,?,?,?,?)";
+	private static final String QUERY = "insert into goesdata (variableName,matrixRow,matrixColumn,dataValue,createdAt,updatedAt) values(?,?,?,?,?,?)";
+	private static final String USERNAME = "josediaz";
+	private static final String PASSWORD = null;
 	private Connection conn;
 	/**
 	 * Constructrs a DBManager object.
@@ -36,16 +38,14 @@ public class DBManager {
 	}
 
 	/**
-	 * Constructs a db connection 
+	 * Constructs a db connection instance 
 	 * @return new db connection
 	 * @throws SQLException
 	 */
 	private Connection connStringHelper() throws SQLException{
 		// jdbc:postgresql://host:port/database
 		String connUrl = new String("jdbc:postgresql://localhost:5432/pragma_test");
-		String username = "josediaz";
-		String password = null;
-		Connection conn = DriverManager.getConnection(connUrl,username,password);
+		Connection conn = DriverManager.getConnection(connUrl,USERNAME,PASSWORD);
 		conn.setAutoCommit(true);
 		return conn;
 	}
@@ -56,34 +56,35 @@ public class DBManager {
 	 * @param inputReader
 	 * @return true if storing the data was successful
 	 */
-	public boolean storeInDB(String goesVariableName, File csvFile){
-		boolean successStatus = false;
-		//parse 
+	public long storeInDB(String goesVariableName, File csvFile){
+	
+
+		//Parse csv data to Goes Variable object
 		GoesVariable var = this.goesVariableExtractor(goesVariableName, csvFile);
 
+		//Create QueryRunner instance
 		QueryRunner run = new QueryRunner();
 
-		 
+		//Create timestamp of insertion
 		DateTime dateTime = new DateTime();
 		Timestamp timeStamp = new Timestamp(dateTime.getMillis());
-		
-		int insertsCounter = 0;
+
+		long insertsCounter = 0;
 		try{
 
 			for(int i=0; i< var.getValues().length; i++){
 				for(int j=0; j< var.getValues().length; j++){
 					if(!Double.isNaN(var.getValues()[i][j])) //insert only values that are NOT NaN values
-						insertsCounter = run.update(this.conn,this.preparedStmt,var.getName(),i,j,var.getValues()[i][j],timeStamp,timeStamp); 
+						insertsCounter = run.update(this.conn,QUERY,var.getName(),i,j,var.getValues()[i][j],timeStamp,timeStamp); 
 				}
 			}
 		}
 		catch(SQLException sqle){
 			sqle.printStackTrace();
-			System.out.println("INSERT EXPLOTO!!!");
+			System.out.println("SQL insert failed.");
 		}
-		successStatus = true;
 
-		return successStatus;
+		return insertsCounter;
 	}
 
 	/**
