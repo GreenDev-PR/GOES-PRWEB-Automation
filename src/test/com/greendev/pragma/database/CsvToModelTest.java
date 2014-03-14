@@ -4,11 +4,13 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 import main.com.greendev.pragma.database.CsvToModel;
 import main.com.greendev.pragma.database.databaseModel.GoesVariable;
 
-import org.apache.commons.io.FilenameUtils;
+import org.joda.time.DateTime;
 import org.junit.Test;
 
 import csv.impl.CSVReader;
@@ -19,30 +21,25 @@ public class CsvToModelTest {
 	 * JUnit tester for utility class CsvToModel
 	 * Uses a CSV file following the naming scheme: variableYYYYMMDD.csv
 	 * Calls the static method CsvToModel.parse with the file and variable name
-	 * Validates name of file, date, values matrix, and map image path
 	 * @author miguelgd
 	 */
 
 	File inputCsv = new File("src/test/com/greendev/pragma/database/resources/variable20140309.csv");
-	private String variableName = "variable";
-	private String date = "20140309";
-	private int matrixSize = 210*101;
-	private String imagePath = FilenameUtils.removeExtension(inputCsv.getAbsolutePath())+".jpg";
-	
-	private final int ROW_NUMBER = 101;
-	private final int COLUMN_NUMBER = 210;
+	private String variableName = "variable";	
+	private final DateTime dataDate= new DateTime("2014-03-09");
 	private CSVReader reader;
 
 
 	@Test
 	public void testCsvToModelParse() {
 
-		GoesVariable result = CsvToModel.parse(variableName, inputCsv);
+		System.out.println(dataDate);
+		
+		List<GoesVariable> expected = CsvToModel.parse(variableName, inputCsv, dataDate);
+		List<GoesVariable> actual = new ArrayList<GoesVariable>();
 
-		assertEquals(result.getName(), variableName);
-		assertEquals(result.getDate(), date);
+		//assertEquals(result.getVariableName(), variableName);
 
-		assertEquals(result.getValues().length*result.getValues()[0].length, matrixSize);
 		//Read the csv file using CSVReader
 		try {
 			reader = new CSVReader(inputCsv);
@@ -52,30 +49,33 @@ public class CsvToModelTest {
 		}
 		//Configuring reader to separate by comma ","
 		reader.setColumnSeparator(',');
-		//Bi-dimensional array to store data values read from csv
-		Double[][] values = new Double[ROW_NUMBER][COLUMN_NUMBER];
-		
-		//Populating values matrix with values from CSV
-		int rowNum=0;
-		while(reader.hasNext()){
 
+		//Populating values matrix with values from CSV
+		int rowNum=100;
+		while(reader.hasNext()){
 			Object[] row = reader.next();
-			for(int i=0; i < row.length; i++){
-				values[rowNum][i] = Double.parseDouble((String) row[i]);
-				//if(Double.isNaN(values[rowNum][i])) ToDo: decide what to do with NaN 
+			for(int column=0; column < row.length; column++){
+
+				Double value = (Double) Double.parseDouble((String) row[column]);
+				GoesVariable element = new GoesVariable(variableName,dataDate,rowNum,column,value);
+				actual.add(element);
+
+
 			}
 			System.out.println();
-			rowNum++;
-		}
-		
-		//Comparing values retrieved with actual csv values
-		for(int i = 0; i<values.length; i++){
-			for(int j=0; j<values[0].length; j++){
-				assertEquals(result.getValues()[i][j], values[i][j]);
-			}	
+			rowNum--;
 		}
 
-		assertEquals(result.getImagePath(), imagePath);
+
+		//Verify that size of result list is equal to matrix size (row*column)
+		assertEquals(expected.size(),actual.size());
+
+		//Verify each entry in the returned GoesVariable list
+		for(int i=0; i<actual.size(); i++){
+			assertEquals(expected.get(i).toString(), actual.get(i).toString());
+		}
+
+
 
 	}
 

@@ -1,32 +1,27 @@
 package main.com.greendev.pragma.database.databaseModel;
 
-import java.sql.Timestamp;
+import org.joda.time.DateTime;
 
 /**
- * Single GOES-PRWEB variable (e.g. rainfall, ET, wind)
- * Includes the variable name, matrix of values corresponding to PR coordinates,
- * and date
+ * Single GOES-PRWEB variable value (e.g. rainfall, ET, wind)
+ * Includes the variable name, date, matrix row, matrix column, value
  * @author miguelgd
  */
 public class GoesVariable {
-
+	
 	private String variableName;
+	private DateTime dataDate;
 	private int row;
 	private int column;
-	private Double value;
-	private Timestamp createdTime;
-	private Timestamp updatedTime;
+	private Double dataValue;	
 	
-	
-	public GoesVariable(String variableName, int row, int column,
-			Double value, Timestamp createdTime, Timestamp updatedTime) {
-		super();
+	public GoesVariable(String variableName, DateTime dataDate, int row,
+			int column, Double dataValue) {
 		this.variableName = variableName;
+		this.dataDate = dataDate;
 		this.row = row;
 		this.column = column;
-		this.value = value;
-		this.createdTime = createdTime;
-		this.updatedTime = updatedTime;
+		this.dataValue = dataValue;
 	}
 	
 	public String getVariableName() {
@@ -35,22 +30,12 @@ public class GoesVariable {
 	public void setVariableName(String variableName) {
 		this.variableName = variableName;
 	}
-	public Timestamp getCreatedTime() {
-		return createdTime;
+	public DateTime getDataDate() {
+		return dataDate;
 	}
-
-	public void setCreatedTime(Timestamp createdTime) {
-		this.createdTime = createdTime;
+	public void setDataDate(DateTime dataDate) {
+		this.dataDate = dataDate;
 	}
-
-	public Timestamp getUpdatedTime() {
-		return updatedTime;
-	}
-
-	public void setUpdatedTime(Timestamp updatedTime) {
-		this.updatedTime = updatedTime;
-	}
-
 	public int getRow() {
 		return row;
 	}
@@ -63,10 +48,16 @@ public class GoesVariable {
 	public void setColumn(int column) {
 		this.column = column;
 	}
-	public Double getValue() {
-		return value;
+	public Double getDataValue() {
+		return dataValue;
 	}
-	public void setValue(Double value) {
-		this.value = value;
+	public void setDataValue(Double dataValue) {
+		this.dataValue = dataValue;
+	}
+	@Override
+	public String toString() {
+		return "GoesVariable [variableName=" + variableName + ", dataDate="
+				+ dataDate + ", row=" + row + ", column=" + column
+				+ ", dataValue=" + dataValue + "]";
 	}
 }
