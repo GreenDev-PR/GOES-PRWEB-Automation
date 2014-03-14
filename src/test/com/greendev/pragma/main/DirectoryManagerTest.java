@@ -3,11 +3,10 @@ package test.com.greendev.pragma.main;
 import static org.junit.Assert.*;
 
 import java.io.File;
-import java.util.Date;
-
 import main.com.greendev.pragma.main.DirectoryManager;
 
 import org.apache.commons.io.FileUtils;
+import org.joda.time.DateTime;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +22,7 @@ public class DirectoryManagerTest {
 
 	private static DirectoryManager manager;
 	private static String rootDirectory = "src/test/com/greendev/pragma/main/temp";
-	private Date date;
+	private DateTime date;
 
 
 	@AfterClass
@@ -34,7 +33,7 @@ public class DirectoryManagerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		date = new Date();
+		date = new DateTime();
 		manager = new DirectoryManager(rootDirectory);
 	}
 

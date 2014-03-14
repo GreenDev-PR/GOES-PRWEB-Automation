@@ -1,7 +1,8 @@
 package main.com.greendev.pragma.main;
 
 import java.io.File;
-import java.util.Date;
+
+import org.joda.time.DateTime;
 
 /**
  * Utility class that creates directories needed for program execution
@@ -24,7 +25,7 @@ public class DirectoryManager {
 	 * @param date
 	 * @return returns the root directory
 	 */
-	public File createDirectoriesForDate(Date date){
+	public File createDirectoriesForDateTime(DateTime date){
 		File dir = getDirectory(date);
 		getInputDirectory(date);
 		getOutputDirectory(date);
@@ -36,7 +37,7 @@ public class DirectoryManager {
 	 * @param date
 	 * @return returns the output directory
 	 */
-	public File getOutputDirectory(Date date) {
+	public File getOutputDirectory(DateTime date) {
 		File output = new File(getDirectory(date), "/OUTPUT");
 		create(output);
 		return output;
@@ -47,7 +48,7 @@ public class DirectoryManager {
 	 * @param date
 	 * @return returns the input directory
 	 */
-	public File getInputDirectory(Date date) {
+	public File getInputDirectory(DateTime date) {
 		File dir = getDirectory(date);
 		File input = new File(dir, "/INPUT");
 		create(input);
@@ -77,9 +78,9 @@ public class DirectoryManager {
 	 * @param date
 	 * @return returns the root directory based on date
 	 */
-	public File getDirectory(Date date) {
+	public File getDirectory(DateTime date) {
 		String str = DIRECTORY_FORMAT.replaceAll("%t", "%1\\$t");
-		String formatted =  String.format(str, date);
+		String formatted =  String.format(str, date.toDate());
 		File dir = new File(rootDirectory,formatted);
 		create(dir);
 		return dir;
