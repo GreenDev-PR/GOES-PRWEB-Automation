@@ -1,0 +1,27 @@
+{
+  "degribber": {
+    "variables": null,
+    "executable": null,
+    "outputDirectory": null,
+    "degribDirectory": null,
+    "map": {}
+  },
+  "downloads": [],
+  "goesDir": null,
+  "matlabCmd": null,
+  "matlabWorkingDirectory": null,
+  "logLayout": null,
+  "variables": [],
+  "email": {
+    "from": null,
+    "to": null,
+    "password": null,
+    "hostname": null,
+    "port": 0
+  },
+  "finished": {
+    "fileName": null,
+    "tries": 0,
+    "seconds": 0
+  }
+}

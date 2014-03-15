@@ -16,16 +16,14 @@ public class GoesProperties {
 
 	private Degribber degribber;
 	private List<Download> downloads;
-	private FtpProperties ftp;
 	private String goesDir;
 	private String matlabCmd;
-	private String matlabWorking;
-	private long waitInterval;
-	private int timesToWait;
+	private String matlabWorkingDirectory;
 	private String logLayout;
-	private String finishedFileName;
 	private List<String> variables;
 	private EmailProperties email;
+	private FinishProperties finished;
+	 
 	
 	public GoesProperties(){
 		
@@ -55,19 +53,6 @@ public class GoesProperties {
 	}
 
 
-
-	public FtpProperties getFtp() {
-		return ftp;
-	}
-
-
-
-	public void setFtp(FtpProperties ftp) {
-		this.ftp = ftp;
-	}
-
-
-
 	public String getMatlabCmd() {
 		return matlabCmd;
 	}
@@ -80,40 +65,15 @@ public class GoesProperties {
 
 
 
-	public String getMatlabWorking() {
-		return matlabWorking;
+	public String getMatlabWorkingDirectory() {
+		return matlabWorkingDirectory;
 	}
 
 
 
-	public void setMatlabWorking(String matlabWorking) {
-		this.matlabWorking = matlabWorking;
+	public void setMatlabWorkingDirectory(String matlabWorking) {
+		this.matlabWorkingDirectory = matlabWorking;
 	}
-
-
-
-	public long getWaitInterval() {
-		return waitInterval;
-	}
-
-
-
-	public void setWaitInterval(long waitInterval) {
-		this.waitInterval = waitInterval;
-	}
-
-
-
-	public int getTimesToWait() {
-		return timesToWait;
-	}
-
-
-
-	public void setTimesToWait(int timesToWait) {
-		this.timesToWait = timesToWait;
-	}
-
 
 
 	public String getLogLayout() {
@@ -125,19 +85,6 @@ public class GoesProperties {
 	public void setLogLayout(String logLayout) {
 		this.logLayout = logLayout;
 	}
-
-
-
-	public String getFinishedFileName() {
-		return finishedFileName;
-	}
-
-
-
-	public void setFinishedFileName(String finishedFileName) {
-		this.finishedFileName = finishedFileName;
-	}
-
 
 
 	public List<String> getVariable() {
@@ -174,13 +121,22 @@ public class GoesProperties {
 		return goesDir;
 	}
 	
+	public FinishProperties getFinished() {
+		return finished;
+	}
+
+
+	public void setFinished(FinishProperties finished) {
+		this.finished = finished;
+	}
+
+
 	public void createGoesProperties(){
 		this.degribber = new Degribber();
 		this.downloads = Collections.emptyList();
 		this.email = new EmailProperties();
-		this.finishedFileName = "";
-		this.ftp = new FtpProperties();
 		this.variables = Collections.emptyList();
+		this.finished = new FinishProperties();
 	}
 	
 	
