@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Date;
 
 import org.apache.commons.mail.EmailException;
+import org.joda.time.DateTime;
 
 import main.com.greendev.pragma.main.properties.GoesProperties;
 /**
@@ -16,19 +17,19 @@ import main.com.greendev.pragma.main.properties.GoesProperties;
 public class AutomateGoes {
 	
 	private GoesProperties properties;
-	private Date date;
-	private Date executionDate;
+	private DateTime date;
+	private DateTime executionDate;
 	private DirectoryManager manager;
 	
 	public AutomateGoes(String propertiesPath) throws IOException{
-		this(propertiesPath, new Date());
+		this(propertiesPath, new DateTime());
 	}
 
-	public AutomateGoes(String propertiesPath, Date date2) throws IOException {
+	public AutomateGoes(String propertiesPath, DateTime date2) throws IOException {
 		loadProperties(propertiesPath);
 		manager = new DirectoryManager(this.properties.getGoesDir());
 		this.date = date2;
-		executionDate = new Date();
+		executionDate = new DateTime();
 	
 		
 	}
@@ -79,12 +80,12 @@ public class AutomateGoes {
 		
 	}
 
-	public Date getDate() {
+	public DateTime getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
+	public void setDate(DateTime start) {
+		this.date = start;
 	}
 	
 	public File getWorkingDirectory(){
