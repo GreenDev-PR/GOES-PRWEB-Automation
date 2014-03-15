@@ -10,13 +10,16 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import main.com.greendev.pragma.database.CsvToModel;
 import main.com.greendev.pragma.database.DBManager;
 import main.com.greendev.pragma.database.databaseModel.GoesVariable;
 
+import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
+import org.apache.log4j.LogMF;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -31,9 +34,10 @@ import org.junit.Test;
  */
 public class DBManagerTest {
 
-	private static final String VERIFY_DATA_QUERY = "SELECT * FROM goesdata";
-	private static final String DELETE_TABLE_RECORDS_QUERY = "DELETE FROM goesdata";
-	private static final String USERNAME = "josediaz";
+	private static final String DELETE_GOES_DATA_RECORDS_QUERY = "DELETE FROM GoesData"; 
+	private static final String DELETE_GOES_MAPS_RECORDS_QUERY = "DELETE FROM GoesMaps"; 
+	
+	private static final String USERNAME = "postgres";
 	private static final String PASSWORD = null;
 	
 	private static Connection conn;
@@ -45,16 +49,18 @@ public class DBManagerTest {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		System.out.println("hereeee");
+		System.out.println("setUpBeforeClass executing...");
 		varName = "variable";
 		date = new DateTime();
 		csvFile = new File("src/test/com/greendev/pragma/database/resources/variable20140309.csv");
 		conn = createConnection();
+		System.out.println("Succesfully connected to database..");
 		//clear previous records
 		dbManager = new DBManager(conn);
-		QueryRunner run = new QueryRunner();
-		run.update(conn, DELETE_TABLE_RECORDS_QUERY);
-		System.out.println("initialization complete!");
+		System.out.println("Created dbManager instance");
+
+		//DbUtils.close(conn);
+		System.out.println("Initialization completed...");
 	}
 
 	/**
@@ -72,53 +78,48 @@ public class DBManagerTest {
 		dbManager = null;
 		varName = null;
 		csvFile = null;
-		conn = null;
+		
 		date = null;
+		//DbUtils.close(conn); //close db connection
+		//System.out.println("Database connection for GoesMaps closed on {0}");
+		
 	}
 
 	@Test
-	public void storeInDbTest() throws SQLException, FileNotFoundException {
-		System.out.println("storeInDb!!!");
+	public void storeGoesDataTest() throws SQLException, FileNotFoundException {
+		
+		System.out.println("Executing dbManager.storeGoesData method ");
 		int dbInserts = dbManager.storeGoesData(varName, csvFile, date);
-		System.out.println("afterstoee!!!");
-		/*//Parse csv data to Goes Variable object
-		GoesVariable var = CsvToModel.parse(variableName, csv);
+		
+		System.out.println("db inserts: "+dbInserts);
+		//Parse csv data to Goes Variable object
+		List<GoesVariable> varList = CsvToModel.parse(varName, csvFile, date);
 
-		long numericValuesInCsv = 0;
-		for(int i = 0; i < var.getValues().length; i++){
-			for(int j=0; j < var.getValues().length; j++){
-				if(!Double.isNaN(var.getValues()[i][j]))
-					numericValuesInCsv++;
-			}
+		int numericValuesInCsv = 0;
+
+		for(int i=0; i < varList.size(); i++){
+			if(!Double.isNaN(varList.get(i).getDataValue()))
+				numericValuesInCsv++;
 		}
-		System.out.println("Numeric values found in CSV: "+numericValuesInCsv);
-		System.out.println("Number of insertions performed to the database: "+dbInserts);
-
+		//It is expected that the number of numericValues in Csv 
+		//should be equal to the number of inserts perfomred
 		assertTrue(dbInserts == numericValuesInCsv);
 
-		/*******************************************/
-		/********* Verify the data inserted ********/
-		/*******************************************/
-		/*
-		System.out.println("Starting verify Test");
-		QueryRunner run = new QueryRunner();
-		
-		ResultSetHandler<GoesVariable> h = new BeanHandler<GoesVariables>(GoesVariable.class);
+	}
 	
-
-		
-		
-		for(Object obj: result){
-			System.out.println("Printing: "+obj.toString());
-		}
-
-		assertTrue(true);
-		 */
+	@Test
+	public void storeGoesMapsTest(){
+		/*System.out.println("Executing dbManager.storeGoesMaps method");
+		File dir = new File();
+		int dbInserts = dbManager.storeGoesMap(variableList, directory, date)*/
 	}
 
 
 	@Before
 	public void setUp() throws Exception {
+		QueryRunner run = new QueryRunner();
+		run.update(conn, DELETE_GOES_DATA_RECORDS_QUERY);
+		run.update(conn, DELETE_GOES_MAPS_RECORDS_QUERY);
 	}
 
 	@After

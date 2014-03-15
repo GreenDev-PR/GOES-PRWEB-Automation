@@ -33,12 +33,12 @@ import main.com.greendev.pragma.download.HttpDownloader;
 public class DBManager {
 
 	private static final String GOES_DATA_QUERY = "INSERT INTO " +
-			"goesdata (variableName,matrixRow,matrixColumn,dataValue) " +
-			"VALUES (?,?,?,?)";
+			"goesdata (variableName,matrixRow,matrixColumn,dataValue,dataDate,createdAt,updatedAt) " +
+			"VALUES (?,?,?,?,?,?,?)";
 	
-	private static final int GOES_VARIABLE_TABLE_INSERT_REQUIRED_COLUMNS = 4;
+	private static final int GOES_DATA_TABLE_INSERT_REQUIRED_COLUMNS = 7;
 	
-	private static final String GOES_MAP_QUERY = "INSERT INTO goesmaps" +
+	private static final String GOES_MAP_QUERY = "INSERT INTO GoesMaps" +
 			" (variableName,imagePath,dataDate) VALUES (?,?,?)";
 	private static final int GOES_MAPS_TABLE_INSERT_REQUIRED_COLUMNS = 3;
 	private static final int GOES_MAPS_TABLE_INSERT_REQUIRED_ROWS = 25;
@@ -81,6 +81,7 @@ public class DBManager {
 		//Counts the number if insertions to be performed based on values !NaN.
 		int insertsCounter = 0;
 
+		//Determine number of values to insert
 		//Prepare batch parameter object matrix
 		//Each row corresponds to a set a parameters to replace
 		//The insert statement has 4 placeholder ('?') 
@@ -92,10 +93,11 @@ public class DBManager {
 		LogMF.debug(logger,"The number if inserts to perform is {0}",insertsCounter);
 
 		//Initialize parameter matrix with NOT NaN
-		Object[][] params = new Object[insertsCounter][GOES_VARIABLE_TABLE_INSERT_REQUIRED_COLUMNS];
+		Object[][] params = new Object[insertsCounter][GOES_DATA_TABLE_INSERT_REQUIRED_COLUMNS];
 
 
 		int row=0;
+		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		for(GoesVariable var : varList){
 			//insert only values that are NOT NaN values
 			if(!Double.isNaN(var.getDataValue()) )
@@ -104,6 +106,9 @@ public class DBManager {
 				params[row][1] = var.getRow();
 				params[row][2] = var.getColumn();
 				params[row][3] = var.getDataValue();
+				params[row][4] = timestamp;
+				params[row][5] = timestamp;
+				params[row][6] = timestamp;
 
 				row++;
 			}
@@ -120,17 +125,15 @@ public class DBManager {
 			result = runner.batch(this.conn,GOES_DATA_QUERY,params); 
 
 			LogMF.debug(logger,"Successfully completed GoesData insertion query",null);
-
-			DbUtils.close(conn); //close db connection
-
-			LogMF.debug(logger,"Database connection for GoesData closed on {0}",DateTime.now());
+		
 		}
 		catch(SQLException sqle){
 			sqle.printStackTrace();
 			//logg Erro
+			System.out.println(sqle.getNextException());
 			LogMF.debug(logger,"Error executing batch inserts",null);
 			throw sqle;
-		}
+		} 
 
 		return result.length;
 	}
@@ -140,7 +143,7 @@ public class DBManager {
 	 * @return
 	 */
 	public int storeGoesMap(List<String> variableList, File directory, DateTime date) throws SQLException{
-
+		
 		GoesImageFinder mapFinder = new GoesImageFinder();
 
 		LogMF.debug(logger,"Going to find GoesMaps for the following date {0}",date);
@@ -149,11 +152,13 @@ public class DBManager {
 
 		Object[][] params = new Object[GOES_MAPS_TABLE_INSERT_REQUIRED_ROWS][GOES_MAPS_TABLE_INSERT_REQUIRED_COLUMNS];
 		int row = 0;
+		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+		
 		for(GoesMap map: mapList){
 			
 			params[row][0] = map.getVariableName();
 			params[row][1] = map.getImagePath();
-			params[row][2] = map.getDataDate(); //OJOJjJOjOJojOJOJOJOJ
+			params[row][2] = timestamp;
 			
 			row++;
 		}
@@ -161,21 +166,23 @@ public class DBManager {
 		//Create query runner
 		QueryRunner runner = new QueryRunner();
 		int[] result;
+		
 		try{
 			LogMF.debug(logger,"Database connection for GoesMaps started at {0}",DateTime.now());
 			LogMF.debug(logger,"Going to execue GoesMap batch insertion query",null);
 			
 			result = runner.batch(this.conn, GOES_MAP_QUERY, params);
 			LogMF.debug(logger,"Successfully completed GoesMap batch insertion query",null);
-			DbUtils.close(conn); //close db connection
-			LogMF.debug(logger,"Database connection for GoesMaps closed on {0}",DateTime.now());
+			
 		}catch(SQLException sqle){
 			sqle.printStackTrace();
 			LogMF.debug(logger, "Error inserting Goes Maps into database",null);
 			throw sqle;
+			
 		}
-
+			
 		return result.length;
 	}
+	
 
 }
