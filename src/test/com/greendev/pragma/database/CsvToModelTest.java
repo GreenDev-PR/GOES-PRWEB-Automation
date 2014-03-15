@@ -34,8 +34,14 @@ public class CsvToModelTest {
 	public void testCsvToModelParse() {
 
 		System.out.println(dataDate);
-		
-		List<GoesVariable> expected = CsvToModel.parse(variableName, inputCsv, dataDate);
+				
+		List<GoesVariable> expected = null;
+		try {
+			expected = CsvToModel.parse(variableName, inputCsv, dataDate);
+		} catch (FileNotFoundException e1) {
+			System.out.println("Csv file not found");
+			e1.printStackTrace();
+		}
 		List<GoesVariable> actual = new ArrayList<GoesVariable>();
 
 		//assertEquals(result.getVariableName(), variableName);

@@ -62,7 +62,12 @@ public class DegribTest {
 
 	@Test
 	public void testDegribVariables(){
-		degrib.degribVariables();
+		try {
+			degrib.degribVariables();
+		} catch (IOException e1) {
+			System.out.println("Error running degrib executable");
+			e1.printStackTrace();
+		}
 		String[] extensions = {"csv"};
 		Collection<File> result = FileUtils.listFiles(outputDirectory, extensions, false);
 		int actualCount = result.size();

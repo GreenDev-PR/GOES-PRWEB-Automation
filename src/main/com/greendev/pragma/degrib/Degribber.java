@@ -84,7 +84,7 @@ public class Degribber {
 		this.executable = executable;
 	}
 
-	public void degribVariables(){		
+	public void degribVariables() throws IOException{		
 		for(DegribVariable variable : variables)
 			degrib(variable);	
 	}
@@ -94,7 +94,7 @@ public class Degribber {
 	 * Calls degribFile with the current file, the message and the variable.
 	 * @param variable variable to degrib from file
 	 */
-	private void degrib(DegribVariable variable) {
+	private void degrib(DegribVariable variable) throws IOException{
 		Collection<File> gribFiles = getGribFiles(variable);
 		for(File file : gribFiles){
 			for(Integer message: variable.getMessages()){
@@ -105,6 +105,7 @@ public class Degribber {
 							logger.error("Error degribbing file, error code not 0 for file: " + file.getAbsolutePath());
 				} catch (IOException e){
 					logger.error("IOException while degribing file: " + file.getAbsolutePath(),e);
+					throw new IOException();
 				}
 			}
 		}
