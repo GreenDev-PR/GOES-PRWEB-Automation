@@ -15,10 +15,12 @@ import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
 
+import main.com.greendev.pragma.degrib.DegribVariable;
+import main.com.greendev.pragma.degrib.Degribber;
 import main.com.greendev.pragma.main.properties.GoesProperties;
 import main.com.greendev.pragma.utils.GoesUtils;
 /**
- * Automate 
+ *  
  * @author josediaz
  *
  */
@@ -102,13 +104,35 @@ public class AutomateGoes {
 	}
 	
 	public void download(){
-		
+		//TODO
 	}
 	
+	/**
+	 * Degribs the downloaded data
+	 */
 	public void degrib(){
+		File dir = getWorkingDirectory();
 		
+		Degribber degrib = this.properties.getDegribber();		
+		degrib.setDegribDirectory(dir);
+		degrib.setOutputDirectory(dir);
+		
+		for (DegribVariable variable : degrib.getVariables()) {
+			variable.setOutputName(this.format(this.fromDate.toDate(), variable.getOutputName()) );
+		}
+		//Degrib each variable using Degribber class
+		try {
+			degrib.degribVariables();
+		} catch (IOException e) {	
+			logger.error("Error degribing variables");
+			e.printStackTrace();
+		}
+
 	}
 	
+	/**
+	 * Run matlab 
+	 */
 	public void matlab(){
 		
 		//Delete file used as flag for matlab completion
@@ -130,24 +154,36 @@ public class AutomateGoes {
 	public void emailLog() throws IOException, EmailException{
 		
 	}
-
-	public DateTime getDate() {
-		return date;
-	}
-
-	public void setDate(DateTime start) {
-		this.date = start;
-	}
 	
-	public File getWorkingDirectory(){
-		return manager.getDirectory(date);
+	/**
+	 * Gets the date from which to start collecting data.
+	 * @return The date from which to start collecting data.
+	 */
+	public DateTime getDate() {
+		return fromDate;
+	}
+
+	/**
+	 * Sets the date from which to start collecting data.
+	 * @param start The date from which to start collecting data.
+	 */
+	public void setDate(DateTime start) {
+		this.fromDate = start;
 	}
 	
 	/**
-	 * Helper method
-	 * @param date
+	 * Gets the path to the working directory.
+	 * @return The path the working directory.
+	 */
+	public File getWorkingDirectory(){
+		return manager.getDirectory(this.fromDate);
+	}
+	
+	/**
+	 * Provides string formatting 
+	 * @param date 
 	 * @param format
-	 * @return
+	 * @return The string formatted
 	 */
 	private String format(Date date, String format) {
 		return GoesUtils.stringFormatTime(format, date);
