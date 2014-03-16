@@ -6,98 +6,58 @@ import java.io.IOException;
 import java.util.Date;
 
 import org.apache.commons.mail.EmailException;
-import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 
-import main.com.greendev.pragma.degrib.DegribVariable;
-import main.com.greendev.pragma.degrib.Degribber;
 import main.com.greendev.pragma.main.properties.GoesProperties;
 /**
- * Automate GOES-PRWEB algorithm 
+ * Automate 
  * @author josediaz
  *
  */
 public class AutomateGoes {
 	
 	private GoesProperties properties;
-	private Date fromDate;
-	private Date executionDate;
-	private DirectoryManager dirManager;
-	private static final Logger logger = Logger.getLogger(AutomateGoes.class);
-	private static final String LOG_NAME_FORMAT = "log_%tY%tm%td.log";
+	private DateTime date;
+	private DateTime executionDate;
+	private DirectoryManager manager;
 	
-	/**
-	 * Construct an AutomateGoes object with specified properties
-	 * @param propertiesPath The properties for which to perform the automation
-	 * @throws IOException
-	 */
 	public AutomateGoes(String propertiesPath) throws IOException{
-		this(propertiesPath, new Date());
+		this(propertiesPath, new DateTime());
+	}
+
+	public AutomateGoes(String propertiesPath, DateTime date2) throws IOException {
+		loadProperties(propertiesPath);
+		manager = new DirectoryManager(this.properties.getGoesDir());
+		this.date = date2;
+		executionDate = new DateTime();
+	
+		
 	}
 	
-	/**
-	 * Constructs an AutomateGoes object with supplied properties and execution date
-	 * @param propertiesPath The properties
-	 * @param fromDate 
-	 * @throws IOException
-	 */
-	public AutomateGoes(String propertiesPath, Date fromDate) throws IOException {
-		this.loadProperties(propertiesPath);
-		this.dirManager = new DirectoryManager(this.properties.getGoesDir());
-		this.fromDate = fromDate;
-		executionDate = new Date();
-	}
-	
-	/**
-	 * 
-	 * @throws IOException
-	 */
 	public void configureFileAppender() throws IOException{
 		
-	}
-	
-	/**
-	 * 
-	 * @param properties
-	 * @throws FileNotFoundException
-	 */
-	public void loadProperties(String properties) throws FileNotFoundException{
+		
 		
 	}
 	
-	/**
-	 * Creates directory structure: Input & Output directories
-	 */
-	public void makeDirs(){
-		logger.info("working directory date "+this.fromDate);
-		this.dirManager.createDirectoriesForDate(this.fromDate);
+	public void loadProperties(String properties) throws FileNotFoundException{
+		
+		
+		
 	}
 	
-	/**
-	 * Performs downloads of data sets
-	 * Robustness
-	 */
+	public void makeDirs(){
+		
+	}
+	
 	public void download(){
 		
 	}
 	
-	/**
-	 * Degribs downloaded data sets into CSV format
-	 */
 	public void degrib(){
-		File dir = getWorkingDirectory();
-		Degribber degrib = properties.getDegribber();
 		
-		degrib.setDegribDirectory(dir);
-		degrib.setOutputDirectory(dir);
-		
-		for(DegribVariable var: degrib.getVariables()){
-			//TODO implement
-		}
 	}
 	
-	/**
-	 * Executes the GOES-PRWEB algorithm Matlab process
-	 */
 	public void matlab(){
 		
 		//Delete file used as flag for matlab completion
@@ -120,28 +80,16 @@ public class AutomateGoes {
 		
 	}
 
-	/**
-	 * Gets the date for which to start collecting datasets
-	 * @return
-	 */
-	public Date getDate() {
-		return fromDate;
+	public DateTime getDate() {
+		return date;
+	}
+
+	public void setDate(DateTime start) {
+		this.date = start;
 	}
 	
-	/**
-	 * Sets the date for which to start collecting datasets 
-	 * @param date 
-	 */
-	public void setDate(Date date) {
-		this.fromDate = date;
-	}
-	
-	/**
-	 * Get the working directory 
-	 * @return
-	 */
 	public File getWorkingDirectory(){
-		return dirManager.getDirectory(fromDate);
+		return manager.getDirectory(date);
 	}
 
 }
