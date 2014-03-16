@@ -31,11 +31,22 @@ public class AutomateGoes {
 	private static final String LOG_NAME_FORMAT = "log_%tY%tm%td.log";
 	private static final Logger logger = Logger.getLogger(AutomateGoes.class);
 	
-	
+	/**
+	 * Constructs an automate goes object from a supplied propertiesPath
+	 * @param propertiesPath The location of the properties file
+	 * @throws IOException 
+	 */
 	public AutomateGoes(String propertiesPath) throws IOException{
 		this(propertiesPath, new DateTime());
 	}
 
+	/**
+	 * Constructs an automate goes object from a supplied propertiesPath and a
+	 * given run date.
+	 * @param propertiesPath The location of the properties file
+	 * @param date The date from which to start collecting data
+	 * @throws IOException
+	 */
 	public AutomateGoes(String propertiesPath, DateTime date) throws IOException {
 		//Load automation properties
 		this.loadProperties(propertiesPath);
@@ -71,16 +82,20 @@ public class AutomateGoes {
 	}
 	
 	/**
-	 * Loads automation properties values.
-	 * @param propertiesPath The location of the .json automation properties file
+	 * Loads automation properties values from external JSON file.
+	 * @param propertiesPath The location of the external JSON automation properties file
 	 * @throws FileNotFoundException The path supplied was not located.
 	 */
 	public void loadProperties(String propertiesPath) throws FileNotFoundException{
 		File props = new File(propertiesPath);
 		Gson gson = new Gson();
+		//Read properties from external JSON file
 		this.properties = gson.fromJson(new FileReader(props),GoesProperties.class);
 	}
 	
+	/**
+	 * Creates directory structure for supplied date
+	 */
 	public void makeDirs(){
 		logger.info("working dir date " + fromDate);
 		manager.createDirectoriesForDateTime(fromDate);
