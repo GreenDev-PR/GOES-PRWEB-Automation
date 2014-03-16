@@ -8,6 +8,7 @@ import java.util.Date;
 
 import org.apache.commons.mail.EmailException;
 import org.apache.log4j.FileAppender;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.joda.time.DateTime;
@@ -15,6 +16,7 @@ import org.joda.time.DateTime;
 import com.google.gson.Gson;
 
 import main.com.greendev.pragma.main.properties.GoesProperties;
+import main.com.greendev.pragma.utils.GoesUtils;
 /**
  * Automate 
  * @author josediaz
@@ -38,20 +40,34 @@ public class AutomateGoes {
 		//Load automation properties
 		this.loadProperties(propertiesPath);
 		this.manager = new DirectoryManager(this.properties.getGoesDir());
+		logger.info("Working Directory " + manager.getRootDirectory().getCanonicalPath());
 		this.fromDate = date;
 		this.executionDate = new DateTime();
-		configureFileAppender();
+		this.configureFileAppender();
 	}
 	
+	/**
+	 * Configures log file management. 
+	 * @throws IOException Error handling files.
+	 */
 	public void configureFileAppender() throws IOException{
-		//Create log directory
+		//Create log directory e.g. /LOG
 		File logDir = manager.getLogDirectory();
 		
-		File log = new File(logDir, format(this.executionDate, LOG_NAME_FORMAT));
-		FileAppender fa = new FileAppender(new PatternLayout(properties.getLogLayout(), log.getCanonicalPath()));
-		fa.setThreshold(level.DEBUG);
+		File log = new File(logDir, this.format(this.executionDate.toDate(), LOG_NAME_FORMAT));
+		
+		//Create a file appender to record log events
+		FileAppender fa = new FileAppender(new PatternLayout(
+				this.properties.getLogLayout()), log.getCanonicalPath());
+		
+		//Configure logger append level
+		fa.setThreshold(Level.DEBUG);
+		
 		fa.setAppend(false);
+		//File is actually opened
 		fa.activateOptions();
+		
+		Logger.getRootLogger().addAppender(fa);
 	}
 	
 	/**
@@ -112,6 +128,12 @@ public class AutomateGoes {
 		return manager.getDirectory(date);
 	}
 	
+	/**
+	 * Helper method
+	 * @param date
+	 * @param format
+	 * @return
+	 */
 	private String format(Date date, String format) {
 		return GoesUtils.stringFormatTime(format, date);
 	}

@@ -26,7 +26,7 @@ public class GoesUtils {
 	 * @param date The date to format to.
 	 * @return The formatted string
 	 */
-	public static String stringformatTime(String str, Date date){
+	public static String stringFormatTime(String str, Date date){
 		str = str.replaceAll("%t","%1\\$t");
 		return String.format(str, date);
 	}
