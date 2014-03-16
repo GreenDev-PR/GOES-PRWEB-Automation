@@ -24,7 +24,7 @@ public class GoesPropertiesToJsonTest {
 	@Before
 	public void setUp() throws Exception {
 
-		propertiesFile = new File("src/main/com/greendev/pragma/main/properties/goesProperties.json");
+		propertiesFile = new File("src/test/com/greendev/pragma/main/properties/goesProperties.json");
 		FileUtils.touch(propertiesFile);
 		
 	}
