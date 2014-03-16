@@ -31,6 +31,11 @@ import main.com.greendev.pragma.download.HttpDownloader;
  *
  */
 public class DBManager {
+	
+	/**
+	 * Create a Logger 
+	 */
+	private static Logger logger = Logger.getLogger(DBManager.class);
 
 	private static final String GOES_DATA_QUERY = "INSERT INTO " +
 			"goesdata (variableName,matrixRow,matrixColumn,dataValue,dataDate,createdAt,updatedAt) " +
@@ -39,20 +44,15 @@ public class DBManager {
 	private static final int GOES_DATA_TABLE_INSERT_REQUIRED_COLUMNS = 7;
 	
 	private static final String GOES_MAP_QUERY = "INSERT INTO GoesMaps" +
-			" (variableName,imagePath,dataDate) VALUES (?,?,?)";
-	private static final int GOES_MAPS_TABLE_INSERT_REQUIRED_COLUMNS = 3;
-	private static final int GOES_MAPS_TABLE_INSERT_REQUIRED_ROWS = 25;
+			" (variableName,imagePath,dataDate,createdAt,updatedAt) VALUES (?,?,?,?,?)";
+	
+	private static final int GOES_MAPS_TABLE_INSERT_REQUIRED_COLUMNS = 5;
 	
 
 	/**
 	 * The connection to the database
 	 */
 	private Connection conn;
-
-	/**
-	 * Create a Logger 
-	 */
-	private static Logger logger = Logger.getLogger(DBManager.class);
 
 	/**
 	 * Constructs a DBManager object.
@@ -81,16 +81,15 @@ public class DBManager {
 		//Counts the number if insertions to be performed based on values !NaN.
 		int insertsCounter = 0;
 
-		//Determine number of values to insert
-		//Prepare batch parameter object matrix
-		//Each row corresponds to a set a parameters to replace
-		//The insert statement has 4 placeholder ('?') 
-		//Each row must contain 4 values
+		//Determine number of values to insert in order
+		//to prepare batch parameter object matrix.
+		//Each row corresponds to a set a parameters to replace.
+		//If insert statement has 4 placeholder ('?') then
+		//each row must contain 4 values
 		for(int i=0; i<varList.size(); i++){
 			if( !Double.isNaN( varList.get(i).getDataValue()) ) //insert only values that are NOT NaN values()
 				insertsCounter++;
 		}
-		LogMF.debug(logger,"The number if inserts to perform is {0}",insertsCounter);
 
 		//Initialize parameter matrix with NOT NaN
 		Object[][] params = new Object[insertsCounter][GOES_DATA_TABLE_INSERT_REQUIRED_COLUMNS];
@@ -98,6 +97,7 @@ public class DBManager {
 
 		int row=0;
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+		
 		for(GoesVariable var : varList){
 			//insert only values that are NOT NaN values
 			if(!Double.isNaN(var.getDataValue()) )
@@ -124,7 +124,7 @@ public class DBManager {
 			//Run batch query
 			result = runner.batch(this.conn,GOES_DATA_QUERY,params); 
 
-			LogMF.debug(logger,"Successfully completed GoesData insertion query",null);
+			LogMF.debug(logger,"Successfully completed GoesData insertion query with {0} new entries",result.length);
 		
 		}
 		catch(SQLException sqle){
@@ -139,8 +139,12 @@ public class DBManager {
 	}
 
 	/**
-	 * Insert GoesMaps int database
-	 * @return
+	 * Insert GoesMaps in database. 
+	 * @param variableList Variables for which maps will be inserted into the database
+	 * @param directory The directory path to the map images
+	 * @param date The date of the insertion
+	 * @return The number of records inserted to the database
+	 * @throws SQLException
 	 */
 	public int storeGoesMap(List<String> variableList, File directory, DateTime date) throws SQLException{
 		
@@ -150,7 +154,7 @@ public class DBManager {
 		List<GoesMap> mapList = mapFinder.getMapsForDate(date, directory, variableList);
 		LogMF.debug(logger,"Succesfully found GoesMaps with the following date {0}",date);
 
-		Object[][] params = new Object[GOES_MAPS_TABLE_INSERT_REQUIRED_ROWS][GOES_MAPS_TABLE_INSERT_REQUIRED_COLUMNS];
+		Object[][] params = new Object[mapList.size()][GOES_MAPS_TABLE_INSERT_REQUIRED_COLUMNS];
 		int row = 0;
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		
@@ -159,7 +163,9 @@ public class DBManager {
 			params[row][0] = map.getVariableName();
 			params[row][1] = map.getImagePath();
 			params[row][2] = timestamp;
-			
+			params[row][3] = timestamp;
+			params[row][4] = timestamp;
+			//System.out.println("Printing record: "+params[row][0]+ " " + params[row][1] + " "+params[row][2]+ " " +params[row][3] + " " +params[row][4]);
 			row++;
 		}
 		
@@ -184,5 +190,4 @@ public class DBManager {
 		return result.length;
 	}
 	
-
 }

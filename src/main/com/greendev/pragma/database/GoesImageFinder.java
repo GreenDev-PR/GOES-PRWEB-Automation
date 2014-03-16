@@ -35,7 +35,7 @@ public class GoesImageFinder {
 			GoesMap map = new GoesMap(variable,date,imagePath);
 			maps.add(map);
 		}
-
+		
 		return maps;
 	}
 
