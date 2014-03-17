@@ -21,11 +21,11 @@ public class DownloaderFactory {
 	public static Downloader getDownloader(Download download){
 		Class<?> clazz;
 		Downloader downloader = null;
-		String downloaderName = download.getDownloadType();
+		String downloaderName = download.getDownloadClass();
 		
 		try{
 			//Get the Class object associated with the class with the given string name.
-			clazz = Class.forName(download.getDownloadType());
+			clazz = Class.forName(download.getDownloadClass());
 			//Instantiate the class
 			downloader = (Downloader) clazz.newInstance();
 			//Set the download 

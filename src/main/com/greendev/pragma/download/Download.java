@@ -25,7 +25,7 @@ public class Download {
 		/**
 		 * Name of download type
 		 */
-		private String downloadType;
+		private String downloadClass;
 		
 		/**
 		 * Default constructor
@@ -42,14 +42,14 @@ public class Download {
 			this.url = download.getUrl();
 			this.saveLocation = download.getSaveLocation();
 			this.dateOffset = download.getDateOffset();
-			this.downloadType = download.getDownloadType();
+			this.downloadClass = download.getDownloadClass();
 		}
 		
 		@Override
 		public String toString() {
 			return "Download [url=" + url + ", saveLocation=" + saveLocation
-					+ ", dateOffset=" + dateOffset + ", downloadType="
-					+ downloadType + "]";
+					+ ", dateOffset=" + dateOffset + ", downloadClass="
+					+ downloadClass + "]";
 		}
 		
 		/**
@@ -104,13 +104,13 @@ public class Download {
 		 * Get the type of download
 		 * @return string representation of download type
 		 */
-		public String getDownloadType() {
-			return downloadType;
+		public String getDownloadClass() {
+			return downloadClass;
 		}
 		/**
 		 * Sets the download type.
 		 */
-		public void setDownloadType(String downloadType) {
-			this.downloadType = downloadType;
+		public void setDownloadType(String downloadClass) {
+			this.downloadClass = downloadClass;
 		}
 }
