@@ -22,6 +22,7 @@ import main.com.greendev.pragma.degrib.Degribber;
 import main.com.greendev.pragma.download.Download;
 import main.com.greendev.pragma.download.Downloader;
 import main.com.greendev.pragma.download.DownloaderFactory;
+import main.com.greendev.pragma.download.RetryDownloader;
 import main.com.greendev.pragma.main.properties.GoesProperties;
 import main.com.greendev.pragma.utils.GoesUtils;
 /**
@@ -37,6 +38,8 @@ public class AutomateGoes {
 	private DirectoryManager dirManager;
 	private static final String LOG_NAME_FORMAT = "log_%tY%tm%td.log";
 	private static final Logger logger = Logger.getLogger(AutomateGoes.class);
+	private static final int ATTEMPTS = 3;
+	private static final long WAIT_TIME = 60*1000; // 1 minute
 	
 	/**
 	 * Constructs an automate goes object from a supplied propertiesPath
@@ -112,7 +115,7 @@ public class AutomateGoes {
 	 * Performed the downloads
 	 */
 	public void download(){
-		
+	
 		String absolute = this.getWorkingDirectory().getAbsolutePath();
 		
 		for(Download download : goesProperties.getDownloads()){
@@ -129,11 +132,12 @@ public class AutomateGoes {
 			Downloader downloader = DownloaderFactory.getDownloader(tempDownload);
 			
 			if(downloader != null){
-				if(downloader.downloadExists()){
+				Downloader retryDownloader = new RetryDownloader(downloader, ATTEMPTS, WAIT_TIME);
+				if(retryDownloader.downloadExists()){
 					try{
-						downloader.download();
+						retryDownloader.download();
 					} catch (IOException e){
-						logger.error("Error download "+ download, e);
+						logger.error("Error download "+ tempDownload, e);
 					}
 				}
 			}else{

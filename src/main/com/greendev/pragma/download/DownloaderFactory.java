@@ -38,9 +38,7 @@ public class DownloaderFactory {
 			logger.error("Error trying to instantiate the following class " +downloaderName, e);
 		}
 		
-		RetryDownloader retryDown = new RetryDownloader(downloader);
-		
-		return retryDown;
+		return downloader;
 	}
 	
 	
