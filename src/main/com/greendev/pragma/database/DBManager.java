@@ -106,7 +106,9 @@ public class DBManager {
 				params[row][1] = var.getRow();
 				params[row][2] = var.getColumn();
 				params[row][3] = var.getDataValue();
-				params[row][4] = timestamp;
+				System.out.println("Var DataValue: "+var.getDataDate());
+				params[row][4] = new Timestamp(var.getDataDate().getMillis());
+				System.out.println("Var timestamp version: "+params[row][4]);
 				params[row][5] = timestamp;
 				params[row][6] = timestamp;
 
@@ -162,7 +164,7 @@ public class DBManager {
 			
 			params[row][0] = map.getVariableName();
 			params[row][1] = map.getImagePath();
-			params[row][2] = timestamp;
+			params[row][2] = new Timestamp(map.getDataDate().getMillis());
 			params[row][3] = timestamp;
 			params[row][4] = timestamp;
 			//System.out.println("Printing record: "+params[row][0]+ " " + params[row][1] + " "+params[row][2]+ " " +params[row][3] + " " +params[row][4]);

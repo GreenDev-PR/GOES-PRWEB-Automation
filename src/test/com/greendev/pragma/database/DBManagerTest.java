@@ -58,7 +58,7 @@ public class DBManagerTest {
 		
 		//initialize common test dependencies
 		conn = createConnection();
-		System.out.println("Database connection succesfully established...");
+		System.out.println("Database connection succesfully established");
 		dbManager = new DBManager(conn);
 		System.out.println("Created dbManager instance");
 
@@ -90,7 +90,10 @@ public class DBManagerTest {
 	private static void initializeGoesDataTestDependancies(){
 		//assign variable name: MUST BE A VALID FOREIGN KEY
 		varName = "Bowen_Ratio";
-		date = new DateTime();
+		//create fake date to append the csv values
+		//int year, int monthOfYear, int dayOfMonth, int hourOfDay,
+		//int minuteOfHour, int secondOfMinute, int millisOfSecond
+		date = new DateTime(1999,11,8,15,31,2,50);
 		csvFile = new File("src/test/com/greendev/pragma/database/resources/variable20140309.csv");
 	}
 
