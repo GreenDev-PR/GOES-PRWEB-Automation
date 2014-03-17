@@ -33,23 +33,23 @@ public class CLI {
 	@SuppressWarnings("static-access")
 	private static Options createOptions(){
 		Options options = new Options();
-		
-		//Loading option corresponding to properties file
+
+		//Loading option corresponding to path to properties file
 		Option properties = OptionBuilder.withArgName("propertiesFile")
 				.hasArg().withDescription("Properties file **required").create("properties");
-		
+
 		//Loading option corresponding to start date
 		Option start = OptionBuilder.withArgName("startDate")
 				.hasArg().withDescription("specify the start date as yyyy/MM/dd").create("start");
-		
+
 		//Loading option corresponding to end date
 		Option end = OptionBuilder.withArgName("endDate")
 				.hasArg().withDescription("specify the end date as yyyy/MM/dd").create("end");
-		
+
 		options.addOption(properties);
 		options.addOption(start);
 		options.addOption(end);
-		
+
 		return options;
 	}
 
@@ -58,31 +58,63 @@ public class CLI {
 
 		//Create options object to receive params from command line
 		Options options = createOptions();
-		
+
 		//Create the command line parser, to extract parameters
 		CommandLineParser parser = new PosixParser();
 		//Extract parameters from args into options
 		CommandLine cli = parser.parse(options, args);
 		final String dateFormat = "yyyy/MM/dd";
 
+		DateTime start = null;
+		DateTime end = null;
+
 		//Start a stopwatch to measure execution time
 		StopWatch time = new StopWatch();
 		time.start();
-		
+
 		//If either properties, start or end parameters are missing, finish execution with error code
-		if(!cli.hasOption("properties") || !cli.hasOption("start") || !cli.hasOption("end")){
-			logger.error("Missing required parameters: properties, start or end");
+		if(!cli.hasOption("properties")){
+			logger.error("Missing required parameter for properties file.");
+			System.exit(1);
+		//If a start date other than today is specified without an end date, finish execution with error code
+		}else if((cli.hasOption("start") && !cli.hasOption("end"))){
+			if(!cli.getOptionValue("start").equalsIgnoreCase("today")){
+				logger.error("Missing end date when specifying range.");
+				System.exit(1);
+			}
+		//If a end date is specified without a start date, finish execution with error code
+		}else if((!cli.hasOption("start") && cli.hasOption("end"))){
+			logger.error("Missing start date when specifying range.");
 			System.exit(1);
 		}else{
-			DateTime start = null;
-			DateTime end = null;
-			String properties = cli.getOptionValue("properties");
-			SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat);
-			String startOptionValue = cli.getOptionValue("start");
 
-			if(startOptionValue.equalsIgnoreCase("today")){
+			//Get path to properties file
+			String properties = cli.getOptionValue("properties");
+
+			//If start date parameter is "today" set the actual start and end dates to the current date
+			if(cli.getOptionValue("start").equalsIgnoreCase("today")){
+				start = new DateTime();
+				end = new DateTime();
+			}else{
+
+				SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat);
+				String startOptionValue = cli.getOptionValue("start");
+				String endOptionValue = cli.getOptionValue("end");
 				start = new DateTime(dateFormatter.parse(startOptionValue));
-				end = new DateTime(dateFormatter.parse(cli.getOptionValue("end")));
+				end = new DateTime(dateFormatter.parse(endOptionValue));
+
+				//Error out if either start or end date is after today
+				if(start.isAfterNow() || end.isAfterNow()){
+					logger.error("Invalid dates: after current date (today)");
+					System.exit(1);
+				}
+
+				//Error out if start date is after end date
+				if(start.isAfter(end)){
+					logger.error("Invalid dates: start date is after end date ");
+					System.exit(1);
+				}
+
 			}
 
 			LogMF.info(logger, "Going to work from {0} to {1}", start, end);
