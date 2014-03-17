@@ -49,7 +49,7 @@ public class LastDigitsChangerDownloader implements Downloader {
 	}
 	
 	@Override
-	public boolean exists() {
+	public boolean downloadExists() {
 		boolean exists = false;
 		URL url = getValidUrl();
 		if(url != null){
@@ -66,7 +66,7 @@ public class LastDigitsChangerDownloader implements Downloader {
 		System.out.println("Executing LastDigitFinder download()");
 		//Check if URL exists 
 		if(this.url == null){
-			if(!exists()){ 
+			if(!downloadExists()){ 
 				return null;
 			}
 		}

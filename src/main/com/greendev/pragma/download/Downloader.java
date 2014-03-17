@@ -14,7 +14,7 @@ public interface Downloader {
 	 * Verify if the download exists
 	 * @return true if the download exists
 	 */
-	public boolean exists();
+	public boolean downloadExists();
 	/**
 	 * Perform a download
 	 * @return the file download 

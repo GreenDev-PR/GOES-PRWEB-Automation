@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Date;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.mail.EmailException;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
@@ -17,6 +19,9 @@ import com.google.gson.Gson;
 
 import main.com.greendev.pragma.degrib.DegribVariable;
 import main.com.greendev.pragma.degrib.Degribber;
+import main.com.greendev.pragma.download.Download;
+import main.com.greendev.pragma.download.Downloader;
+import main.com.greendev.pragma.download.DownloaderFactory;
 import main.com.greendev.pragma.main.properties.GoesProperties;
 import main.com.greendev.pragma.utils.GoesUtils;
 /**
@@ -26,10 +31,10 @@ import main.com.greendev.pragma.utils.GoesUtils;
  */
 public class AutomateGoes {
 	
-	private GoesProperties properties;
+	private GoesProperties goesProperties;
 	private DateTime fromDate;
 	private DateTime executionDate;
-	private DirectoryManager manager;
+	private DirectoryManager dirManager;
 	private static final String LOG_NAME_FORMAT = "log_%tY%tm%td.log";
 	private static final Logger logger = Logger.getLogger(AutomateGoes.class);
 	
@@ -52,8 +57,8 @@ public class AutomateGoes {
 	public AutomateGoes(String propertiesPath, DateTime date) throws IOException {
 		//Load automation properties
 		this.loadProperties(propertiesPath);
-		this.manager = new DirectoryManager(this.properties.getGoesDir());
-		logger.info("Working Directory " + manager.getRootDirectory().getCanonicalPath());
+		this.dirManager = new DirectoryManager(this.goesProperties.getGoesDir());
+		logger.info("Working Directory " + dirManager.getRootDirectory().getCanonicalPath());
 		this.fromDate = date;
 		this.executionDate = new DateTime();
 		this.configureFileAppender();
@@ -65,13 +70,13 @@ public class AutomateGoes {
 	 */
 	public void configureFileAppender() throws IOException{
 		//Create log directory e.g. /LOG
-		File logDir = manager.getLogDirectory();
+		File logDir = this.dirManager.getLogDirectory();
 		
 		File log = new File(logDir, this.format(this.executionDate.toDate(), LOG_NAME_FORMAT));
 		
 		//Create a file appender to record log events
 		FileAppender fa = new FileAppender(new PatternLayout(
-				this.properties.getLogLayout()), log.getCanonicalPath());
+				this.goesProperties.getLogLayout()), log.getCanonicalPath());
 		
 		//Configure logger append level
 		fa.setThreshold(Level.DEBUG);
@@ -92,7 +97,7 @@ public class AutomateGoes {
 		File props = new File(propertiesPath);
 		Gson gson = new Gson();
 		//Read properties from external JSON file
-		this.properties = gson.fromJson(new FileReader(props),GoesProperties.class);
+		this.goesProperties = gson.fromJson(new FileReader(props),GoesProperties.class);
 	}
 	
 	/**
@@ -100,11 +105,42 @@ public class AutomateGoes {
 	 */
 	public void makeDirs(){
 		logger.info("working dir date " + fromDate);
-		manager.createDirectoriesForDateTime(fromDate);
+		dirManager.createDirectoriesForDateTime(fromDate);
 	}
 	
+	/**
+	 * Performed the downloads
+	 */
 	public void download(){
-		//TODO
+		
+		String absolute = this.getWorkingDirectory().getAbsolutePath();
+		
+		for(Download download : goesProperties.getDownloads()){
+			//ojo
+			DateTime workDate = fromDate.plusDays(download.getDateOffset());
+			
+			Download tempDownload = new Download(download);
+			
+			tempDownload.setUrl(this.format(workDate.toDate(), download.getUrl()) );
+			
+			tempDownload.setSaveLocation(FilenameUtils.concat(absolute, 
+				this.format(workDate.toDate(), download.getSaveLocation())) );
+			
+			Downloader downloader = DownloaderFactory.getDownloader(tempDownload);
+			
+			if(downloader != null){
+				if(downloader.downloadExists()){
+					try{
+						downloader.download();
+					} catch (IOException e){
+						logger.error("Error download "+ download, e);
+					}
+				}
+			}else{
+				logger.error("Couldn't find a downloader for the following download "
+			+ download);
+			}
+		}
 	}
 	
 	/**
@@ -113,7 +149,7 @@ public class AutomateGoes {
 	public void degrib(){
 		File dir = getWorkingDirectory();
 		
-		Degribber degrib = this.properties.getDegribber();		
+		Degribber degrib = this.goesProperties.getDegribber();		
 		degrib.setDegribDirectory(dir);
 		degrib.setOutputDirectory(dir);
 		
@@ -176,7 +212,7 @@ public class AutomateGoes {
 	 * @return The path the working directory.
 	 */
 	public File getWorkingDirectory(){
-		return manager.getDirectory(this.fromDate);
+		return dirManager.getDirectory(this.fromDate);
 	}
 	
 	/**

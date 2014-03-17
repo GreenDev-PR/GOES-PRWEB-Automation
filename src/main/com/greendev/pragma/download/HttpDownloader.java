@@ -44,7 +44,7 @@ public class HttpDownloader implements Downloader {
 	
 	//Check if the URL exits
 	@Override
-	public boolean exists() {
+	public boolean downloadExists() {
 		URL url = null;
 		boolean exists = false; //By default the URL is presummed to not exist
 		try{
