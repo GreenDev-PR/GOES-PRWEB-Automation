@@ -41,17 +41,19 @@ public class RetryDownloader implements Downloader {
 		LogMF.info(logger,"Going to check if download exists for the {0} time", counter);
 
 		while(counter < ATTEMPTS){
-			if(this.downloadExists() == false){
-
+			if(!this.downloader.downloadExists()){
+				counter++;	
 				try {
-					LogMF.info(logger,"Thread going to, counter value {0}",counter);
+					LogMF.info(logger,"Thread going to sleep, counter value {0}",counter);
+					
 					Thread.sleep(WAIT_TIME);
+					
 					LogMF.info(logger,"Thread woke up, counter value: {0}",counter);
 				} catch (InterruptedException e) {
 					LogMF.info(logger,"Thread sleep was interrupted",null);
 					e.printStackTrace();
 				}
-				counter++;	
+				
 			}else{
 				return exists = this.downloadExists();
 			}
