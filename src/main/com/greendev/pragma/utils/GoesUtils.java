@@ -12,19 +12,19 @@ public class GoesUtils {
 	private static final int MILLIS = 1000;
 	
 	/**
-	 * Converts seconds to milli seconds
-	 * @param seconds Value to convert
-	 * @return the value in milliseconds
+	 * Converts seconds to milli seconds.
+	 * @param seconds Value to convert.
+	 * @return the value in milliseconds.
 	 */
 	public static long convertSecondsToMillis(long seconds){
 		return MILLIS * seconds;
 	}
 	
 	/**
-	 * Provides formatting to given string
-	 * @param str The string to format
-	 * @param date The date to format to.
-	 * @return The formatted string
+	 * Provides formatting to given string. 
+	 * @param str The string to be formatted.
+	 * @param date The date include in the string.
+	 * @return The formatted string. 
 	 */
 	public static String stringFormatTime(String str, Date date){
 		str = str.replaceAll("%t","%1\\$t");

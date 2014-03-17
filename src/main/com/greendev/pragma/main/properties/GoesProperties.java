@@ -29,7 +29,6 @@ public class GoesProperties {
 		
 	}
 	
-	
 	public Degribber getDegribber() {
 		return degribber;
 	}
