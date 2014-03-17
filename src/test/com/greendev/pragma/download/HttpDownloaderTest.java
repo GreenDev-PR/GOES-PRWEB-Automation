@@ -42,14 +42,14 @@ public class HttpDownloaderTest extends DownloaderTest {
 	public void testExists() throws IOException {
 		System.out.println("Executing @TestExists Annotation");
 		setDownload("download.json");
-		assertTrue(downloader.exists());
+		assertTrue(downloader.downloadExists());
 	}
 	
 	@Test
 	public void testNotExits() throws FileNotFoundException{
 		setDownload("downloadNotExists.json");
 		System.out.println("Executing @TestNotExists Annotation");
-		assertFalse(downloader.exists());
+		assertFalse(downloader.downloadExists());
 	}
 	
 	@Test

@@ -41,7 +41,7 @@ public class LastDigitsChangerDownloaderTest extends DownloaderTest {
 	public void testNotExists(){
 		System.out.println("@TestNotExists annotation execution");
 		setDownload("downloadNotExists.json");
-		assertFalse(downloader.exists());
+		assertFalse(downloader.downloadExists());
 	}
 	@Test
 	public void testDownload() throws IOException{
