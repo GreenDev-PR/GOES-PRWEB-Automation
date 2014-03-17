@@ -19,14 +19,15 @@ public class RetryDownloaderTest {
 	
 	private static final Logger logger = Logger.getLogger(RetryDownloaderTest.class);
 	private static final int ATTEMPTS = 3;
-	private static final long WAIT_TIME = 2000; // 1 minute
+	private static final long WAIT_TIME = 10*1000; // 10 sec
 	private static Downloader retryDownloader;
 	
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		//Creates non-existent download
 		Download download = new Download();
-		download.setUrl("http://groovy.com/aloja");
+		download.setUrl("http://10.21.35.50:8080");
 		download.setSaveLocation("src/");
 		download.setDownloadType("main.com.greendev.pragma.download.HttpDownloader");
 		download.setDateOffset(0);
