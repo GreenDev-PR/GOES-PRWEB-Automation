@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import main.com.greendev.pragma.database.CsvToModel;
-import main.com.greendev.pragma.database.DBManager;
+import main.com.greendev.pragma.database.DbManager;
 import main.com.greendev.pragma.database.GoesImageFinder;
 import main.com.greendev.pragma.database.databaseModel.GoesVariable;
 
@@ -34,7 +34,7 @@ import org.junit.Test;
  * @author josediaz
  *
  */
-public class DBManagerTest {
+public class DbManagerTest {
 
 	private static final String DELETE_GOES_DATA_RECORDS_QUERY = "DELETE FROM GoesData"; 
 	private static final String DELETE_GOES_MAPS_RECORDS_QUERY = "DELETE FROM GoesMaps"; 
@@ -43,7 +43,7 @@ public class DBManagerTest {
 	private static final String PASSWORD = null;
 	
 	private static Connection conn;
-	private static DBManager dbManager;
+	private static DbManager dbManager;
 	
 	private static String varName;
 	private static File csvFile;
@@ -59,7 +59,7 @@ public class DBManagerTest {
 		//initialize common test dependencies
 		conn = createConnection();
 		System.out.println("Database connection succesfully established");
-		dbManager = new DBManager(conn);
+		dbManager = new DbManager(conn);
 		System.out.println("Created dbManager instance");
 
 		//initialize GoesDataTest dependencies

@@ -30,12 +30,12 @@ import main.com.greendev.pragma.download.HttpDownloader;
  * @author josediaz
  *
  */
-public class DBManager {
+public class DbManager {
 	
 	/**
 	 * Create a Logger 
 	 */
-	private static Logger logger = Logger.getLogger(DBManager.class);
+	private static Logger logger = Logger.getLogger(DbManager.class);
 
 	private static final String GOES_DATA_QUERY = "INSERT INTO " +
 			"goesdata (variableName,matrixRow,matrixColumn,dataValue,dataDate,createdAt,updatedAt) " +
@@ -57,7 +57,7 @@ public class DBManager {
 	/**
 	 * Constructs a DBManager object.
 	 */
-	public DBManager(Connection conn){
+	public DbManager(Connection conn){
 		this.conn = conn;
 	}
 
