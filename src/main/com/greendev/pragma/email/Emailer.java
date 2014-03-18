@@ -78,7 +78,7 @@ public class Emailer {
 	 * @throws EmailException Error sending email.
 	 * @throws MalformedURLException Error creating the URL.
 	 */
-	public void sendEmailWithAttached(String subject, String message, File file) throws EmailException, MalformedURLException{
+	public void sendEmailWithAttachment(String subject, String message, File file) throws EmailException, MalformedURLException{
 		MultiPartEmail email = new MultiPartEmail();
 		initializeEmail(email,subject);
 		email.setMsg(message);

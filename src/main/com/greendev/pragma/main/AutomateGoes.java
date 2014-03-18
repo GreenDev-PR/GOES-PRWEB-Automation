@@ -6,24 +6,33 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Date;
 
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.ExecuteException;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.monitor.FileAlterationObserver;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.mail.EmailException;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
+import org.apache.log4j.LogMF;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
 
+import main.com.greendev.pragma.database.DbManager;
 import main.com.greendev.pragma.degrib.DegribVariable;
 import main.com.greendev.pragma.degrib.Degribber;
 import main.com.greendev.pragma.download.Download;
 import main.com.greendev.pragma.download.Downloader;
 import main.com.greendev.pragma.download.DownloaderFactory;
 import main.com.greendev.pragma.download.RetryDownloader;
+import main.com.greendev.pragma.email.Emailer;
 import main.com.greendev.pragma.main.properties.GoesProperties;
+import main.com.greendev.pragma.main.properties.EmailProperties;
 import main.com.greendev.pragma.utils.GoesUtils;
 /**
  *  
@@ -36,6 +45,7 @@ public class AutomateGoes {
 	private DateTime fromDate;
 	private DateTime executionDate;
 	private DirectoryManager dirManager;
+	private DbManager dbManager;
 	private static final String LOG_NAME_FORMAT = "log_%tY%tm%td.log";
 	private static final Logger logger = Logger.getLogger(AutomateGoes.class);
 	private static final int ATTEMPTS = 3;
@@ -61,6 +71,7 @@ public class AutomateGoes {
 		//Load automation properties
 		this.loadProperties(propertiesPath);
 		this.dirManager = new DirectoryManager(this.goesProperties.getGoesDir());
+		this.dbManager = new DbManager();
 		logger.info("Working Directory " + dirManager.getRootDirectory().getCanonicalPath());
 		this.fromDate = date;
 		this.executionDate = new DateTime();
@@ -172,27 +183,68 @@ public class AutomateGoes {
 	
 	/**
 	 * Run matlab 
+	 * @throws IOException 
+	 * @throws ExecuteException 
 	 */
-	public void matlab(){
-		
+	public void matlab() throws ExecuteException, IOException{
+		CommandLine cmd = CommandLine.parse(goesProperties.getMatlabCmd());
 		//Delete file used as flag for matlab completion
+		DefaultExecutor executor = new DefaultExecutor();
+		executor.setWorkingDirectory(new File(goesProperties.getMatlabWorkingDirectory()));
+		executor.execute(cmd);
 		
 	}
 	
-	public boolean waitForFinishedFile(){
-		return false;
+	public boolean waitForFinishedFile(String directory, String fileName){
+		LogMF.info(logger, "Waiting for file, looking for {0} in {1}",
+				fileName, directory);
+		FileAlterationObserver observer = new FileAlterationObserver(new File(
+				directory));
+		FileCreatedListener listener = new FileCreatedListener(fileName);
+		
+		observer.addListener(listener);
+		long timeToWait = GoesUtils.convertSecondsToMillis(goesProperties.getWaitInterval());
+		int tries = 0;
+		int numberOfTries = properties.getTimesToWait();
+		observer.checkAndNotify();
+		while (!listener.isFoundFile()) {
+			try {
+				Thread.sleep(timeToWait);
+			} catch (InterruptedException ignore) {
+			}
+			if (tries > numberOfTries) {
+				return false;
+			}
+			observer.checkAndNotify();
+
+		}
+
+		return true;
 	}
 	
 	public boolean waitForFile(){
 		return false;
 	}
 	
+	/**
+	 * 
+	 */
 	public void insertToDb(){
 		
 	}
 	
+	/**
+	 * Emails log files to properties specified in the GoesProperties JSON file
+	 * @throws IOException
+	 * @throws EmailException
+	 */
 	public void emailLog() throws IOException, EmailException{
-		
+		File logDirectory = dirManager.getLogDirectory();
+		Emailer emailer = new Emailer(this.goesProperties.getEmail());
+		emailer.sendEmailWithAttachment(
+				"GOES-PRWEB LOG for " + executionDate,
+				"Log",FileUtils.getFile(logDirectory,
+						this.format(executionDate.toDate(), LOG_NAME_FORMAT)));
 	}
 	
 	/**
