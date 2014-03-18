@@ -93,7 +93,7 @@ public class CLI {
 
 			//If start date parameter is "today" set the actual start and end dates to the current date
 			if(cli.getOptionValue("start").equalsIgnoreCase("today")){
-				start = new DateTime().minusDays(1);
+				start = new DateTime();
 				end = start;
 			}else{
 
@@ -120,7 +120,7 @@ public class CLI {
 			LogMF.info(logger, "Going to work from {0} to {1}", start, end);
 
 			AutomateGoes goes = new AutomateGoes(properties);
-			process(start, end, new CompleteProcess(goes), goes);
+			process(start.minusDays(1), end.minusDays(1), new CompleteProcess(goes), goes);
 
 			time.stop();
 			logger.info("Finished in: "+time.toString());
