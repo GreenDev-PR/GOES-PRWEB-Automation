@@ -14,7 +14,7 @@ import org.apache.commons.io.monitor.FileAlterationObserver;
 
 public class FileCreatedListener implements FileAlterationListener {
 
-	public boolean foundFile = false;
+	private boolean foundFile = false;
 	private String fileName;
 	
 	public FileCreatedListener(String filename){
