@@ -68,7 +68,6 @@ public class DbManager {
 	 * @throws SQLException 
 	 */
 	public List<String> readGoesVariables() throws SQLException{
-		GoesVariable varList; //variable list
 		
 		//define resultset handler
 		ResultSetHandler<Object[]> h = new ResultSetHandler<Object[]>() {

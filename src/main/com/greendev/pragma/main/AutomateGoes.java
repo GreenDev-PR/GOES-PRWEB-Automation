@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
@@ -47,6 +49,7 @@ public class AutomateGoes {
 	private DirectoryManager dirManager;
 	private DbManager dbManager;
 	private static final String LOG_NAME_FORMAT = "log_%tY%tm%td.log";
+	private static final String CSV_DATE_FORMAT = "%tY%tm%td";
 	private static final Logger logger = Logger.getLogger(AutomateGoes.class);
 	private static final int ATTEMPTS = 3;
 	private static final long WAIT_TIME = 60*1000; // 1 minute
@@ -195,7 +198,13 @@ public class AutomateGoes {
 		
 	}
 	
-	public boolean waitForFinishedFile(String directory, String fileName){
+	/**
+	 * Waits until a specified file is found in the supplied directory. 
+	 * @param directory The directory in which to look for the file
+	 * @param fileName The file to look for
+	 * @return True, if the file was found
+	 */
+	public boolean waitForFile(String directory, String fileName){
 		LogMF.info(logger, "Waiting for file, looking for {0} in {1}",
 				fileName, directory);
 		FileAlterationObserver observer = new FileAlterationObserver(new File(
@@ -203,18 +212,19 @@ public class AutomateGoes {
 		FileCreatedListener listener = new FileCreatedListener(fileName);
 		
 		observer.addListener(listener);
-		long timeToWait = GoesUtils.convertSecondsToMillis(goesProperties.getWaitInterval());
+		long timeToWait = GoesUtils.convertSecondsToMillis(goesProperties.getFinished().getSeconds());
 		int tries = 0;
-		int numberOfTries = properties.getTimesToWait();
+		int numberOfTries = goesProperties.getFinished().getTries();
 		observer.checkAndNotify();
-		while (!listener.isFoundFile()) {
-			try {
-				Thread.sleep(timeToWait);
-			} catch (InterruptedException ignore) {
-			}
-			if (tries > numberOfTries) {
+		while (!listener.isFileFound()) {
+			tries++;
+			if (tries >= numberOfTries) {
 				return false;
 			}
+			try {
+				Thread.sleep(timeToWait);
+			} catch (InterruptedException ignore) {}
+			
 			observer.checkAndNotify();
 
 		}
@@ -222,18 +232,63 @@ public class AutomateGoes {
 		return true;
 	}
 	
-	public boolean waitForFile(){
-		return false;
+	/**
+	 * Wait for the finished file.
+	 * @return True, if the finished file is found.
+	 */
+	public boolean waitForFinishedFile(){
+		File workingDir = dirManager.getOutputDirectory(this.fromDate);
+		
+		boolean result = this.waitForFile(workingDir.getAbsolutePath(),
+				goesProperties.getFinished().getFileName());
+		if (!result) {
+			logger.error("Couldn't find the matlab file ");
+		}
+		return result;
 	}
 	
 	/**
-	 * 
+	 * Insert to database goes data and
+	 * goes map images
+	 * @throws SQLException 
+	 * @throws FileNotFoundException 
 	 */
 	public void insertToDb(){
-		this.dbManager.storeGoesData(goesVariableName, csvFile, date);
-		this.dbManager.storeGoesMap(variableList, directory, date);
+
+		List<String> goesVariableNameList = null;
+
+		try {
+			goesVariableNameList = this.dbManager.readGoesVariables();
+		} catch (SQLException e) {
+			LogMF.info(logger, "Error reading goesVariable List from database",null);
+			e.printStackTrace();
+		}
+
+		File outFolder = dirManager.getOutputDirectory(this.fromDate);
+
+		for(String variable: goesVariableNameList){
+			String csvName = GoesUtils.stringFormatTime(variable+CSV_DATE_FORMAT, this.fromDate.toDate())+".csv";
+			File csvFile = FileUtils.getFile(outFolder,csvName);
+
+			try {
+				this.dbManager.storeGoesData(variable, csvFile, this.fromDate);
+			} catch (FileNotFoundException e) {
+				LogMF.info(logger, "Error locating csv file",null);
+				e.printStackTrace();
+			} catch (SQLException e) {
+				LogMF.info(logger, "Error storing does data in database",null);
+				e.printStackTrace();
+			}
+
+		}
+
+		try {
+			this.dbManager.storeGoesMap(goesVariableNameList, outFolder, this.fromDate);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
-	
+
 	/**
 	 * Emails log files to properties specified in the GoesProperties JSON file
 	 * @throws IOException
