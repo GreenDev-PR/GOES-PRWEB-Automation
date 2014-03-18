@@ -26,7 +26,7 @@ public class GoesPropertiesToJson {
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.setPrettyPrinting().serializeNulls().create();
 		
-		File output = new File("src/test/com/greendev/pragma/main/properties/goesProperties2.json");
+		File output = new File("src/test/com/greendev/pragma/main/properties/goesProperties.json");
 		FileWriter writer = new FileWriter(output);
 		gson.toJson(properties,writer);
 		IOUtils.closeQuietly(writer);

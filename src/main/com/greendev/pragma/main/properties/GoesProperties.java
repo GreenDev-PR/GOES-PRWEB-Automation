@@ -23,12 +23,13 @@ public class GoesProperties {
 	private List<String> variables;
 	private EmailProperties email;
 	private FinishProperties finished;
-	 
-	
+	private DatabaseProperties database;
+
+
 	public GoesProperties(){
-		
+
 	}
-	
+
 	public Degribber getDegribber() {
 		return degribber;
 	}
@@ -119,7 +120,7 @@ public class GoesProperties {
 	public String getGoesDir() {
 		return goesDir;
 	}
-	
+
 	public FinishProperties getFinished() {
 		return finished;
 	}
@@ -129,6 +130,13 @@ public class GoesProperties {
 		this.finished = finished;
 	}
 
+	public DatabaseProperties getDatabase() {
+		return database;
+	}
+
+	public void setDatabase(DatabaseProperties database) {
+		this.database = database;
+	}
 
 	public void createGoesProperties(){
 		this.degribber = new Degribber();
@@ -136,8 +144,8 @@ public class GoesProperties {
 		this.email = new EmailProperties();
 		this.variables = Collections.emptyList();
 		this.finished = new FinishProperties();
+		this.database = new DatabaseProperties();
 	}
-	
-	
+
 
 }
