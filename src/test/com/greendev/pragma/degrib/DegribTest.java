@@ -29,7 +29,7 @@ public class DegribTest {
 	private final String VARIABLE_NAME = "wind*";
 	private List<Integer> messages;
 	private final String OUTPUT_VARIABLE_NAME = "wind";
-	private String executable = "/Users/miguelgd/Downloads/degrib/bin/degrib";
+	private String executable = "/usr/local/bin/degrib/bin/degrib";
 
 	@Before
 	public void setUp() throws Exception {	
