@@ -71,7 +71,7 @@ public class AutomateGoes {
 		//Load automation properties
 		this.loadProperties(propertiesPath);
 		this.dirManager = new DirectoryManager(this.goesProperties.getGoesDir());
-		this.dbManager = new DbManager();
+		//this.dbManager = new DbManager();
 		logger.info("Working Directory " + dirManager.getRootDirectory().getCanonicalPath());
 		this.fromDate = date;
 		this.executionDate = new DateTime();
@@ -230,7 +230,8 @@ public class AutomateGoes {
 	 * 
 	 */
 	public void insertToDb(){
-		
+		this.dbManager.storeGoesData(goesVariableName, csvFile, date);
+		this.dbManager.storeGoesMap(variableList, directory, date);
 	}
 	
 	/**
