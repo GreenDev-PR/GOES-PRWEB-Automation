@@ -93,8 +93,8 @@ public class CLI {
 
 			//If start date parameter is "today" set the actual start and end dates to the current date
 			if(cli.getOptionValue("start").equalsIgnoreCase("today")){
-				start = new DateTime();
-				end = new DateTime();
+				start = new DateTime().minusDays(1);
+				end = start;
 			}else{
 
 				SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat);
