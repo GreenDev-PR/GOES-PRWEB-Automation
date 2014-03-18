@@ -29,6 +29,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.google.gson.Gson;
+
 /**
  * This class provides testing for two 
  * @author josediaz
@@ -108,6 +110,23 @@ public class DbManagerTest {
 	}
 	
 	/******** Testing methods **********/
+	
+	
+	@Test 
+	public void readGoesDataTest() throws SQLException{
+		System.out.println("Executing @Test - readGoesVariableTest()");
+		
+		List<String> testList = new ArrayList<String>();
+		/*Gson gson = new Gson();
+		gson.fromJson(new FileReader, typeOfT)
+		testList.add(e)*/
+		
+		List<String> resultList = dbManager.readGoesVariables();
+		assertNotNull(resultList);
+		for(String str: resultList)
+			assertTrue(resultList.contains(str));
+		
+	}
 	
 	@Test
 	public void storeGoesDataTest() throws SQLException, FileNotFoundException {

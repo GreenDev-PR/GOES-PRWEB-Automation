@@ -2,27 +2,23 @@ package main.com.greendev.pragma.database;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.Reader;
 import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.sql.Timestamp;
 
-import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
+import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.log4j.LogMF;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 
 import main.com.greendev.pragma.database.databaseModel.GoesMap;
 import main.com.greendev.pragma.database.databaseModel.GoesVariable;
-import main.com.greendev.pragma.download.HttpDownloader;
+
 
 /**
  * DBMananger: Provides communication with database.   
@@ -37,6 +33,9 @@ public class DbManager {
 	 */
 	private static Logger logger = Logger.getLogger(DbManager.class);
 
+	private static final String READ_GOES_VARIABLES_QUERY = "SELECT * FROM GoesVariables";
+	
+	
 	private static final String GOES_DATA_QUERY = "INSERT INTO " +
 			"goesdata (variableName,matrixRow,matrixColumn,dataValue,dataDate,createdAt,updatedAt) " +
 			"VALUES (?,?,?,?,?,?,?)";
@@ -60,6 +59,49 @@ public class DbManager {
 	public DbManager(Connection conn){
 		this.conn = conn;
 	}
+	
+	/**
+	 * Reads goes variables from the GoesVariable table.
+	 * This should be the first method to call when using 
+	 * dbManager class
+	 * @return The list of goes variables found in the database.
+	 * @throws SQLException 
+	 */
+	public List<String> readGoesVariables() throws SQLException{
+		GoesVariable varList; //variable list
+		
+		//define resultset handler
+		ResultSetHandler<Object[]> h = new ResultSetHandler<Object[]>() {
+		    public Object[] handle(ResultSet rs) throws SQLException {
+		
+		       List<Object> list = new ArrayList<Object>();
+		    	while (rs.next()) {
+		        	list.add(rs.getObject("variablename"));
+		    	}
+		    	
+		    	Object[] result = new Object[list.size()];
+		    	int i =0;
+		    	for(Object obj: list){
+		    		result[i] = obj;
+		    		i++;
+		    	}
+		        return result;
+		    }
+		};
+		//System.out.println("Hanlder creation");
+		QueryRunner run = new QueryRunner();
+		
+		System.out.println("Going to run read query");
+		Object[] res = run.query(conn, READ_GOES_VARIABLES_QUERY, h);
+		
+		List<String> resList = new ArrayList<String>();
+		
+		for(Object obj: res){
+			resList.add(""+obj);
+		}
+		
+		return resList;
+	}
 
 	/**
 	 * Stores  GOES variable records in the database.
@@ -73,10 +115,10 @@ public class DbManager {
 
 		//Parse csv data to Goes Variable object
 		//Received collection 
-		LogMF.debug(logger,"Going to parse CsvToModel on the following date {0}",date);
+		LogMF.info(logger,"Going to parse CsvToModel on the following date {0}",date);
 		List<GoesVariable> varList = CsvToModel.parse(goesVariableName, csvFile, date);
 
-		LogMF.debug(logger,"Successfully completed CsvToModel parsing on the following date {0}",date);
+		LogMF.info(logger,"Successfully completed CsvToModel parsing on the following date {0}",date);
 
 		//Counts the number if insertions to be performed based on values !NaN.
 		int insertsCounter = 0;
@@ -106,9 +148,7 @@ public class DbManager {
 				params[row][1] = var.getRow();
 				params[row][2] = var.getColumn();
 				params[row][3] = var.getDataValue();
-				System.out.println("Var DataValue: "+var.getDataDate());
 				params[row][4] = new Timestamp(var.getDataDate().getMillis());
-				System.out.println("Var timestamp version: "+params[row][4]);
 				params[row][5] = timestamp;
 				params[row][6] = timestamp;
 
@@ -121,19 +161,19 @@ public class DbManager {
 		int[] result;
 		//Execute batch inserts
 		try{
-			LogMF.debug(logger,"Database connection for GoesData started at {0}",DateTime.now());
-			LogMF.debug(logger,"Going to execute GoesData batch insertion query",null);
+			LogMF.info(logger,"Database connection for GoesData started at {0}",DateTime.now());
+			LogMF.info(logger,"Going to execute GoesData batch insertion query",null);
 			//Run batch query
 			result = runner.batch(this.conn,GOES_DATA_QUERY,params); 
 
-			LogMF.debug(logger,"Successfully completed GoesData insertion query with {0} new entries",result.length);
+			LogMF.info(logger,"Successfully completed GoesData insertion query with {0} new entries",result.length);
 		
 		}
 		catch(SQLException sqle){
 			sqle.printStackTrace();
 			//logg Erro
 			System.out.println(sqle.getNextException());
-			LogMF.debug(logger,"Error executing batch inserts",null);
+			LogMF.info(logger,"Error executing batch inserts",null);
 			throw sqle;
 		} 
 
@@ -152,9 +192,9 @@ public class DbManager {
 		
 		GoesImageFinder mapFinder = new GoesImageFinder();
 
-		LogMF.debug(logger,"Going to find GoesMaps for the following date {0}",date);
+		LogMF.info(logger,"Going to find GoesMaps for the following date {0}",date);
 		List<GoesMap> mapList = mapFinder.getMapsForDate(date, directory, variableList);
-		LogMF.debug(logger,"Succesfully found GoesMaps with the following date {0}",date);
+		LogMF.info(logger,"Succesfully found GoesMaps with the following date {0}",date);
 
 		Object[][] params = new Object[mapList.size()][GOES_MAPS_TABLE_INSERT_REQUIRED_COLUMNS];
 		int row = 0;
@@ -176,15 +216,15 @@ public class DbManager {
 		int[] result;
 		
 		try{
-			LogMF.debug(logger,"Database connection for GoesMaps started at {0}",DateTime.now());
-			LogMF.debug(logger,"Going to execue GoesMap batch insertion query",null);
+			LogMF.info(logger,"Database connection for GoesMaps started at {0}",DateTime.now());
+			LogMF.info(logger,"Going to execue GoesMap batch insertion query",null);
 			
 			result = runner.batch(this.conn, GOES_MAP_QUERY, params);
-			LogMF.debug(logger,"Successfully completed GoesMap batch insertion query",null);
+			LogMF.info(logger,"Successfully completed GoesMap batch insertion query",null);
 			
 		}catch(SQLException sqle){
 			sqle.printStackTrace();
-			LogMF.debug(logger, "Error inserting Goes Maps into database",null);
+			LogMF.info(logger, "Error inserting Goes Maps into database",null);
 			throw sqle;
 			
 		}
