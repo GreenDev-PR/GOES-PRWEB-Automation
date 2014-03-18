@@ -37,7 +37,7 @@ import main.com.greendev.pragma.main.properties.GoesProperties;
 import main.com.greendev.pragma.main.properties.EmailProperties;
 import main.com.greendev.pragma.utils.GoesUtils;
 /**
- *  
+ * AutomateGoes
  * @author josediaz
  *
  */
@@ -115,6 +115,7 @@ public class AutomateGoes {
 		Gson gson = new Gson();
 		//Read properties from external JSON file
 		this.goesProperties = gson.fromJson(new FileReader(props),GoesProperties.class);
+		System.out.println("loadPRoperties(): "+this.goesProperties.getGoesDir());
 	}
 	
 	/**
@@ -267,7 +268,8 @@ public class AutomateGoes {
 		File outFolder = dirManager.getOutputDirectory(this.fromDate);
 
 		for(String variable: goesVariableNameList){
-			String csvName = GoesUtils.stringFormatTime(variable+CSV_DATE_FORMAT, this.fromDate.toDate())+".csv";
+			String csvName = GoesUtils.stringFormatTime(variable+CSV_DATE_FORMAT, 
+					this.fromDate.toDate())+".csv";
 			File csvFile = FileUtils.getFile(outFolder,csvName);
 
 			try {
@@ -279,7 +281,6 @@ public class AutomateGoes {
 				LogMF.info(logger, "Error storing does data in database",null);
 				e.printStackTrace();
 			}
-
 		}
 
 		try {
@@ -317,6 +318,14 @@ public class AutomateGoes {
 	 */
 	public void setDate(DateTime start) {
 		this.fromDate = start;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public GoesProperties getGoesProperties(){
+		return this.goesProperties;
 	}
 	
 	/**

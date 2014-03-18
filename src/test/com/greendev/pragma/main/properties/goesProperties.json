@@ -1,18 +1,81 @@
 {
   "degribber": {
     "variables": [
-      { "name":"airtemp*.bin","messages":[3,5,6],"outputName":"airtemp_degrib_%tY%tm%td" },
-      { "name":"dewpoint*.bin","messages":[2,3,4,5,6,7,8,9],"outputName":"dewpoint_degrib_%tY%tm%td" },
-      { "name":"wind*.bin","messages":[2,3,4,5,6,7,8,9],"outputName":"dewpoint_degrib_%tY%tm%td" }
-      ],
-    "executable": null
+      {
+        "name": "airtemp*.bin",
+        "outputName": "airtemp_degrib_%tY%tm%td",
+        "messages": [
+          3,
+          5,
+          6
+        ]
+      },
+      {
+        "name": "dewpoint*.bin",
+        "outputName": "dewpoint_degrib_%tY%tm%td",
+        "messages": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      {
+        "name": "wind*.bin",
+        "outputName": "dewpoint_degrib_%tY%tm%td",
+        "messages": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      }
+    ],
+    "executable": null,
+    "outputDirectory": null,
+    "degribDirectory": null,
+    "map": {}
   },
-  "downloads": [{"url":"http://nomads.ncdc.noaa.gov/data/ndfd/%tY%tm/%tY%tm%td/YCAZ98_KWBN_%tY%tm%td00", "saveIn":"wind_%tY%tm%td.bin", "dateOffset":0, "downloaderClass":"edu.uprm.ece.hydroclimate.download.LastDigitsChangerDownloader"},
-        {"url":"http://nomads.ncdc.noaa.gov/data/ndfd/%tY%tm/%tY%tm%td/YEAZ98_KWBN_%tY%tm%td00", "saveIn":"airtemp_%tY%tm%td.bin", "dateOffset":0, "downloaderClass":"edu.uprm.ece.hydroclimate.download.LastDigitsChangerDownloader"},
-        {"url":"http://nomads.ncdc.noaa.gov/data/ndfd/%tY%tm/%tY%tm%td/YFAZ98_KWBN_%tY%tm%td00", "saveIn":"dewpoint_%tY%tm%td.bin", "dateOffset":0, "downloaderClass":"edu.uprm.ece.hydroclimate.download.LastDigitsChangerDownloader"},
-        {"url":"http://water.weather.gov/precip/p_download_new/%tY/%tm/%td/nws_precip_1day_observed_shape_%tY%tm%td.tar.gz", "saveIn":"precip_%tY%tm%td.tar.gz", "dateOffset":1, "downloaderClass":"edu.uprm.ece.hydroclimate.download.HttpDownloader"},
-        {"url":"http://academic.uprm.edu/hdc/solar/INSOLRICO.%tY%tj.gz", "saveIn":"solar_%tY%tm%td.tar.gz", "dateOffset":0, "downloaderClass":"edu.uprm.ece.hydroclimate.download.HttpDownloader"}
-        ],
+  "downloads": [
+    {
+      "url": "http://nomads.ncdc.noaa.gov/data/ndfd/%tY%tm/%tY%tm%td/YCAZ98_KWBN_%tY%tm%td00",
+      "saveLocation": null,
+      "dateOffset": 0,
+      "downloadClass": null
+    },
+    {
+      "url": "http://nomads.ncdc.noaa.gov/data/ndfd/%tY%tm/%tY%tm%td/YEAZ98_KWBN_%tY%tm%td00",
+      "saveLocation": null,
+      "dateOffset": 0,
+      "downloadClass": null
+    },
+    {
+      "url": "http://nomads.ncdc.noaa.gov/data/ndfd/%tY%tm/%tY%tm%td/YFAZ98_KWBN_%tY%tm%td00",
+      "saveLocation": null,
+      "dateOffset": 0,
+      "downloadClass": null
+    },
+    {
+      "url": "http://water.weather.gov/precip/p_download_new/%tY/%tm/%td/nws_precip_1day_observed_shape_%tY%tm%td.tar.gz",
+      "saveLocation": null,
+      "dateOffset": 1,
+      "downloadClass": null
+    },
+    {
+      "url": "http://academic.uprm.edu/hdc/solar/INSOLRICO.%tY%tj.gz",
+      "saveLocation": null,
+      "dateOffset": 0,
+      "downloadClass": null
+    }
+  ],
   "goesDir": "./src/test/resources/GOES-PRWEB/DAILY_DATA/",
   "matlabCmd": null,
   "matlabWorkingDirectory": null,
