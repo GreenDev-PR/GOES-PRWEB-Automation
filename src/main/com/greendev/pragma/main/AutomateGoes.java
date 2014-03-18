@@ -42,7 +42,7 @@ import main.com.greendev.pragma.utils.GoesUtils;
  *
  */
 public class AutomateGoes {
-	
+
 	private GoesProperties goesProperties;
 	private DateTime fromDate;
 	private DateTime executionDate;
@@ -53,7 +53,7 @@ public class AutomateGoes {
 	private static final Logger logger = Logger.getLogger(AutomateGoes.class);
 	private static final int ATTEMPTS = 3;
 	private static final long WAIT_TIME = 60*1000; // 1 minute
-	
+
 	/**
 	 * Constructs an automate goes object from a supplied propertiesPath
 	 * @param propertiesPath The location of the properties file
@@ -80,7 +80,7 @@ public class AutomateGoes {
 		this.executionDate = new DateTime();
 		this.configureFileAppender();
 	}
-	
+
 	/**
 	 * Configures log file management. 
 	 * @throws IOException Error handling files.
@@ -88,23 +88,23 @@ public class AutomateGoes {
 	public void configureFileAppender() throws IOException{
 		//Create log directory e.g. /LOG
 		File logDir = this.dirManager.getLogDirectory();
-		
+
 		File log = new File(logDir, this.format(this.executionDate.toDate(), LOG_NAME_FORMAT));
-		
+
 		//Create a file appender to record log events
 		FileAppender fa = new FileAppender(new PatternLayout(
 				this.goesProperties.getLogLayout()), log.getCanonicalPath());
-		
+
 		//Configure logger append level
 		fa.setThreshold(Level.DEBUG);
-		
+
 		fa.setAppend(false);
 		//File is actually opened
 		fa.activateOptions();
-		
+
 		Logger.getRootLogger().addAppender(fa);
 	}
-	
+
 	/**
 	 * Loads automation properties values from external JSON file.
 	 * @param propertiesPath The location of the external JSON automation properties file
@@ -115,9 +115,8 @@ public class AutomateGoes {
 		Gson gson = new Gson();
 		//Read properties from external JSON file
 		this.goesProperties = gson.fromJson(new FileReader(props),GoesProperties.class);
-		System.out.println("loadPRoperties(): "+this.goesProperties.getGoesDir());
 	}
-	
+
 	/**
 	 * Creates directory structure for supplied date
 	 */
@@ -125,28 +124,30 @@ public class AutomateGoes {
 		logger.info("working dir date " + fromDate);
 		dirManager.createDirectoriesForDateTime(fromDate);
 	}
-	
+
 	/**
 	 * Performed the downloads
 	 */
 	public void download(){
-	
+
 		String absolute = this.getWorkingDirectory().getAbsolutePath();
-		
+
 		for(Download download : goesProperties.getDownloads()){
-			//ojo
-			DateTime workDate = fromDate.plusDays(download.getDateOffset());
-			
+			//By convention one must add te offset of the download
+			// 
+			DateTime workDate = this.fromDate.plusDays(download.getDateOffset());
+
 			Download tempDownload = new Download(download);
-			
+
 			tempDownload.setUrl(this.format(workDate.toDate(), download.getUrl()) );
-			
+
 			tempDownload.setSaveLocation(FilenameUtils.concat(absolute, 
-				this.format(workDate.toDate(), download.getSaveLocation())) );
-			
+					this.format(workDate.toDate(), download.getSaveLocation())) );
+
 			Downloader downloader = DownloaderFactory.getDownloader(tempDownload);
-			
+
 			if(downloader != null){
+				//Retry downloader integrates retry attempts mechanisms
 				Downloader retryDownloader = new RetryDownloader(downloader, ATTEMPTS, WAIT_TIME);
 				if(retryDownloader.downloadExists()){
 					try{
@@ -157,21 +158,21 @@ public class AutomateGoes {
 				}
 			}else{
 				logger.error("Couldn't find a downloader for the following download "
-			+ download);
+						+ download);
 			}
 		}
 	}
-	
+
 	/**
 	 * Degribs the downloaded data
 	 */
 	public void degrib(){
 		File dir = getWorkingDirectory();
-		
+
 		Degribber degrib = this.goesProperties.getDegribber();		
 		degrib.setDegribDirectory(dir);
 		degrib.setOutputDirectory(dir);
-		
+
 		for (DegribVariable variable : degrib.getVariables()) {
 			variable.setOutputName(this.format(this.fromDate.toDate(), variable.getOutputName()) );
 		}
@@ -184,7 +185,7 @@ public class AutomateGoes {
 		}
 
 	}
-	
+
 	/**
 	 * Run matlab 
 	 * @throws IOException 
@@ -196,9 +197,8 @@ public class AutomateGoes {
 		DefaultExecutor executor = new DefaultExecutor();
 		executor.setWorkingDirectory(new File(goesProperties.getMatlabWorkingDirectory()));
 		executor.execute(cmd);
-		
 	}
-	
+
 	/**
 	 * Waits until a specified file is found in the supplied directory. 
 	 * @param directory The directory in which to look for the file
@@ -206,18 +206,21 @@ public class AutomateGoes {
 	 * @return True, if the file was found
 	 */
 	public boolean waitForFile(String directory, String fileName){
-		LogMF.info(logger, "Waiting for file, looking for {0} in {1}",
-				fileName, directory);
-		FileAlterationObserver observer = new FileAlterationObserver(new File(
-				directory));
+
+		LogMF.info(logger, "Waiting for file, looking for {0} in {1}",fileName, directory);
+
+		FileAlterationObserver observer = new FileAlterationObserver(new File(directory));
 		FileCreatedListener listener = new FileCreatedListener(fileName);
-		
 		observer.addListener(listener);
+
 		long timeToWait = GoesUtils.convertSecondsToMillis(goesProperties.getFinished().getSeconds());
 		int tries = 0;
 		int numberOfTries = goesProperties.getFinished().getTries();
+		
 		observer.checkAndNotify();
 		while (!listener.isFileFound()) {
+			LogMF.debug(logger, "Listener value: {0}", listener.isFileFound());
+			LogMF.debug(logger, "Waiting for {0} file, tries_variable value = {1}",fileName,tries);
 			tries++;
 			if (tries >= numberOfTries) {
 				return false;
@@ -225,21 +228,19 @@ public class AutomateGoes {
 			try {
 				Thread.sleep(timeToWait);
 			} catch (InterruptedException ignore) {}
-			
+
 			observer.checkAndNotify();
-
 		}
-
 		return true;
 	}
-	
+
 	/**
 	 * Wait for the finished file.
 	 * @return True, if the finished file is found.
 	 */
 	public boolean waitForFinishedFile(){
 		File workingDir = dirManager.getOutputDirectory(this.fromDate);
-		
+
 		boolean result = this.waitForFile(workingDir.getAbsolutePath(),
 				goesProperties.getFinished().getFileName());
 		if (!result) {
@@ -247,7 +248,7 @@ public class AutomateGoes {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Insert to database goes data and
 	 * goes map images
@@ -303,7 +304,7 @@ public class AutomateGoes {
 				"Log",FileUtils.getFile(logDirectory,
 						this.format(executionDate.toDate(), LOG_NAME_FORMAT)));
 	}
-	
+
 	/**
 	 * Gets the date from which to start collecting data.
 	 * @return The date from which to start collecting data.
@@ -319,7 +320,7 @@ public class AutomateGoes {
 	public void setDate(DateTime start) {
 		this.fromDate = start;
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -327,7 +328,7 @@ public class AutomateGoes {
 	public GoesProperties getGoesProperties(){
 		return this.goesProperties;
 	}
-	
+
 	/**
 	 * Gets the path to the working directory.
 	 * @return The path the working directory.
@@ -335,7 +336,7 @@ public class AutomateGoes {
 	public File getWorkingDirectory(){
 		return dirManager.getDirectory(this.fromDate);
 	}
-	
+
 	/**
 	 * Provides string formatting 
 	 * @param date 
