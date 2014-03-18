@@ -90,31 +90,27 @@ public class AutomateGoesTest {
 		
 		long taskTimer = 5000;
 		Timer timer = new Timer();
-		timer.schedule(new CreateFileTask(), taskTimer);	
-		
-		//This should run for at least 60ms.
-		result = goes.waitForFile(directory, fileName);
-		//Timer should activate after 20ms so at its 2nd or 3rd try.
-		assertTrue(result);
-	}
+		//create timertaks
+		timer.schedule(new TimerTask(){
 
-	/**
-	 * Task
-	 * @author josediaz
-	 *
-	 */
-	private class CreateFileTask extends TimerTask{
-
-		@Override
-		public void run() {
-			System.out.println("TASK - Writting file..");
-			File file = new File(WAIT_FOR_FILE_DIR + WAIT_FOR_FILE_FILENAME);
-			try {
-				FileUtils.touch(file);
-			} catch (IOException e1) {
-				e1.printStackTrace();
+			@Override
+			public void run() {
+				File file = new File(WAIT_FOR_FILE_DIR + WAIT_FOR_FILE_FILENAME);
+				try {
+					FileUtils.touch(file);
+					LogMF.debug(logger, "TASK - Writting file...",null);
+				} catch (IOException e1) {
+					LogMF.debug(logger, "ERROR on TimerTask - Writting file.",null);
+					e1.printStackTrace();
+				}
 			}
-		}
+			
+		}, taskTimer);	
+		
+		//This should run for at least 20seconds.
+		result = goes.waitForFile(directory, fileName);
+		//Timer should activate after 5seconds.
+		assertTrue(result);
 	}
 
 }
