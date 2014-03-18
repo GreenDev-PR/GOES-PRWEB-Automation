@@ -60,6 +60,8 @@ public class CsvToModel {
 			}
 			rowNum--;
 		}
+		
+		logger.info("Finished parsing csv into GoesVariable objects size: "+output.size());
 
 		return output;
 	}

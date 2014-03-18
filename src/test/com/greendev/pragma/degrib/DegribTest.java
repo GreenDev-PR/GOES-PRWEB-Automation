@@ -1,5 +1,3 @@
-//TODO: Implement test to validate that Grib files are returned for a given variable and that the files are read using Degrib executable
-
 package test.com.greendev.pragma.degrib;
 
 import static org.junit.Assert.*;
@@ -17,6 +15,12 @@ import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+/**
+ * Tests the Degribber and DegribVariable classes
+ * @author miguelgd
+ *
+ */
 
 public class DegribTest {
 
@@ -52,7 +56,9 @@ public class DegribTest {
 
 	}
 
-
+	/**
+	 * Tests that the files for a given variable are returned
+	 */
 	@Test
 	public void testFilesForVariableFound(){
 		Collection<File> results = degrib.getGribFiles(variable);
@@ -60,6 +66,10 @@ public class DegribTest {
 		assertEquals(COUNT_OF_WIND_FILES, results.size());
 	}
 
+	/**
+	 * Tests that the variables are degribed to csv and that the 
+	 * csv contains the actual values
+	 */
 	@Test
 	public void testDegribVariables(){
 		try {

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 
 import main.com.greendev.pragma.database.databaseModel.GoesMap;
@@ -18,6 +19,8 @@ import main.com.greendev.pragma.database.databaseModel.GoesMap;
 public class GoesImageFinder {
 
 	List<GoesMap> maps;
+	
+	private static final Logger logger = Logger.getLogger(GoesImageFinder.class);
 
 	/**
 	 * Generates the list of populated GoesMap objects
@@ -35,6 +38,8 @@ public class GoesImageFinder {
 			GoesMap map = new GoesMap(variable,date,imagePath);
 			maps.add(map);
 		}
+		
+		logger.info("Finished generating list of GoesMaps, for database insertion size: "+maps.size());
 		
 		return maps;
 	}
