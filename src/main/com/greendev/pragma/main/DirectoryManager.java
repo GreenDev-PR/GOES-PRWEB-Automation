@@ -91,9 +91,10 @@ public class DirectoryManager {
 	
 	public boolean archiveDataForCurrentDate(DateTime date) throws IOException{
 		File currentDir = getDirectory(date);
+		DateTime currentDate = new DateTime();
 		boolean createArchive = currentDir.list().length > 0;
 		if(currentDir.list().length > 0){	
-			File newArchive = new File(currentDir,"Archive "+date);
+			File newArchive = new File(currentDir,"Archive "+currentDate);
 			FileUtils.copyDirectory(currentDir, newArchive);
 			String[] toDelete = newArchive.list(new WildcardFileFilter("Archive*"));
 			for(int i = 0; i < toDelete.length; i++){

@@ -65,10 +65,20 @@ public class DirectoryManagerTest {
 	
 	@Test
 	public void testArchiving() {
+		FileUtils.deleteQuietly(new File(rootDirectory));
+		manager = new DirectoryManager(rootDirectory);
 		try {
-			assertTrue(manager.archiveDataForCurrentDate(date));
+			assertFalse(manager.archiveDataForCurrentDate(date));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error: Could not create archive");
+			e.printStackTrace();
+		}
+		manager.createDirectoriesForDateTime(date);
+		try {
+			boolean archived = manager.archiveDataForCurrentDate(date);
+			assertTrue(archived);
+		} catch (IOException e) {
+			System.out.println("Error: Could not create archive");
 			e.printStackTrace();
 		}
 	}
