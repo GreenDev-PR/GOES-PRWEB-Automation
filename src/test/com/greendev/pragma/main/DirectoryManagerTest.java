@@ -3,6 +3,8 @@ package test.com.greendev.pragma.main;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.IOException;
+
 import main.com.greendev.pragma.main.DirectoryManager;
 
 import org.apache.commons.io.FileUtils;
@@ -59,6 +61,16 @@ public class DirectoryManagerTest {
 	public void testOutputDirectory() {
 		File file = manager.getOutputDirectory(date);
 		assertTrue(file.exists());
+	}
+	
+	@Test
+	public void testArchiving() {
+		try {
+			assertTrue(manager.archiveDataForCurrentDate(date));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -1,7 +1,10 @@
 package main.com.greendev.pragma.main;
 
 import java.io.File;
+import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.joda.time.DateTime;
 
 /**
@@ -84,6 +87,22 @@ public class DirectoryManager {
 		File dir = new File(rootDirectory,formatted);
 		create(dir);
 		return dir;
+	}
+	
+	public boolean archiveDataForCurrentDate(DateTime date) throws IOException{
+		File currentDir = getDirectory(date);
+		boolean createArchive = currentDir.list().length > 0;
+		if(currentDir.list().length > 0){	
+			File newArchive = new File(currentDir,"Archive "+date);
+			FileUtils.copyDirectory(currentDir, newArchive);
+			String[] toDelete = newArchive.list(new WildcardFileFilter("Archive*"));
+			for(int i = 0; i < toDelete.length; i++){
+				FileUtils.deleteQuietly(new File(newArchive,toDelete[i]));
+			}
+		}
+		
+		return createArchive;
+		
 	}
 }
 
