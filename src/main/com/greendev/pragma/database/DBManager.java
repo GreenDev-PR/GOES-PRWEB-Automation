@@ -135,7 +135,6 @@ public class DbManager {
 		//Initialize parameter matrix with NOT NaN
 		Object[][] params = new Object[insertsCounter][GOES_DATA_TABLE_INSERT_REQUIRED_COLUMNS];
 
-
 		int row=0;
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		
