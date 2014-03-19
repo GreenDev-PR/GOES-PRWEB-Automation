@@ -37,15 +37,14 @@ public class AutomateGoesTest {
 	private static final String PROPERTIES_PATH = "src/test/com/greendev/pragma/main/properties/goesProperties.json";
 	private static final String PROPERTIES_PATH_TEST_RESULT = "src/test/com/greendev/pragma/main/properties/" +
 																					"goesProperties2.json";
-	public static final String WAIT_FOR_FILE_DIR = "src/test/";
-	public static final String WAIT_FOR_FILE_FILENAME = "waitTest.txt";
+	private static final String WAIT_FOR_FILE_DIR = "src/test/resources/";
+	private static final String WAIT_FOR_FILE_FILENAME = "waitTest.txt";
 	private static int WAIT_FOR_FILE_SECONDS;
 	private static AutomateGoes goes;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		DateTime date = new DateTime();
-		goes = new AutomateGoes(PROPERTIES_PATH,date);
+		goes = new AutomateGoes(PROPERTIES_PATH, new DateTime());
 		WAIT_FOR_FILE_SECONDS = goes.getGoesProperties().getFinished().getSeconds();
 		LogMF.debug(logger, "Wait for file time value: ", WAIT_FOR_FILE_SECONDS);
 	}
@@ -62,7 +61,7 @@ public class AutomateGoesTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-
+	
 	@Test
 	public void loadGoesPropertiesTest() throws SQLException, IOException {
 		GsonBuilder builder = new GsonBuilder();
@@ -78,19 +77,18 @@ public class AutomateGoesTest {
 	}
 	
 	@Test
-	public void waitForFile() throws InterruptedException{
+	public void waitForFileTest() throws InterruptedException{
 		boolean result = false;
-		long createFileTimeInMilliseconds = GoesUtils.convertSecondsToMillis(WAIT_FOR_FILE_SECONDS);
 		
 		String directory = WAIT_FOR_FILE_DIR;
 		String fileName = WAIT_FOR_FILE_FILENAME;
 		LogMF.debug(logger, "Running AutomateGoes - waitForFile({0},{1}). \n" +
-				"Properties - waitTime: {2}ms, tries: {3}",directory,fileName,createFileTimeInMilliseconds,
+				"Properties - waitTime: {2}ms, tries: {3}",directory,fileName,GoesUtils.convertSecondsToMillis(WAIT_FOR_FILE_SECONDS),
 				goes.getGoesProperties().getFinished().getTries());
 		
 		long taskTimer = 5000;
 		Timer timer = new Timer();
-		//create timertaks
+		//Anonymous TimerTask
 		timer.schedule(new TimerTask(){
 
 			@Override
@@ -111,6 +109,11 @@ public class AutomateGoesTest {
 		result = goes.waitForFile(directory, fileName);
 		//Timer should activate after 5seconds.
 		assertTrue(result);
+	}
+	
+	@Test
+	public void emailLogTest(){
+		
 	}
 
 }

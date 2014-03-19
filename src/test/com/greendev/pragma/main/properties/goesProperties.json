@@ -82,11 +82,11 @@
   "logLayout": "%r [%t] %p %c %x - %m%n",
   "variables": [],
   "email": {
-    "from": null,
-    "to": null,
-    "password": null,
-    "hostname": null,
-    "port": 0
+    "from": "jrd.palacios@gmail.com",
+    "to": "jrd.palacios@gmail.com",
+    "password": "",
+    "hostname": "smtp.googlemail.com",
+    "port": "465"
   },
   "finished": {
     "fileName": "finish.mat",

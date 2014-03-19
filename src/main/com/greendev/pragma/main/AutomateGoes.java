@@ -43,16 +43,16 @@ import main.com.greendev.pragma.utils.GoesUtils;
  */
 public class AutomateGoes {
 
-	private GoesProperties goesProperties;
-	private DateTime fromDate;
-	private DateTime executionDate;
-	private DirectoryManager dirManager;
-	private DbManager dbManager;
 	private static final String LOG_NAME_FORMAT = "log_%tY%tm%td.log";
 	private static final String CSV_DATE_FORMAT = "%tY%tm%td";
 	private static final Logger logger = Logger.getLogger(AutomateGoes.class);
 	private static final int ATTEMPTS = 3;
 	private static final long WAIT_TIME = 60*1000; // 1 minute
+	private GoesProperties goesProperties;
+	private DateTime fromDate;
+	private DateTime executionDate;
+	private DirectoryManager dirManager;
+	private DbManager dbManager;
 
 	/**
 	 * Constructs an automate goes object from a supplied propertiesPath
@@ -92,17 +92,17 @@ public class AutomateGoes {
 		File log = new File(logDir, this.format(this.executionDate.toDate(), LOG_NAME_FORMAT));
 
 		//Create a file appender to record log events
-		FileAppender fa = new FileAppender(new PatternLayout(
+		FileAppender fileAppender = new FileAppender(new PatternLayout(
 				this.goesProperties.getLogLayout()), log.getCanonicalPath());
 
 		//Configure logger append level
-		fa.setThreshold(Level.DEBUG);
+		fileAppender.setThreshold(Level.DEBUG);
 
-		fa.setAppend(false);
+		fileAppender.setAppend(false);
 		//File is actually opened
-		fa.activateOptions();
+		fileAppender.activateOptions();
 
-		Logger.getRootLogger().addAppender(fa);
+		Logger.getRootLogger().addAppender(fileAppender);
 	}
 
 	/**
@@ -133,8 +133,7 @@ public class AutomateGoes {
 		String absolute = this.getWorkingDirectory().getAbsolutePath();
 
 		for(Download download : goesProperties.getDownloads()){
-			//By convention one must add te offset of the download
-			// 
+			//By convention one must add the offset of the download
 			DateTime workDate = this.fromDate.plusDays(download.getDateOffset());
 
 			Download tempDownload = new Download(download);
@@ -147,7 +146,7 @@ public class AutomateGoes {
 			Downloader downloader = DownloaderFactory.getDownloader(tempDownload);
 
 			if(downloader != null){
-				//Retry downloader integrates retry attempts mechanisms
+				//RetryDownloader integrates retry attempts mechanisms
 				Downloader retryDownloader = new RetryDownloader(downloader, ATTEMPTS, WAIT_TIME);
 				if(retryDownloader.downloadExists()){
 					try{
@@ -322,8 +321,8 @@ public class AutomateGoes {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Gets the GoesProperties object.
+	 * @return The generated from JSON GoesProperties .
 	 */
 	public GoesProperties getGoesProperties(){
 		return this.goesProperties;
