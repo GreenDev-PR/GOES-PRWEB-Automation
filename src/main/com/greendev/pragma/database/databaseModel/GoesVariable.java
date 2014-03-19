@@ -15,6 +15,8 @@ public class GoesVariable {
 	private int column;
 	private Double dataValue;	
 	
+	public GoesVariable(){};
+	
 	public GoesVariable(String variableName, DateTime dataDate, int row,
 			int column, Double dataValue) {
 		this.variableName = variableName;
