@@ -13,7 +13,6 @@ public class EmailProperties {
 	private int port;
 
 	public EmailProperties() {
-		super();
 	}
 
 	public String getFrom() {
@@ -54,10 +53,6 @@ public class EmailProperties {
 
 	public void setHostname(String hostname) {
 		this.hostname = hostname;
-	}
-
-	public static void main(String[] args) {
-
 	}
 
 }

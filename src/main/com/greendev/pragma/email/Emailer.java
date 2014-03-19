@@ -80,7 +80,7 @@ public class Emailer {
 	 */
 	public void sendEmailWithAttachment(String subject, String message, File file) throws EmailException, MalformedURLException{
 		MultiPartEmail email = new MultiPartEmail();
-		initializeEmail(email,subject);
+		this.initializeEmail(email,subject);
 		email.setMsg(message);
 		email.attach(file.toURI().toURL(), file.getName(), "goes-file");
 		email.send();
