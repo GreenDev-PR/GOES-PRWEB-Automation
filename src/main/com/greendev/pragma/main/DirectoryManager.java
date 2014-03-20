@@ -88,12 +88,18 @@ public class DirectoryManager {
 		create(dir);
 		return dir;
 	}
-	
+	/**
+	 * Creates an archive folder with the name Archive+Timestamp
+	 * if there was data already in the date's directory
+	 * @param date date for which algorithm is running
+	 * @return true if an archive was created, false otherwise
+	 * @throws IOException
+	 */
 	public boolean archiveDataForCurrentDate(DateTime date) throws IOException{
 		File currentDir = getDirectory(date);
 		DateTime currentDate = new DateTime();
 		boolean createArchive = currentDir.list().length > 0;
-		if(currentDir.list().length > 0){	
+		if(createArchive){	
 			File newArchive = new File(currentDir,"Archive "+currentDate);
 			FileUtils.copyDirectory(currentDir, newArchive);
 			String[] toDelete = newArchive.list(new WildcardFileFilter("Archive*"));
