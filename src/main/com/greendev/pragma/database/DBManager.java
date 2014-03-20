@@ -11,7 +11,6 @@ import java.sql.Timestamp;
 
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
-import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.log4j.LogMF;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
@@ -36,15 +35,13 @@ public class DbManager {
 	private static final String READ_GOES_VARIABLES_QUERY = "SELECT * FROM GoesVariables";
 	
 	
-	private static final String GOES_DATA_QUERY = "INSERT INTO " +
+	private static final String INSERT_GOES_DATA_QUERY = "INSERT INTO " +
 			"goesdata (variableName,matrixRow,matrixColumn,dataValue,dataDate,createdAt,updatedAt) " +
 			"VALUES (?,?,?,?,?,?,?)";
-	
 	private static final int GOES_DATA_TABLE_INSERT_REQUIRED_COLUMNS = 7;
 	
-	private static final String GOES_MAP_QUERY = "INSERT INTO GoesMaps" +
+	private static final String INSERT_GOES_MAP_QUERY = "INSERT INTO GoesMaps" +
 			" (variableName,imagePath,dataDate,createdAt,updatedAt) VALUES (?,?,?,?,?)";
-	
 	private static final int GOES_MAPS_TABLE_INSERT_REQUIRED_COLUMNS = 5;
 	
 
@@ -75,7 +72,7 @@ public class DbManager {
 		
 		       List<Object> list = new ArrayList<Object>();
 		    	while (rs.next()) {
-		        	list.add(rs.getObject("variablename"));
+		        	list.add(rs.getObject("variablename"));	
 		    	}
 		    	
 		    	Object[] result = new Object[list.size()];
@@ -84,6 +81,7 @@ public class DbManager {
 		    		result[i] = obj;
 		    		i++;
 		    	}
+		    	list = null;
 		        return result;
 		    }
 		};
@@ -162,7 +160,7 @@ public class DbManager {
 			LogMF.info(logger,"Database connection for GoesData started at {0}",DateTime.now());
 			LogMF.info(logger,"Going to execute GoesData batch insertion query",null);
 			//Run batch query
-			result = runner.batch(this.conn,GOES_DATA_QUERY,params); 
+			result = runner.batch(this.conn,INSERT_GOES_DATA_QUERY,params); 
 
 			LogMF.info(logger,"Successfully completed GoesData insertion query with {0} new entries",result.length);
 		
@@ -217,7 +215,7 @@ public class DbManager {
 			LogMF.info(logger,"Database connection for GoesMaps started at {0}",DateTime.now());
 			LogMF.info(logger,"Going to execue GoesMap batch insertion query",null);
 			
-			result = runner.batch(this.conn, GOES_MAP_QUERY, params);
+			result = runner.batch(this.conn, INSERT_GOES_MAP_QUERY, params);
 			LogMF.info(logger,"Successfully completed GoesMap batch insertion query",null);
 			
 		}catch(SQLException sqle){
