@@ -4,7 +4,7 @@ import main.com.greendev.pragma.main.AutomateGoes;
 
 /**
  * GoesProcess abstract
- * @author josediaz
+ * @author miguelgd
  *
  */
 public abstract class GoesProcess implements Runnable {

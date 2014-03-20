@@ -6,7 +6,7 @@ import main.com.greendev.pragma.main.AutomateGoes;
 
 /**
  * Goes process
- * @author josediaz
+ * @author miguelgd
  *
  */
 public class CompleteProcess extends GoesProcess {
@@ -24,14 +24,7 @@ public class CompleteProcess extends GoesProcess {
 		goes.makeDirs();
 		goes.download();
 		goes.degrib();
-		try {
-			goes.matlab();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			logger.error("IOException while running Matlab");
-			e.printStackTrace();
-		}
-
+		goes.matlab();
 		if(goes.waitForFinishedFile())
 			goes.insertToDb();
 	}
