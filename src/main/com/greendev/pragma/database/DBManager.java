@@ -169,7 +169,7 @@ public class DbManager {
 			sqle.printStackTrace();
 			//logg Erro
 			System.out.println(sqle.getNextException());
-			LogMF.info(logger,"Error executing batch inserts",null);
+			LogMF.error(logger,"Error executing batch inserts",null);
 			throw sqle;
 		} 
 
@@ -220,7 +220,7 @@ public class DbManager {
 			
 		}catch(SQLException sqle){
 			sqle.printStackTrace();
-			LogMF.info(logger, "Error inserting Goes Maps into database",null);
+			LogMF.error(logger, "Error inserting Goes Maps into database",null);
 			throw sqle;
 			
 		}

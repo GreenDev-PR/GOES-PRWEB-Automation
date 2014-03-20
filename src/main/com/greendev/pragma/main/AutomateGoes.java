@@ -126,7 +126,7 @@ public class AutomateGoes {
 		try {
 			dirManager.archiveDataForCurrentDate(fromDate);
 		} catch (IOException e) {
-			LogMF.info(logger, "Error archiving old files", null);
+			LogMF.error(logger, "Error archiving old files", null);
 			e.printStackTrace();
 		}
 		//If directory hierarchy is absent, created. If not do nothing.
@@ -282,7 +282,7 @@ public class AutomateGoes {
 		try {
 			goesVariableNameList = this.dbManager.readGoesVariables();
 		} catch (SQLException e) {
-			LogMF.info(logger, "Error reading goesVariable List from database",null);
+			LogMF.error(logger, "Error reading goesVariable List from database",null);
 			e.printStackTrace();
 		}
 
@@ -296,10 +296,10 @@ public class AutomateGoes {
 			try {
 				this.dbManager.storeGoesData(variable, csvFile, this.fromDate);
 			} catch (FileNotFoundException e) {
-				LogMF.info(logger, "Error locating csv file",null);
+				LogMF.error(logger, "Error locating csv file",null);
 				e.printStackTrace();
 			} catch (SQLException e) {
-				LogMF.info(logger, "Error storing does data in database",null);
+				LogMF.error(logger, "Error storing does data in database",null);
 				e.printStackTrace();
 			}
 		}

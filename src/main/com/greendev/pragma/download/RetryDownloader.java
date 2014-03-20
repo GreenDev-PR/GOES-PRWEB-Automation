@@ -50,7 +50,7 @@ public class RetryDownloader implements Downloader {
 					
 					LogMF.info(logger,"Thread woke up, counter value: {0}",counter);
 				} catch (InterruptedException e) {
-					LogMF.info(logger,"Thread sleep was interrupted",null);
+					LogMF.error(logger,"Thread sleep was interrupted",null);
 					e.printStackTrace();
 				}
 				

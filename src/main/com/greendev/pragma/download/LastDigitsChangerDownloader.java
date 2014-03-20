@@ -85,7 +85,7 @@ public class LastDigitsChangerDownloader implements Downloader {
 	 */
 	private URL getValidUrl(){
 		String url = download.getUrl(); //extract the URL to download
-		LogMF.debug(logger, "Got the following url to validate {0}", url); //log 
+		LogMF.info(logger, "Got the following url to validate {0}", url); //log 
 		if(url == null){ 
 			//URL is not provided in download
 			return null;
@@ -95,13 +95,14 @@ public class LastDigitsChangerDownloader implements Downloader {
 			//Check which minute is iteratively 
 			
 			String tempUrl = url + String.format("%02d", i); //Append minute URL portion of the string.
-			//System.out.println(tempUrl);
+		
 			try{
 				workingUrl = new URL(tempUrl);
 			}catch(MalformedURLException e){
 				// do nothing when malformed
+				logger.error("Going to verify the following url: "+workingUrl.toExternalForm());
 			}
-			LogMF.debug(logger, "Going to verify the following url {0}", workingUrl.toExternalForm());
+			LogMF.info(logger, "Going to verify the following url {0}", workingUrl.toExternalForm());
 			
 			//verify that the current, not malformed, URL actually exists
 			if(HttpUtils.urlExists(workingUrl)){ 

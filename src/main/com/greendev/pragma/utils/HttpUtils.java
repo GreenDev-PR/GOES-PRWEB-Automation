@@ -41,8 +41,7 @@ public class HttpUtils {
 			
 		}catch(IOException e){
 			//write to log
-			LogMF.debug(logger, "Exception trying to verify the url {0}", e);
-			
+			logger.error("Exception trying to verify the url: "+url.toExternalForm());
 		}finally{
 			if(conn != null){
 				conn.disconnect(); //close connection
@@ -59,7 +58,7 @@ public class HttpUtils {
 	 * @throws IOException - thrown if I/O Exception occurs
 	 */
 	public static void downloadToFile(URL url, File file) throws IOException{
-		LogMF.debug(logger, "Going to download from {0}", url.toExternalForm());
+		LogMF.info(logger, "Going to download from {0}", url.toExternalForm());
 		FileUtils.copyURLToFile(url, file);
 		logger.debug("Downloaded");
 	}

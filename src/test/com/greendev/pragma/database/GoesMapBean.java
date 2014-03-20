@@ -5,7 +5,11 @@ import java.sql.Timestamp;
 import main.com.greendev.pragma.database.databaseModel.GoesMap;
 
 import org.joda.time.DateTime;
-
+/**
+ * GoesMap bean wrapper class
+ * @author josediaz
+ *
+ */
 public class GoesMapBean {
 
 	private String variableName;
