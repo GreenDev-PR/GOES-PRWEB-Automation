@@ -122,6 +122,14 @@ public class AutomateGoes {
 	 */
 	public void makeDirs(){
 		logger.info("working dir date " + fromDate);
+		//If data exists for given date, archive it.
+		try {
+			dirManager.archiveDataForCurrentDate(fromDate);
+		} catch (IOException e) {
+			LogMF.info(logger, "Error archiving old files", null);
+			e.printStackTrace();
+		}
+		//If directory hierarchy is absent, created. If not do nothing.
 		dirManager.createDirectoriesForDateTime(fromDate);
 	}
 
@@ -190,12 +198,25 @@ public class AutomateGoes {
 	 * @throws IOException 
 	 * @throws ExecuteException 
 	 */
-	public void matlab() throws ExecuteException, IOException{
+	public void matlab(){
 		CommandLine cmd = CommandLine.parse(goesProperties.getMatlabCmd());
+		
 		//Delete file used as flag for matlab completion
+		File finishedMatFile = new File(this.dirManager.getOutputDirectory(fromDate),
+				this.goesProperties.getFinished().getFileName());
+		FileUtils.deleteQuietly(finishedMatFile);
+		
 		DefaultExecutor executor = new DefaultExecutor();
 		executor.setWorkingDirectory(new File(goesProperties.getMatlabWorkingDirectory()));
-		executor.execute(cmd);
+		try {
+			executor.execute(cmd);
+		} catch (ExecuteException e) {
+			logger.error("Error executing matlab");
+			e.printStackTrace();
+		} catch (IOException e) {
+			logger.error("Error getting matlab working directory");
+			e.printStackTrace();
+		}
 	}
 
 	/**
