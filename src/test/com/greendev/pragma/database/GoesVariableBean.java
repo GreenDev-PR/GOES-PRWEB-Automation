@@ -19,8 +19,10 @@ public class GoesVariableBean {
 	
 	public GoesVariableBean(){
 	}
+	
 	public GoesVariableBean(GoesVariable var){
 		this.variableName = var.getVariableName();
+		//Addresses PostgresSQL inability to infer Joda's DateTime as Timestamp.
 		this.dataDate = new Timestamp(var.getDataDate().getMillis());
 		this.row = var.getRow();
 		this.column = var.getColumn();
@@ -73,11 +75,12 @@ public class GoesVariableBean {
 		}
 		if(this.getClass() != other.getClass()){
 			return false;
-		}
-		return this.variableName.equals( ((GoesVariableBean)other).getVariableName()) && 
-			this.row == ((GoesVariableBean)other).getRow() 
-				&& this.column == ((GoesVariableBean)other).getColumn() && 
-				this.dataValue.equals( ((GoesVariableBean)other).getDataValue() );
+		} 
+		return this.variableName.equals( ((GoesVariableBean) other).getVariableName())
+				&& this.row == ((GoesVariableBean)other).getRow() 
+				&& this.column == ((GoesVariableBean)other).getColumn()
+				&& this.dataValue.equals( ((GoesVariableBean)other).getDataValue()) 
+				&& this.dataDate.equals( ((GoesVariableBean)other).getDataDate()) ;
 		
 	}
 	

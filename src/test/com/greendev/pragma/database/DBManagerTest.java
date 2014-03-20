@@ -19,6 +19,7 @@ import java.util.Map;
 import main.com.greendev.pragma.database.CsvToModel;
 import main.com.greendev.pragma.database.DbManager;
 import main.com.greendev.pragma.database.GoesImageFinder;
+import main.com.greendev.pragma.database.databaseModel.GoesMap;
 import main.com.greendev.pragma.database.databaseModel.GoesVariable;
 
 import org.apache.commons.dbutils.BasicRowProcessor;
@@ -51,8 +52,11 @@ public class DbManagerTest {
 	private static final String READ_GOES_MAPS = "SELECT * FROM GoesMaps";
 
 	private static  Map<String,String> map;
-	private static  BeanProcessor processor;
+	private static  BeanProcessor goesDataBeanProcessor;
 
+	private static  Map<String,String> map2;
+	private static  BeanProcessor goesMapsBeanProcessor;
+	
 	private static final String USERNAME = "postgres";
 	private static final String PASSWORD = null;
 
@@ -78,7 +82,10 @@ public class DbManagerTest {
 
 		//initialize GoesDataIntegrityTest dependencies
 		initializeGoesDataIntegrityDependencies();
-
+		
+		//initialize GoesMapsIntegrityTest dependencies
+		initializeGoesMapsIntegrityDependencies();
+		
 		//initialize GoesDataTest dependencies
 		initializeGoesDataTestDependancies();
 
@@ -121,11 +128,20 @@ public class DbManagerTest {
 		map.put("matrixcolumn", "column");
 		map.put("datavalue", "dataValue");
 		map.put("datadate",  "dataDate");
-		processor = new BeanProcessor(map);
+		goesDataBeanProcessor = new BeanProcessor(map);
+	}
+	
+	private static void initializeGoesMapsIntegrityDependencies(){
+		//Setup Map Bean Processor
+		map2 = new HashMap<String,String>();
+		map2.put("variablename", "variableName");
+		map2.put("imagepath", "imagePath");
+		map2.put("datadate",  "dataDate");
+		goesMapsBeanProcessor = new BeanProcessor(map2);
 	}
 
 	/************* Testing methods **************/
-	//@Test 
+	@Test 
 	public void readGoesDataTest() throws SQLException{
 		System.out.println("Executing @Test - readGoesVariableTest()");
 
@@ -163,13 +179,13 @@ public class DbManagerTest {
 	public void storeGoesMapsTest() throws SQLException{
 		System.out.println("Executing @Test - storeGoesMapsTest()");
 		int inserts = dbManager.storeGoesMap(varNameList, mapDir, date);
-		
+
 		assertTrue(inserts == varNameList.size());
 	}
 
 	@Test
-	public void verifyDataInserted() throws FileNotFoundException, SQLException{
-
+	public void verifyGoesDataDbIntegrity() throws FileNotFoundException, SQLException{
+		System.out.println("Executing @Test - verifyGoesDataDbIntegrity");
 		//Resultset Handler
 		ResultSetHandler<Object[]> h = new ResultSetHandler<Object[]>(){
 			Object[] result = new Object[dbManager.storeGoesData(varName, csvFile, date)];
@@ -180,7 +196,7 @@ public class DbManagerTest {
 				GoesVariableBean row = null;
 				//Create JavaBeans of each GoesVariable
 				while(rs.next()){
-					row = processor.toBean(rs, GoesVariableBean.class);
+					row = goesDataBeanProcessor.toBean(rs, GoesVariableBean.class);
 					result[i] = row;
 					i++;
 				}   
@@ -194,7 +210,7 @@ public class DbManagerTest {
 		Object[] beanArray = run.query(conn, READ_GOES_DATA, h);
 
 		/****************************************************************************
-		 * Simulate the insertion method with data extracted directly from CSV file
+		 * Collect the insertion method data extracted directly from CSV file
 		 ****************************************************************************/
 		//Read data from csv is compared Vs. data inserted in db.
 		//However, data inserted by the DbManager class, is
@@ -218,9 +234,48 @@ public class DbManagerTest {
 		//Compare for member filtered CSV data to query result data.
 		//This verifies data integrity
 		for(int i=0; i<NaNFilteredCSVData.size(); i++){
-		//	System.out.println("Bean: "+beanArray[i]);
-		//	System.out.println("CSV: "+NaNFilteredCSVData.get(i));
+			//	System.out.println("Bean: "+beanArray[i]);
+			//	System.out.println("CSV: "+NaNFilteredCSVData.get(i));
 			assertTrue(NaNFilteredCSVData.contains(beanArray[i]));
+		}
+	}
+
+	@Test
+	public void verifyGoesMapsDbDataIntegrity() throws SQLException{
+		System.out.println("Executing @Test - verifyGoesMapsDbdataIntegrity");
+		//Resultset Handler
+		ResultSetHandler<Object[]> h = new ResultSetHandler<Object[]>(){
+			Object[] result = new Object[dbManager.storeGoesMap(varNameList, mapDir, date)];
+
+			public Object[] handle(ResultSet rs) throws SQLException {
+
+				int i = 0;
+				GoesMapBean row = null;
+				//Create JavaBeans of each GoesVariable
+				while(rs.next()){
+					row = goesMapsBeanProcessor.toBean(rs, GoesMapBean.class);
+					result[i] = row;
+					i++;
+				}   
+				return result;
+			}
+		};
+		
+		QueryRunner run = new QueryRunner();
+		Object[] readMaps = run.query(conn, READ_GOES_MAPS, h);
+		
+		GoesImageFinder mapFinder = new GoesImageFinder();
+		
+		//Collect maps from directory
+		List<GoesMap> fsMaps = mapFinder.getMapsForDate(date, mapDir, varNameList);
+		//Convert maps from dirtory to Bean Representation
+		List<GoesMapBean> fsMapsBean = new ArrayList<GoesMapBean>();
+		for(GoesMap map : fsMaps){
+			fsMapsBean.add(new GoesMapBean(map));
+		}
+		//Comparison
+		for(int i=0; i<readMaps.length; i++){
+			assertTrue(fsMapsBean.contains(readMaps[i]));
 		}
 	}
 
@@ -249,6 +304,4 @@ public class DbManagerTest {
 		System.out.println("Database connection for GoesMaps closed on: "+new Timestamp(System.currentTimeMillis()));
 
 	}
-
-
 }
