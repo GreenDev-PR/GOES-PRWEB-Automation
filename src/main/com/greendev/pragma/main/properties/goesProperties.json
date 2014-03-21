@@ -74,7 +74,7 @@
     }
   ],
   "goesDir": "./src/test/resources/GOES-PRWEB/DAILY_DATA/",
-  "matlabCmd": null,
+  "matlabCmd": "matlab /r ",
   "matlabWorkingDirectory": null,
   "logLayout": "%r [%t] %p %c %x - %m%n",
   "variables": [],
