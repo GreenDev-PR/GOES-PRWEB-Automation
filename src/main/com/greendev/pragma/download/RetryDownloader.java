@@ -56,7 +56,9 @@ public class RetryDownloader implements Downloader {
 				
 			}else{
 				LogMF.info(logger, "Found download located at #{0} try",counter);
-				return exists = this.downloadExists();
+				//return exists = this.downloadExists();
+				exists = true;
+				return exists;
 			}
 		}
 
