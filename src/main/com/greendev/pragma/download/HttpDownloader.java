@@ -49,12 +49,12 @@ public class HttpDownloader implements Downloader {
 		boolean exists = false; //By default the URL is presummed to not exist
 		try{
 			url = new URL(download.getUrl());
-			LogMF.debug(logger,"Going to verify if the following url exists {0}",url);
+			LogMF.info(logger,"Going to verify if the following url exists {0}",url);
 			//verify if URL exists
 			exists = HttpUtils.urlExists(url);
 		} catch (MalformedURLException e){
 			//URL does not exist
-			LogMF.debug(logger,"Malformed url {0}",url);
+			logger.error("Malformed url: "+url);
 		}
 		return exists;
 	}
@@ -63,7 +63,7 @@ public class HttpDownloader implements Downloader {
 	public File download() throws IOException {
 		File destination = new File(download.getSaveLocation());
 		URL url = new URL(download.getUrl());
-		LogMF.debug(
+		LogMF.info(
 				logger,
 				"Going to download the following url {0} saving it in {1}",
 				url, destination.getAbsolutePath());
