@@ -45,7 +45,7 @@ public class AutomateGoes {
 
 	private static final String LOG_NAME_FORMAT = "log_%tY%tm%td.log";
 	private static final String CSV_DATE_FORMAT = "%tY%tm%td";
-	private static final String MATLAB_CMD_FORMAT = "'%tm/%td/%tY';";
+	private static final String MATLAB_CMD_FORMAT = "date='%tm/%td/%tY';";
 	private static final Logger logger = Logger.getLogger(AutomateGoes.class);
 	private static final int ATTEMPTS = 3;
 	private static final long WAIT_TIME = 60*1000; // 1 minute
