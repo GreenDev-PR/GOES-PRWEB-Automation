@@ -45,6 +45,7 @@ public class AutomateGoes {
 
 	private static final String LOG_NAME_FORMAT = "log_%tY%tm%td.log";
 	private static final String CSV_DATE_FORMAT = "%tY%tm%td";
+	private static final String MATLAB_CMD_FORMAT = "'%tm/%td/%tY';";
 	private static final Logger logger = Logger.getLogger(AutomateGoes.class);
 	private static final int ATTEMPTS = 3;
 	private static final long WAIT_TIME = 60*1000; // 1 minute
@@ -199,8 +200,10 @@ public class AutomateGoes {
 	 * @throws ExecuteException 
 	 */
 	public void matlab(){
-		CommandLine cmd = CommandLine.parse(goesProperties.getMatlabCmd());
-		
+		String command = goesProperties.getMatlabCmd() +  '"'+this.format(this.fromDate.toDate(),MATLAB_CMD_FORMAT)+'"';
+		System.out.println("Printing command! "+command);
+		CommandLine cmd = CommandLine.parse(command);
+		System.out.println("Printign parsed command! "+cmd);
 		//Delete file used as flag for matlab completion
 		File finishedMatFile = new File(this.dirManager.getOutputDirectory(fromDate),
 				this.goesProperties.getFinished().getFileName());
