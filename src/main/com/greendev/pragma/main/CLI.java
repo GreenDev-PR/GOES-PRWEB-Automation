@@ -56,13 +56,15 @@ public class CLI {
 	public static void main(String[] args)
 			throws ParseException, IOException, org.apache.commons.cli.ParseException, EmailException {
 
+		String[] params = {"-properties","/Users/miguelgd/Desktop/goesProperties.json","-start","today"};
+
 		//Create options object to receive params from command line
 		Options options = createOptions();
 
 		//Create the command line parser, to extract parameters
 		CommandLineParser parser = new PosixParser();
 		//Extract parameters from args into options
-		CommandLine cli = parser.parse(options, args);
+		CommandLine cli = parser.parse(options, params);
 		final String dateFormat = "yyyy/MM/dd";
 
 		DateTime start = null;
@@ -76,55 +78,61 @@ public class CLI {
 		if(!cli.hasOption("properties")){
 			logger.error("Missing required parameter for properties file.");
 			System.exit(1);
-		//If a start date other than today is specified without an end date, finish execution with error code
+			//If no start or end day is specified, finish execution with error code
+		}else if((!cli.hasOption("start") && !cli.hasOption("end"))){
+			logger.error("Missing start date and end date.");
+			System.exit(1);
+			//If an end date is not specified and start date is not today, finish execution with error code
 		}else if((cli.hasOption("start") && !cli.hasOption("end"))){
+			System.out.println("inside has today not end");
 			if(!cli.getOptionValue("start").equalsIgnoreCase("today")){
 				logger.error("Missing end date when specifying range.");
 				System.exit(1);
 			}
-		//If a end date is specified without a start date, finish execution with error code
+			//If a end date is specified without a start date, finish execution with error code
 		}else if((!cli.hasOption("start") && cli.hasOption("end"))){
 			logger.error("Missing start date when specifying range.");
 			System.exit(1);
+		}
+
+		System.out.println("inside last else");
+		//Get path to properties file
+		String properties = cli.getOptionValue("properties");
+
+		//If start date parameter is "today" set the actual start and end dates to the current date
+		if(cli.getOptionValue("start").equalsIgnoreCase("today")){
+			System.out.println("in today conditional");
+			start = new DateTime();
+			end = start;
 		}else{
 
-			//Get path to properties file
-			String properties = cli.getOptionValue("properties");
+			SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat);
+			String startOptionValue = cli.getOptionValue("start");
+			String endOptionValue = cli.getOptionValue("end");
+			start = new DateTime(dateFormatter.parse(startOptionValue));
+			end = new DateTime(dateFormatter.parse(endOptionValue));
 
-			//If start date parameter is "today" set the actual start and end dates to the current date
-			if(cli.getOptionValue("start").equalsIgnoreCase("today")){
-				start = new DateTime();
-				end = start;
-			}else{
-
-				SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat);
-				String startOptionValue = cli.getOptionValue("start");
-				String endOptionValue = cli.getOptionValue("end");
-				start = new DateTime(dateFormatter.parse(startOptionValue));
-				end = new DateTime(dateFormatter.parse(endOptionValue));
-
-				//Error out if either start or end date is after today
-				if(start.isAfterNow() || end.isAfterNow()){
-					logger.error("Invalid dates: after current date (today)");
-					System.exit(1);
-				}
-
-				//Error out if start date is after end date
-				if(start.isAfter(end)){
-					logger.error("Invalid dates: start date is after end date ");
-					System.exit(1);
-				}
-
+			//Error out if either start or end date is after today
+			if(start.isAfterNow() || end.isAfterNow()){
+				logger.error("Invalid dates: after current date (today)");
+				System.exit(1);
 			}
 
-			LogMF.info(logger, "Going to work from {0} to {1}", start, end);
+			//Error out if start date is after end date
+			if(start.isAfter(end)){
+				logger.error("Invalid dates: start date is after end date ");
+				System.exit(1);
+			}
 
-			AutomateGoes goes = new AutomateGoes(properties);
-			process(start.minusDays(1), end.minusDays(1), new CompleteProcess(goes), goes);
-
-			time.stop();
-			logger.info("Finished in: "+time.toString());
 		}
+
+		LogMF.info(logger, "Going to work from {0} to {1}", start, end);
+
+		AutomateGoes goes = new AutomateGoes(properties);
+		process(start.minusDays(1), end.minusDays(1), new CompleteProcess(goes), goes);
+
+		time.stop();
+		logger.info("Finished in: "+time.toString());
 	}
 
 	/**
