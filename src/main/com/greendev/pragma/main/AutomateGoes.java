@@ -179,7 +179,7 @@ public class AutomateGoes {
 
 		Degribber degrib = this.goesProperties.getDegribber();		
 		degrib.setDegribDirectory(dir);
-		degrib.setOutputDirectory(dir);
+		degrib.setOutputDirectory(this.dirManager.getInputDirectory(fromDate));
 
 		for (DegribVariable variable : degrib.getVariables()) {
 			variable.setOutputName(this.format(this.fromDate.toDate(), variable.getOutputName()) );
