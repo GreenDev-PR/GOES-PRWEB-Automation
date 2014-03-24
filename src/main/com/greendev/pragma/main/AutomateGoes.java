@@ -239,22 +239,18 @@ public class AutomateGoes {
 		long timeToWait = GoesUtils.convertSecondsToMillis(goesProperties.getFinished().getSeconds());
 		int tries = 0;
 		int numberOfTries = goesProperties.getFinished().getTries();
+		boolean found = false;
 		
-		observer.checkAndNotify();
-		while (!listener.isFileFound()) {
-			LogMF.debug(logger, "Listener value: {0}", listener.isFileFound());
-			LogMF.debug(logger, "Waiting for {0} file, tries_variable value = {1}",fileName,tries);
+		while (!found && numberOfTries >= tries) {
+			observer.checkAndNotify(); 		//verify for file existance
+			found = listener.isFileFound(); //update found value
+			LogMF.info(logger, "Matlab end file isFoundValue: {0}, attempValue: {1}",found,tries);
 			tries++;
-			if (tries >= numberOfTries) {
-				return false;
-			}
 			try {
 				Thread.sleep(timeToWait);
 			} catch (InterruptedException ignore) {}
-
-			observer.checkAndNotify();
 		}
-		return true;
+		return found;
 	}
 
 	/**
@@ -268,6 +264,8 @@ public class AutomateGoes {
 				goesProperties.getFinished().getFileName());
 		if (!result) {
 			logger.error("Couldn't find the matlab file ");
+		}else{
+			logger.info("Matlab end file found!");
 		}
 		return result;
 	}
