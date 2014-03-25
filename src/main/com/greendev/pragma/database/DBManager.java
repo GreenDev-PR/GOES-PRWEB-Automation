@@ -1,3 +1,5 @@
+//TODO: Verify insertion of updatedAt & createdAt values
+//TODO: Inserting NaN values???
 package main.com.greendev.pragma.database;
 
 import java.io.File;
@@ -88,7 +90,7 @@ public class DbManager {
 		//System.out.println("Hanlder creation");
 		QueryRunner run = new QueryRunner();
 		
-		System.out.println("Going to run read query");
+		logger.info("Reading GoesVariable TABLE");
 		Object[] res = run.query(conn, READ_GOES_VARIABLES_QUERY, h);
 		
 		List<String> resList = new ArrayList<String>();
@@ -96,7 +98,7 @@ public class DbManager {
 		for(Object obj: res){
 			resList.add(""+obj);
 		}
-		
+		logger.info("Succesfully read " +resList.size() + " variables from GoesVariable Table");
 		return resList;
 	}
 
@@ -163,12 +165,8 @@ public class DbManager {
 			result = runner.batch(this.conn,INSERT_GOES_DATA_QUERY,params); 
 
 			LogMF.info(logger,"Successfully completed GoesData insertion query with {0} new entries",result.length);
-		
 		}
 		catch(SQLException sqle){
-			sqle.printStackTrace();
-			//logg Erro
-			System.out.println(sqle.getNextException());
 			LogMF.error(logger,"Error executing batch inserts",null);
 			throw sqle;
 		} 
@@ -203,7 +201,7 @@ public class DbManager {
 			params[row][2] = new Timestamp(map.getDataDate().getMillis());
 			params[row][3] = timestamp;
 			params[row][4] = timestamp;
-			//System.out.println("Printing record: "+params[row][0]+ " " + params[row][1] + " "+params[row][2]+ " " +params[row][3] + " " +params[row][4]);
+		
 			row++;
 		}
 		
@@ -219,7 +217,6 @@ public class DbManager {
 			LogMF.info(logger,"Successfully completed GoesMap batch insertion query",null);
 			
 		}catch(SQLException sqle){
-			sqle.printStackTrace();
 			LogMF.error(logger, "Error inserting Goes Maps into database",null);
 			throw sqle;
 			
