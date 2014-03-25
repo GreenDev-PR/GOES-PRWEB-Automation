@@ -110,7 +110,7 @@ public class Download {
 		/**
 		 * Sets the download type.
 		 */
-		public void setDownloadType(String downloadClass) {
+		public void setDownloadClass(String downloadClass) {
 			this.downloadClass = downloadClass;
 		}
 }

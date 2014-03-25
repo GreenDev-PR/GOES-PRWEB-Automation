@@ -1,8 +1,7 @@
+//TODO: Verify <?> statement
 package main.com.greendev.pragma.download;
 
 import org.apache.log4j.Logger;
-
-//import apache
 
 /**
  * Determines the type of downloader required for the specified download.

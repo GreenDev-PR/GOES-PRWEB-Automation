@@ -1,3 +1,4 @@
+//TODO: confirm lastdigitchanger range
 package main.com.greendev.pragma.download;
 
 import java.io.File;
@@ -74,7 +75,7 @@ public class LastDigitsChangerDownloader implements Downloader {
 		LogMF.info(logger, "Downloading from url {0}", url.toExternalForm());
 		HttpUtils.downloadToFile(url, destination);
 		this.url = null;
-		//System.out.println("Currently Downloading: "+url );
+	
 		return destination;
 	}
 	
@@ -106,7 +107,7 @@ public class LastDigitsChangerDownloader implements Downloader {
 			//verify that the current, not malformed, URL actually exists
 			if(HttpUtils.urlExists(workingUrl)){ 
 				LogMF.info(logger, "Confirmed url {0} existance", workingUrl.toExternalForm());
-				//System.out.println("Printing working URL: "+workingUrl);
+				
 				return workingUrl;
 			}
 		}

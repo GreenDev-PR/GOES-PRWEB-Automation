@@ -2,21 +2,18 @@ package main.com.greendev.pragma.download;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import org.apache.log4j.LogMF;
 import org.apache.log4j.Logger;
 
 /**
- * Decorator
+ * RetryDownloader provides re-attempt feature for apparent non existent downloads.
+ * The re-attempt mechanism is blocking. Follows Decorator Design Pattern.
  * @author josediaz
  *
  */
 public class RetryDownloader implements Downloader {
 
-	private static Logger logger = Logger.getLogger(RetryDownloader.class);
-	//60*60*1000;  
+	private static Logger logger = Logger.getLogger(RetryDownloader.class);  
 	private long WAIT_TIME;
 	private int ATTEMPTS;
 	private Downloader downloader;
@@ -56,7 +53,7 @@ public class RetryDownloader implements Downloader {
 				
 			}else{
 				LogMF.info(logger, "Found download located at #{0} try",counter);
-				//return exists = this.downloadExists();
+			
 				exists = true;
 				return exists;
 			}
