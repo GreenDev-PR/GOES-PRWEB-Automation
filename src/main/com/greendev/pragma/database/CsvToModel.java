@@ -19,6 +19,7 @@ import main.com.greendev.pragma.database.databaseModel.GoesVariable;
 
 public class CsvToModel {
 
+	//Maximum number of rows in csv matrix (0-100)
 	private static final int MAXIMUM_ROW_NUMBER = 100;
 	private static CSVReader reader;
 
@@ -37,7 +38,7 @@ public class CsvToModel {
 		try {
 			reader = new CSVReader(csv);
 		} catch (FileNotFoundException e) {
-			logger.error("File not found when initializing CSVReader");
+			logger.error("File not found when initializing CSVReader. File: "+csv.getName());
 			throw new FileNotFoundException();
 		}
 
