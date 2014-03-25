@@ -63,7 +63,7 @@ public class LastDigitsChangerDownloader implements Downloader {
 	
 	@Override
 	public File download() throws IOException {
-		System.out.println("Executing LastDigitFinder download()");
+		logger.info("Executing LastDigitChangerDownlaoder download method...");
 		//Check if URL exists 
 		if(this.url == null){
 			if(!downloadExists()){ 
