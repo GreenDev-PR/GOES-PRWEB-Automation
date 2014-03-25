@@ -1,3 +1,6 @@
+//TODO: Verify and correct degrib command (e.g. csv, paths and messages)
+//TODO: Size of byte buffer
+
 package main.com.greendev.pragma.degrib;
 
 import java.io.ByteArrayInputStream;
@@ -20,7 +23,8 @@ import org.apache.log4j.Logger;
 
 public class Degribber {
 
-/**
+	
+	/**
  * Degribs Grib files using provided executable.
  * Requires the specification of the input and output directories.
  * 
