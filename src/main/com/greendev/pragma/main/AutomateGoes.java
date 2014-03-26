@@ -1,9 +1,12 @@
+//TODO: Test download()
 package main.com.greendev.pragma.main;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
@@ -14,7 +17,6 @@ import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.monitor.FileAlterationObserver;
-import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.mail.EmailException;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
@@ -34,10 +36,11 @@ import main.com.greendev.pragma.download.DownloaderFactory;
 import main.com.greendev.pragma.download.RetryDownloader;
 import main.com.greendev.pragma.email.Emailer;
 import main.com.greendev.pragma.main.properties.GoesProperties;
-import main.com.greendev.pragma.main.properties.EmailProperties;
 import main.com.greendev.pragma.utils.GoesUtils;
+import main.com.greendev.pragma.main.DirectoryManager;
 /**
- * AutomateGoes
+ * AutomateGoes class is a top level class that leverages individual packages
+ * to provide functionality of the program. 
  * @author josediaz
  *
  */
@@ -49,11 +52,13 @@ public class AutomateGoes {
 	private static final Logger logger = Logger.getLogger(AutomateGoes.class);
 	private static final int ATTEMPTS = 3;
 	private static final long WAIT_TIME = 60*1000; // 1 minute
+	private static final int MATLAB_ATTEMPTS = 2; //Number of times to attempt to run Matlab
 	private GoesProperties goesProperties;
 	private DateTime fromDate;
 	private DateTime executionDate;
 	private DirectoryManager dirManager;
 	private DbManager dbManager;
+	private Connection conn;
 
 	/**
 	 * Constructs an automate goes object from a supplied propertiesPath
@@ -74,12 +79,41 @@ public class AutomateGoes {
 	public AutomateGoes(String propertiesPath, DateTime date) throws IOException {
 		//Load automation properties
 		this.loadProperties(propertiesPath);
+		
+		//Create database connection
+		try {
+			String url = "jdbc:postgresql://"
+					+goesProperties.getDatabase().getHost() + ":" 
+					+goesProperties.getDatabase().getPort() + "/"
+					+goesProperties.getDatabase().getDatabase();
+			String username = goesProperties.getDatabase().getUsername();
+			String password = goesProperties.getDatabase().getPassword();
+			
+			this.conn = DriverManager.getConnection(url,username,password);
+			logger.info("Created database connection for url: "+url);
+		} catch (SQLException e) {
+			logger.error("Errror trying to connect to database", e);
+		}
+		
+		this.dbManager = new DbManager(conn);
 		this.dirManager = new DirectoryManager(this.goesProperties.getGoesDir());
-		//this.dbManager = new DbManager();
+
 		logger.info("Working Directory " + dirManager.getRootDirectory().getCanonicalPath());
 		this.fromDate = date;
 		this.executionDate = new DateTime();
 		this.configureFileAppender();
+	}
+	
+	/**
+	 * Loads automation properties values from external JSON file.
+	 * @param propertiesPath The location of the external JSON automation properties file
+	 * @throws FileNotFoundException The path supplied was not located.
+	 */
+	public void loadProperties(String propertiesPath) throws FileNotFoundException{
+		File props = new File(propertiesPath);
+		Gson gson = new Gson();
+		//Read properties from external JSON file
+		this.goesProperties = gson.fromJson(new FileReader(props),GoesProperties.class);
 	}
 
 	/**
@@ -107,18 +141,6 @@ public class AutomateGoes {
 	}
 
 	/**
-	 * Loads automation properties values from external JSON file.
-	 * @param propertiesPath The location of the external JSON automation properties file
-	 * @throws FileNotFoundException The path supplied was not located.
-	 */
-	public void loadProperties(String propertiesPath) throws FileNotFoundException{
-		File props = new File(propertiesPath);
-		Gson gson = new Gson();
-		//Read properties from external JSON file
-		this.goesProperties = gson.fromJson(new FileReader(props),GoesProperties.class);
-	}
-
-	/**
 	 * Creates directory structure for supplied date
 	 */
 	public void makeDirs(){
@@ -127,8 +149,7 @@ public class AutomateGoes {
 		try {
 			dirManager.archiveDataForCurrentDate(fromDate);
 		} catch (IOException e) {
-			LogMF.error(logger, "Error archiving old files", null);
-			e.printStackTrace();
+			logger.error("Error archiving old files", e);
 		}
 		//If directory hierarchy is absent, created. If not do nothing.
 		dirManager.createDirectoriesForDateTime(fromDate);
@@ -178,7 +199,9 @@ public class AutomateGoes {
 		File dir = getWorkingDirectory();
 
 		Degribber degrib = this.goesProperties.getDegribber();		
+		//Which directory contains the files to degrib 
 		degrib.setDegribDirectory(dir);
+		//To which directory output the processed files
 		degrib.setOutputDirectory(this.dirManager.getInputDirectory(fromDate));
 
 		for (DegribVariable variable : degrib.getVariables()) {
@@ -188,38 +211,57 @@ public class AutomateGoes {
 		try {
 			degrib.degribVariables();
 		} catch (IOException e) {	
-			logger.error("Error degribing variables");
-			e.printStackTrace();
+			logger.error("Error degribing variables ",e);
 		}
 
 	}
 
 	/**
-	 * Run matlab 
-	 * @throws IOException 
-	 * @throws ExecuteException 
+	 * Executes maltlab command. This method provides fallback
+	 * mechanism in case matlab execution end prematurely. If
+	 * the endFileFlag is not found, it will re-attempt to execute
+	 * matlab. 
+	 * @return true if Matlab completed.
 	 */
-	public void matlab(){
+	public boolean matlab(){
+		boolean finished = false;
+		int matlabCounter = 0;
+		
 		String command = goesProperties.getMatlabCmd() +  '"'+this.format(this.fromDate.toDate(),MATLAB_CMD_FORMAT)+'"';
-		System.out.println("Printing command! "+command);
 		CommandLine cmd = CommandLine.parse(command);
-		System.out.println("Printign parsed command! "+cmd);
-		//Delete file used as flag for matlab completion
-		File finishedMatFile = new File(this.dirManager.getOutputDirectory(fromDate),
-				this.goesProperties.getFinished().getFileName());
-		FileUtils.deleteQuietly(finishedMatFile);
 		
 		DefaultExecutor executor = new DefaultExecutor();
 		executor.setWorkingDirectory(new File(goesProperties.getMatlabWorkingDirectory()));
-		try {
-			executor.execute(cmd);
-		} catch (ExecuteException e) {
-			logger.error("Error executing matlab");
-			e.printStackTrace();
-		} catch (IOException e) {
-			logger.error("Error getting matlab working directory");
-			e.printStackTrace();
+		
+		//  In case matlab processing is interrupted
+		//	Fallback mechanism is in place.
+		while( matlabCounter < MATLAB_ATTEMPTS && !finished)
+		{
+			//clean up previous attempted data.
+			try {
+				logger.info("Performing matlab output directory cleanup");
+				this.dirManager.cleanUp(fromDate);
+			} catch (IOException e1) {
+				logger.error("Error trying to clean up /OUTPUT directory ",e1);
+			}
+			
+			try {
+				//execute matlab 
+				logger.info("Going to try to execute Matlab commond: "+cmd);
+				executor.execute(cmd);
+			} catch (ExecuteException e) {
+				logger.error("Error executing matlab ",e);
+			} catch (IOException e) {
+				logger.error("Error getting matlab working directory ",e);
+			}
+			//Wait for matlab to finish
+			finished = waitForFinishedFile();
+			//if not finished, it will re-attempt the download until 
+			//max number of tries is reached.
 		}
+		logger.info("Matlab completed with successStatus: "+finished);
+		
+		return finished;
 	}
 
 	/**
@@ -240,7 +282,7 @@ public class AutomateGoes {
 		int tries = 0;
 		int numberOfTries = goesProperties.getFinished().getTries();
 		boolean found = false;
-		
+
 		while (!found && numberOfTries >= tries) {
 			observer.checkAndNotify(); 		//verify for file existance
 			found = listener.isFileFound(); //update found value
@@ -250,6 +292,12 @@ public class AutomateGoes {
 				Thread.sleep(timeToWait);
 			} catch (InterruptedException ignore) {}
 		}
+		/*
+		int attemptCounter = 0;
+		//Fail safe. In case Matlab fails to complete properly.
+ 		while(!found && MATLAB_ATTEMPT > attemptCounter )
+ 			matlabRetry();  
+ 			*/
 		return found;
 	}
 
@@ -266,7 +314,7 @@ public class AutomateGoes {
 			logger.error("Couldn't find the matlab file ");
 		}else{
 			logger.info("Matlab end file found!");
-		}
+		} 
 		return result;
 	}
 
@@ -283,8 +331,7 @@ public class AutomateGoes {
 		try {
 			goesVariableNameList = this.dbManager.readGoesVariables();
 		} catch (SQLException e) {
-			LogMF.error(logger, "Error reading goesVariable List from database",null);
-			e.printStackTrace();
+			logger.error("Error reading goesVariable List from database",e);
 		}
 
 		File outFolder = dirManager.getOutputDirectory(this.fromDate);
@@ -297,18 +344,16 @@ public class AutomateGoes {
 			try {
 				this.dbManager.storeGoesData(variable, csvFile, this.fromDate);
 			} catch (FileNotFoundException e) {
-				LogMF.error(logger, "Error locating csv file",null);
-				e.printStackTrace();
+				logger.error("Error locating csv file",e);
 			} catch (SQLException e) {
-				LogMF.error(logger, "Error storing does data in database",null);
-				e.printStackTrace();
+				logger.error("Error storing does data in database",e);
 			}
 		}
 
 		try {
 			this.dbManager.storeGoesMap(goesVariableNameList, outFolder, this.fromDate);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error("Error trying to inserGoesMaps ",e);
 		}
 	}
 

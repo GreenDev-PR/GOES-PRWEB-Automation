@@ -87,8 +87,8 @@
   },
   "finished": {
     "fileName": "finish.mat",
-    "tries": 4,
-    "seconds": 5
+    "tries": 240,
+    "seconds": 30
   },
   "database": {
     "username": "postgres",
