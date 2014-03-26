@@ -292,12 +292,7 @@ public class AutomateGoes {
 				Thread.sleep(timeToWait);
 			} catch (InterruptedException ignore) {}
 		}
-		/*
-		int attemptCounter = 0;
-		//Fail safe. In case Matlab fails to complete properly.
- 		while(!found && MATLAB_ATTEMPT > attemptCounter )
- 			matlabRetry();  
- 			*/
+		
 		return found;
 	}
 
