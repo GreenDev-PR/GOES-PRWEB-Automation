@@ -100,7 +100,7 @@ public class DirectoryManager {
 		DateTime currentDate = new DateTime();
 		boolean createArchive = currentDir.list().length > 0;
 		if(createArchive){	
-			File newArchive = new File(currentDir,"Archive "+currentDate);
+			File newArchive = new File(currentDir,"Archive "+currentDate.getMillis());
 			FileUtils.copyDirectory(currentDir, newArchive);
 			String[] toDelete = newArchive.list(new WildcardFileFilter("Archive*"));
 			for(int i = 0; i < toDelete.length; i++){
@@ -109,6 +109,19 @@ public class DirectoryManager {
 		}
 		
 		return createArchive;
+		
+	}
+	
+	/**
+	 * Cleans up the input and output directory
+	 * Can be used if matlab execution is not successful
+	 * @param date
+	 */
+	public void cleanUp(DateTime date) throws IOException{
+		File input = getInputDirectory(date);
+		File output = this.getOutputDirectory(date);	
+		FileUtils.cleanDirectory(input);
+		FileUtils.cleanDirectory(output);
 		
 	}
 }

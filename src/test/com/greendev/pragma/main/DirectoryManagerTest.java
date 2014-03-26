@@ -63,6 +63,7 @@ public class DirectoryManagerTest {
 		assertTrue(file.exists());
 	}
 	
+	
 	@Test
 	public void testArchiving() {
 		FileUtils.deleteQuietly(new File(rootDirectory));
@@ -81,6 +82,35 @@ public class DirectoryManagerTest {
 			System.out.println("Error: Could not create archive");
 			e.printStackTrace();
 		}
+	}
+	
+	@Test 
+	public void testCleanup(){
+		//Prepare root directory and create input and output dirs
+		FileUtils.deleteQuietly(new File(rootDirectory));
+		manager = new DirectoryManager(rootDirectory);
+		manager.createDirectoriesForDateTime(date);	
+		File input = manager.getInputDirectory(date);
+		File output = manager.getOutputDirectory(date);
+		//Create temp files inside both input and output dirs
+		try {
+			FileUtils.touch(new File(input,"temp"));
+			FileUtils.touch(new File(output, "temp"));
+		} catch (IOException e1) {
+			System.out.println("Error creating temp file for cleanup test");
+		}
+		//Assert that the input and output dirs are not empty before running cleanup
+		assertTrue(!(input.list().length == 0));	
+		assertTrue(!(output.list().length == 0));	
+		//Perform cleanup of input and output dirs
+		try {
+			manager.cleanUp(date);
+		} catch (IOException e) {
+			System.out.println("Error cleaning up input and outpur directories");
+		}
+		//Assert that the input and output dirs are empty after cleanup
+		assertTrue(input.list().length == 0);	
+		assertTrue(output.list().length == 0);
 	}
 
 }
