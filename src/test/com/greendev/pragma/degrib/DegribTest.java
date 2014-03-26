@@ -25,12 +25,15 @@ import org.junit.Test;
 public class DegribTest {
 
 	private static final int COUNT_OF_WIND_FILES = 1;
+	private static final int COUNT_OF_SUN_FILES = 0;
 	private Degribber degrib;
 	private DegribVariable variable;
 	private List<DegribVariable> variables;
 	private File degribDirectory;
 	private File outputDirectory;
 	private final String VARIABLE_NAME = "wind*";
+	private final String NON_EXISTING_VARIABLE_NAME = "sun*";
+	private final String NON_EXISTING_OUTPUT_VARIABLE_NAME = "sun";
 	private List<Integer> messages;
 	private final String OUTPUT_VARIABLE_NAME = "wind";
 	private String executable = "/usr/local/bin/degrib/bin/degrib";
@@ -42,18 +45,11 @@ public class DegribTest {
 		degribDirectory = new File("src/test/com/greendev/pragma/degrib/resources/");
 		outputDirectory = degribDirectory;
 		messages = new ArrayList<Integer>();
-		variables = new ArrayList<DegribVariable>();
 		degrib.setDegribDirectory(degribDirectory);
 		degrib.setOutputDirectory(outputDirectory);
 		degrib.setExecutable(executable);
 		for(int i=1; i<5; i++)
 			messages.add(i);
-		variable.setName(VARIABLE_NAME);
-		variable.setMessages(messages);
-		variable.setOutputName(OUTPUT_VARIABLE_NAME);
-		variables.add(variable);
-		degrib.setVariables(variables);
-
 	}
 
 	/**
@@ -61,8 +57,14 @@ public class DegribTest {
 	 */
 	@Test
 	public void testFilesForVariableFound(){
+		variable.setName(VARIABLE_NAME);
+		variable.setMessages(messages);
+		variable.setOutputName(OUTPUT_VARIABLE_NAME);
+		variables = new ArrayList<DegribVariable>();
+		variables.add(variable);
+		degrib.setVariables(variables);
+		
 		Collection<File> results = degrib.getGribFiles(variable);
-		//System.out.println("Count of wind grib files: "+results.size());
 		assertEquals(COUNT_OF_WIND_FILES, results.size());
 	}
 
@@ -72,6 +74,13 @@ public class DegribTest {
 	 */
 	@Test
 	public void testDegribVariables(){
+		variable.setName(VARIABLE_NAME);
+		variable.setMessages(messages);
+		variable.setOutputName(OUTPUT_VARIABLE_NAME);
+		variables = new ArrayList<DegribVariable>();
+		variables.add(variable);
+		degrib.setVariables(variables);
+
 		try {
 			degrib.degribVariables();
 		} catch (IOException e1) {
@@ -81,8 +90,8 @@ public class DegribTest {
 		String[] extensions = {"csv"};
 		Collection<File> result = FileUtils.listFiles(outputDirectory, extensions, false);
 		int actualCount = result.size();
-		
-		assertEquals(messages.size(),actualCount);		
+
+		assertEquals(messages.size(),actualCount);
 		for(Integer m : messages){
 			String currentFile = outputDirectory.getPath()+"/"+OUTPUT_VARIABLE_NAME+m+".csv";
 			System.out.println(currentFile);
@@ -93,7 +102,33 @@ public class DegribTest {
 				e.printStackTrace();
 			}
 		}
-		
+
+	}
+
+	/**
+	 * Tests that for a variable that does not exist, the degriber
+	 * does not stop and nothing is created in the output directory
+	 * Useful in the case of downloads that fail (will be estimated with
+	 * older data) that should not be degribed. 
+	 */
+	@Test
+	public void testDegribVariableNotExists(){
+		variable.setName(NON_EXISTING_VARIABLE_NAME);
+		variable.setMessages(messages);
+		variable.setOutputName(NON_EXISTING_OUTPUT_VARIABLE_NAME);
+		variables = new ArrayList<DegribVariable>();
+		variables.add(variable);
+		degrib.setVariables(variables);
+
+		try {
+			degrib.degribVariables();
+		} catch (IOException e1) {
+			System.out.println("Error running degrib executable");
+			e1.printStackTrace();
+		}
+		String[] extensions = {"csv"};
+		Collection<File> result = FileUtils.listFiles(outputDirectory, extensions, false);
+		assertEquals(result.size(), COUNT_OF_SUN_FILES);	
 	}
 
 
