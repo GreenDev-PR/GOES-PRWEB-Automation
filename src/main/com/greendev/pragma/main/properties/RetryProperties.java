@@ -18,7 +18,7 @@ public class RetryProperties {
 		this.interval = interval;
 	}
 	
-	public long getAttempts() {
+	public int getAttempts() {
 		return attempts;
 	}
 	
