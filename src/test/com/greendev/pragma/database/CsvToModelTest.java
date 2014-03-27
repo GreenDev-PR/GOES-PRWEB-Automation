@@ -42,9 +42,8 @@ public class CsvToModelTest {
 			System.out.println("Csv file not found");
 			e1.printStackTrace();
 		}
+		
 		List<GoesVariable> actual = new ArrayList<GoesVariable>();
-
-		//assertEquals(result.getVariableName(), variableName);
 
 		//Read the csv file using CSVReader
 		try {
@@ -71,7 +70,6 @@ public class CsvToModelTest {
 			System.out.println();
 			rowNum--;
 		}
-
 
 		//Verify that size of result list is equal to matrix size (row*column)
 		assertEquals(expected.size(),actual.size());

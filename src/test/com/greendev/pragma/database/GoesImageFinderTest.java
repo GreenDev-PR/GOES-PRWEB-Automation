@@ -40,6 +40,8 @@ public class GoesImageFinderTest {
 		finder = new GoesImageFinder();
 	}
 
+	//Gets the list of map paths using finder.getMapsForDate
+	//Compares the list with the list of files in the test directory
 	@Test
 	public void testGetMapsForDate() {
 		List<GoesMap> output = finder.getMapsForDate(date, directory, variables);
