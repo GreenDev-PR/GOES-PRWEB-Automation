@@ -74,8 +74,6 @@
     }
   ],
   "goesDir": "./src/test/resources/GOES-PRWEB/DAILY_DATA/",
-  "matlabCmd": "matlab /r ",
-  "matlabWorkingDirectory": null,
   "logLayout": "%r [%t] %p %c %x - %m%n",
   "variables": [],
   "email": {
@@ -96,5 +94,15 @@
     "host": "localhost",
     "port": 5432,
     "database": "pragma_test"
+  },
+  "retry": {
+    "interval": 15000,
+    "attempts": 20,
+    "lastDownloadAttemptTime": 78000
+  },
+  "matlab": {
+    "matlabCmd": "matlab -r \"startup ",
+    "matlabWorkingDirectory": null,
+    "retryAttempts": 2
   }
 }

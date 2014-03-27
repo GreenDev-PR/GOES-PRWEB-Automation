@@ -17,13 +17,13 @@ public class GoesProperties {
 	private Degribber degribber;
 	private List<Download> downloads;
 	private String goesDir;
-	private String matlabCmd;
-	private String matlabWorkingDirectory;
 	private String logLayout;
 	private List<String> variables;
 	private EmailProperties email;
 	private FinishProperties finished;
 	private DatabaseProperties database;
+	private RetryProperties retry;
+	private MatlabProperties matlab;
 
 
 	public GoesProperties(){
@@ -52,28 +52,6 @@ public class GoesProperties {
 		this.downloads = downloads;
 	}
 
-
-	public String getMatlabCmd() {
-		return matlabCmd;
-	}
-
-
-
-	public void setMatlabCmd(String matlabCmd) {
-		this.matlabCmd = matlabCmd;
-	}
-
-
-
-	public String getMatlabWorkingDirectory() {
-		return matlabWorkingDirectory;
-	}
-
-
-
-	public void setMatlabWorkingDirectory(String matlabWorking) {
-		this.matlabWorkingDirectory = matlabWorking;
-	}
 
 
 	public String getLogLayout() {
@@ -137,6 +115,23 @@ public class GoesProperties {
 	public void setDatabase(DatabaseProperties database) {
 		this.database = database;
 	}
+	
+
+	public RetryProperties getRetry() {
+		return retry;
+	}
+
+	public void setRetry(RetryProperties retry) {
+		this.retry = retry;
+	}
+
+	public MatlabProperties getMatlab() {
+		return matlab;
+	}
+
+	public void setMatlab(MatlabProperties matlab) {
+		this.matlab = matlab;
+	}
 
 	public void createGoesProperties(){
 		this.degribber = new Degribber();
@@ -145,6 +140,8 @@ public class GoesProperties {
 		this.variables = Collections.emptyList();
 		this.finished = new FinishProperties();
 		this.database = new DatabaseProperties();
+		this.retry = new RetryProperties();
+		this.matlab = new MatlabProperties();
 	}
 
 
