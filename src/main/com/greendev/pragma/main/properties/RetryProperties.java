@@ -2,15 +2,15 @@ package main.com.greendev.pragma.main.properties;
 
 public class RetryProperties {
 
-	private int interval;
-	private long attempts;
+	private long interval;
+	private int attempts;
 	private int lastDownloadAttemptTime;	
 
 	public RetryProperties(){
 		super();
 	}
 	
-	public int getInterval() {
+	public long getInterval() {
 		return interval;
 	}
 	
@@ -22,7 +22,7 @@ public class RetryProperties {
 		return attempts;
 	}
 	
-	public void setAttempts(long attempts) {
+	public void setAttempts(int attempts) {
 		this.attempts = attempts;
 	}
 	

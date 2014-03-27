@@ -101,7 +101,7 @@
     "lastDownloadAttemptTime": 78000
   },
   "matlab": {
-    "matlabCmd": "matlab -r \"startup ",
+    "matlabCmd": "matlab -r \"startup(",
     "matlabWorkingDirectory": null,
     "retryAttempts": 2
   }
