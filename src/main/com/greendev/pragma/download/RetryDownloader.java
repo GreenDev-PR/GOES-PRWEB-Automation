@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import org.apache.log4j.LogMF;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 
 /**
  * RetryDownloader provides re-attempt feature for apparent non existent downloads.
@@ -14,20 +15,23 @@ import org.apache.log4j.Logger;
 public class RetryDownloader implements Downloader {
 
 	private static Logger logger = Logger.getLogger(RetryDownloader.class);  
-	private long WAIT_TIME;
+	private long INTERVAL;
 	private int ATTEMPTS;
+	private int END_OF_DAY;
 	private Downloader downloader;
 	
 	/**
 	 * Constructor
-	 * @param downloader
-	 * @param attempts
-	 * @param waitTime
+	 * @param downloader The Downloader to utilize for downloads.
+	 * @param attempts Number of attempts to make.
+	 * @param interval The time to wait until next re-try attempt.
+	 * @param endOfDay Time at which the algorithm needs to be executed.
 	 */
-	public RetryDownloader(Downloader downloader, int attempts, long waitTime){	
+	public RetryDownloader(Downloader downloader, int attempts, long interval, int endOfDay){	
 		this.downloader = downloader;
 		this.ATTEMPTS = attempts;
-		this.WAIT_TIME = waitTime;
+		this.INTERVAL = interval;
+		this.END_OF_DAY = endOfDay;
 	}
 
 	@Override
@@ -36,19 +40,19 @@ public class RetryDownloader implements Downloader {
 		int counter = 0;
 
 		LogMF.info(logger,"Going to check if download exists for the {0} time", counter);
-
-		while(counter < ATTEMPTS){
+		
+		while(counter < ATTEMPTS && new DateTime().getSecondOfDay() < END_OF_DAY){
 			if(!this.downloader.downloadExists()){
 				counter++;	
 				try {
 					LogMF.info(logger,"Thread going to sleep, counter value {0}",counter);
 					
-					Thread.sleep(WAIT_TIME);
+					Thread.sleep(INTERVAL);
 					
 					LogMF.info(logger,"Thread woke up, counter value: {0}",counter);
 				} catch (InterruptedException e) {
-					LogMF.error(logger,"Thread sleep was interrupted",null);
-					e.printStackTrace();
+					logger.error("Retry Downlaoder thread sleep was interrupted ",e);
+					
 				}
 				
 			}else{

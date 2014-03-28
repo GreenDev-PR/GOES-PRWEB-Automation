@@ -19,7 +19,8 @@ public class RetryDownloaderTest {
 	
 	private static final Logger logger = Logger.getLogger(RetryDownloaderTest.class);
 	private static final int ATTEMPTS = 3;
-	private static final long WAIT_TIME = 10*1000; // 10 sec
+	private static final long INTERVAL = 10*1000; // 10 sec
+	private static final int END_OF_DAY = 77;
 	private static Downloader retryDownloader;
 	
 	
@@ -33,7 +34,7 @@ public class RetryDownloaderTest {
 		download.setDateOffset(0);
 		
 		Downloader downloader = DownloaderFactory.getDownloader(download);
-		retryDownloader = new RetryDownloader(downloader,ATTEMPTS, WAIT_TIME);
+		retryDownloader = new RetryDownloader(downloader,ATTEMPTS, INTERVAL, END_OF_DAY);
 	}
 
 	@AfterClass
