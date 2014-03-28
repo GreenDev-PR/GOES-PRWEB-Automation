@@ -47,6 +47,7 @@ public class AutomateGoesTest {
 		goes = new AutomateGoes(PROPERTIES_PATH, new DateTime());
 		WAIT_FOR_FILE_SECONDS = goes.getGoesProperties().getFinished().getSeconds();
 		LogMF.debug(logger, "Wait for file time value: ", WAIT_FOR_FILE_SECONDS);
+		
 	}
 
 	@AfterClass
@@ -118,6 +119,10 @@ public class AutomateGoesTest {
 	
 	//@Test
 	public void emailLogTest(){
+		
+	}
+	
+	public void downloadTest(){
 		
 	}
 

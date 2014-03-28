@@ -9,7 +9,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
@@ -50,9 +52,10 @@ public class AutomateGoes {
 	private static final String CSV_DATE_FORMAT = "%tY%tm%td";
 	private static final String MATLAB_CMD_FORMAT = "date='%tm/%td/%tY';";
 	private static final Logger logger = Logger.getLogger(AutomateGoes.class);
-	private static final int ATTEMPTS = 3;
-	private static final long WAIT_TIME = 60*1000; // 1 minute
-	private static final int MATLAB_ATTEMPTS = 2; //Number of times to attempt to run Matlab
+	private static int RETRY_DOWNLOADER_ATTEMPTS;
+	private static long RETRY_DOWNLOADER_INTERVAL; //in millis
+	private static int LAST_DOWNLOAD_ATTEMPT_TIME; //in seconds
+	private static int MATLAB_ATTEMPTS; //Number of times to attempt to run Matlab
 	private GoesProperties goesProperties;
 	private DateTime fromDate;
 	private DateTime executionDate;
@@ -88,22 +91,27 @@ public class AutomateGoes {
 					+goesProperties.getDatabase().getDatabase();
 			String username = goesProperties.getDatabase().getUsername();
 			String password = goesProperties.getDatabase().getPassword();
-			
+
 			this.conn = DriverManager.getConnection(url,username,password);
 			logger.info("Created database connection for url: "+url);
 		} catch (SQLException e) {
 			logger.error("Errror trying to connect to database", e);
 		}
-		
+
 		this.dbManager = new DbManager(conn);
 		this.dirManager = new DirectoryManager(this.goesProperties.getGoesDir());
 
 		logger.info("Working Directory " + dirManager.getRootDirectory().getCanonicalPath());
 		this.fromDate = date;
 		this.executionDate = new DateTime();
+		
+		RETRY_DOWNLOADER_ATTEMPTS = this.goesProperties.getRetry().getAttempts();
+		RETRY_DOWNLOADER_INTERVAL = this.goesProperties.getRetry().getInterval();
+		LAST_DOWNLOAD_ATTEMPT_TIME = this.goesProperties.getRetry().getLastDownloadAttemptTime();
+		MATLAB_ATTEMPTS = this.goesProperties.getMatlab().getRetryAttempts();
 		this.configureFileAppender();
 	}
-	
+
 	/**
 	 * Loads automation properties values from external JSON file.
 	 * @param propertiesPath The location of the external JSON automation properties file
@@ -161,7 +169,11 @@ public class AutomateGoes {
 	public void download(){
 
 		String absolute = this.getWorkingDirectory().getAbsolutePath();
-
+		
+		//Downloader buffer
+		Queue<Downloader> buffer = new LinkedList<Downloader>();
+		
+		//Prepare the downloads for processing
 		for(Download download : goesProperties.getDownloads()){
 			//By convention one must add the offset of the download
 			DateTime workDate = this.fromDate.plusDays(download.getDateOffset());
@@ -176,18 +188,36 @@ public class AutomateGoes {
 			Downloader downloader = DownloaderFactory.getDownloader(tempDownload);
 
 			if(downloader != null){
-				//RetryDownloader integrates retry attempts mechanisms
-				Downloader retryDownloader = new RetryDownloader(downloader, ATTEMPTS, WAIT_TIME);
-				if(retryDownloader.downloadExists()){
-					try{
-						retryDownloader.download();
-					} catch (IOException e){
-						logger.error("Error download "+ tempDownload, e);
-					}
-				}
+				buffer.add(downloader);
 			}else{
 				logger.error("Couldn't find a downloader for the following download "
 						+ download);
+			}
+
+		}
+		//Will attempt to download the first in the queue
+		//It will block if first does not exists.
+		//In such case, it will stop attempting at END_OFDAY
+		while(!buffer.isEmpty() && System.currentTimeMillis() < LAST_DOWNLOAD_ATTEMPT_TIME){
+			Downloader retryDownloader = new RetryDownloader(
+					buffer.element(), RETRY_DOWNLOADER_ATTEMPTS,RETRY_DOWNLOADER_INTERVAL,LAST_DOWNLOAD_ATTEMPT_TIME);
+			if(retryDownloader.downloadExists()){ //wait until download available to make the download
+				try{
+					retryDownloader.download(); //make download
+					buffer.remove(); //dequeue
+				} catch (IOException e){
+					logger.error("Error download "+ buffer.element(), e);
+				}
+			}
+		}
+		//Empty the rest of the queue 
+		while(!buffer.isEmpty()){
+			try{
+				Downloader downloader = buffer.remove();
+				downloader.download();
+			}catch(IOException e){
+				// laugh
+				logger.error("Error trying to make download ",e);
 			}
 		}
 	}
@@ -226,13 +256,13 @@ public class AutomateGoes {
 	public boolean matlab(){
 		boolean finished = false;
 		int matlabCounter = 0;
-		
-		String command = goesProperties.getMatlabCmd() +  '"'+this.format(this.fromDate.toDate(),MATLAB_CMD_FORMAT)+'"';
+
+		String command = goesProperties.getMatlab().getMatlabCmd() +  '"'+this.format(this.fromDate.toDate(),MATLAB_CMD_FORMAT)+'"';
 		CommandLine cmd = CommandLine.parse(command);
-		
+
 		DefaultExecutor executor = new DefaultExecutor();
-		executor.setWorkingDirectory(new File(goesProperties.getMatlabWorkingDirectory()));
-		
+		executor.setWorkingDirectory(new File(goesProperties.getMatlab().getMatlabWorkingDirectory()));
+
 		//  In case matlab processing is interrupted
 		//	Fallback mechanism is in place.
 		while( matlabCounter < MATLAB_ATTEMPTS && !finished)
@@ -244,7 +274,7 @@ public class AutomateGoes {
 			} catch (IOException e1) {
 				logger.error("Error trying to clean up /OUTPUT directory ",e1);
 			}
-			
+
 			try {
 				//execute matlab 
 				logger.info("Going to try to execute Matlab commond: "+cmd);
@@ -260,7 +290,7 @@ public class AutomateGoes {
 			//max number of tries is reached.
 		}
 		logger.info("Matlab completed with successStatus: "+finished);
-		
+
 		return finished;
 	}
 
@@ -292,7 +322,7 @@ public class AutomateGoes {
 				Thread.sleep(timeToWait);
 			} catch (InterruptedException ignore) {}
 		}
-		
+
 		return found;
 	}
 

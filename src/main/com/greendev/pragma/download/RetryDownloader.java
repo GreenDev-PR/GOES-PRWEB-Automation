@@ -17,7 +17,7 @@ public class RetryDownloader implements Downloader {
 	private static Logger logger = Logger.getLogger(RetryDownloader.class);  
 	private long INTERVAL;
 	private int ATTEMPTS;
-	private int END_OF_DAY;
+	private int LAST_DOWNLOAD_ATTEMPT_TIME;
 	private Downloader downloader;
 	
 	/**
@@ -31,7 +31,7 @@ public class RetryDownloader implements Downloader {
 		this.downloader = downloader;
 		this.ATTEMPTS = attempts;
 		this.INTERVAL = interval;
-		this.END_OF_DAY = endOfDay;
+		this.LAST_DOWNLOAD_ATTEMPT_TIME = endOfDay;
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class RetryDownloader implements Downloader {
 
 		LogMF.info(logger,"Going to check if download exists for the {0} time", counter);
 		
-		while(counter < ATTEMPTS && new DateTime().getSecondOfDay() < END_OF_DAY){
+		while(counter < ATTEMPTS && new DateTime().getSecondOfDay() < LAST_DOWNLOAD_ATTEMPT_TIME){
 			if(!this.downloader.downloadExists()){
 				counter++;	
 				try {
