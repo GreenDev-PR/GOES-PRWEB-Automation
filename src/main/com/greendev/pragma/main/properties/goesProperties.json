@@ -26,7 +26,7 @@
       },
       {
         "name": "wind*.bin",
-        "outputName": "dewpoint_degrib_%tY%tm%td",
+        "outputName": "wind_%tY%tm%td",
         "messages": [
           2,
           3,

@@ -89,8 +89,10 @@ public class Degribber {
 	}
 
 	public void degribVariables() throws IOException{		
-		for(DegribVariable variable : variables)
-			degrib(variable);	
+		for(DegribVariable variable : variables){
+			logger.info(variable.getName());
+			degrib(variable);
+		}
 	}
 
 	/**
@@ -145,6 +147,7 @@ public class Degribber {
 		ExecuteStreamHandler streamHandler = executor.getStreamHandler();
 		streamHandler.setProcessOutputStream(inStream);
 		executor.setStreamHandler(streamHandler);
+		logger.info(cmd.toString());
 		int exitCode = executor.execute(cmd);
 		
 		LogMF.info(logger, "Degrib output {0}", IOUtils.toString(inStream));
