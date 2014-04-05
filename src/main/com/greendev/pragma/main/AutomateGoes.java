@@ -50,7 +50,7 @@ public class AutomateGoes {
 
 	private static final String LOG_NAME_FORMAT = "log_%tY%tm%td.log";
 	private static final String CSV_DATE_FORMAT = "%tY%tm%td";
-	private static final String MATLAB_CMD_FORMAT = "date='%tm/%td/%tY';";
+	private static final String MATLAB_CMD_FORMAT = "'%tm/%td/%tY'";
 	private static final Logger logger = Logger.getLogger(AutomateGoes.class);
 	private static int RETRY_DOWNLOADER_ATTEMPTS;
 	private static long RETRY_DOWNLOADER_INTERVAL; //in millis
@@ -125,7 +125,8 @@ public class AutomateGoes {
 	}
 
 	/**
-	 * Configures log file management. 
+	 * Creates a log file. It appends the Logger logs 
+	 * to the aforementioned log file.
 	 * @throws IOException Error handling files.
 	 */
 	public void configureFileAppender() throws IOException{
@@ -149,7 +150,8 @@ public class AutomateGoes {
 	}
 
 	/**
-	 * Creates directory structure for supplied date
+	 * Creates directory structure for the specified date 
+	 * in the goesProperties.json file.
 	 */
 	public void makeDirs(){
 		logger.info("working dir date " + fromDate);
@@ -164,7 +166,7 @@ public class AutomateGoes {
 	}
 
 	/**
-	 * Performed the downloads
+	 * Performed the downloads specified in the goesProperties.json.
 	 */
 	public void download(){
 
@@ -223,7 +225,8 @@ public class AutomateGoes {
 	}
 
 	/**
-	 * Degribs the downloaded data
+	 * Degribs the previously downloaded data to specified
+	 * output directories. 
 	 */
 	public void degrib(){
 		File dir = getWorkingDirectory();
@@ -297,7 +300,7 @@ public class AutomateGoes {
 	/**
 	 * Waits until a specified file is found in the supplied directory. 
 	 * @param directory The directory in which to look for the file
-	 * @param fileName The file to look for
+	 * @param fileName The file to wait for
 	 * @return True, if the file was found
 	 */
 	public boolean waitForFile(String directory, String fileName){
@@ -327,7 +330,8 @@ public class AutomateGoes {
 	}
 
 	/**
-	 * Wait for the finished file.
+	 * Wait for the finished file flag to be written. The
+	 * presence of this file signals matlab process completion
 	 * @return True, if the finished file is found.
 	 */
 	public boolean waitForFinishedFile(){
@@ -344,10 +348,9 @@ public class AutomateGoes {
 	}
 
 	/**
-	 * Insert to database goes data and
-	 * goes map images
-	 * @throws SQLException 
-	 * @throws FileNotFoundException 
+	 * Insert to database goes data and map images
+	 * @throws SQLException  Error trying to insert data to database
+	 * @throws FileNotFoundException Error managing csv files 
 	 */
 	public void insertToDb(){
 
@@ -384,8 +387,8 @@ public class AutomateGoes {
 
 	/**
 	 * Emails log files to properties specified in the GoesProperties JSON file
-	 * @throws IOException
-	 * @throws EmailException
+	 * @throws IOException Error managing directory structure
+	 * @throws EmailException Error trying to send an email
 	 */
 	public void emailLog() throws IOException, EmailException{
 		File logDirectory = dirManager.getLogDirectory();
@@ -429,10 +432,10 @@ public class AutomateGoes {
 	}
 
 	/**
-	 * Provides string formatting 
-	 * @param date 
-	 * @param format
-	 * @return The string formatted
+	 * Provides string formatting for a given date object
+	 * @param date The date object to format
+	 * @param format The string representing the desired format
+	 * @return The formatted date as a string
 	 */
 	private String format(Date date, String format) {
 		return GoesUtils.stringFormatTime(format, date);
