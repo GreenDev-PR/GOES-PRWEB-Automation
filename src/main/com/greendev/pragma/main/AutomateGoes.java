@@ -50,7 +50,7 @@ public class AutomateGoes {
 
 	private static final String LOG_NAME_FORMAT = "log_%tY%tm%td.log";
 	private static final String CSV_DATE_FORMAT = "%tY%tm%td";
-	private static final String MATLAB_CMD_FORMAT = "'%tm/%td/%tY'";
+	private static final String MATLAB_CMD_FORMAT = "'%tm/%td/%tY\'";
 	private static final Logger logger = Logger.getLogger(AutomateGoes.class);
 	private static int RETRY_DOWNLOADER_ATTEMPTS;
 	private static long RETRY_DOWNLOADER_INTERVAL; //in millis
@@ -260,8 +260,10 @@ public class AutomateGoes {
 		boolean finished = false;
 		int matlabCounter = 0;
 
-		String command = goesProperties.getMatlab().getMatlabCmd() +  '"'+this.format(this.fromDate.toDate(),MATLAB_CMD_FORMAT)+'"';
+		String command = goesProperties.getMatlab().getMatlabCmd() + this.format(fromDate.plusDays(1).toDate(),MATLAB_CMD_FORMAT)+'"';
 		CommandLine cmd = CommandLine.parse(command);
+		
+		logger.info(command.toString());
 
 		DefaultExecutor executor = new DefaultExecutor();
 		executor.setWorkingDirectory(new File(goesProperties.getMatlab().getMatlabWorkingDirectory()));

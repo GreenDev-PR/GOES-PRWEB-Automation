@@ -124,7 +124,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>edu.uprm.ece.hydroclimate.main.Driver</mainClass>
+							<mainClass>main.com.greendev.pragma.main.CLI</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

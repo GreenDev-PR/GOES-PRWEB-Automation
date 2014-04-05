@@ -57,7 +57,7 @@ public class CLI {
 			throws ParseException, IOException, org.apache.commons.cli.ParseException, EmailException {
 
 		String[] params = {"-properties","/Users/miguelgd/Desktop/goesProperties.json",
-				"-start","2014/03/02","-end","2014/03/02"};
+				"-start","2014/03/03","-end","2014/03/03"};
 
 		//Create options object to receive params from command line
 		Options options = createOptions();

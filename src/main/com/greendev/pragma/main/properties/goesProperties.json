@@ -39,7 +39,7 @@
         ]
       }
     ],
-    "executable": "/usr/local/bin/degrib/bin/degrib"
+    "executable": "/home/greendev/degrib/bin/degrib"
   },
   "downloads": [
     {
