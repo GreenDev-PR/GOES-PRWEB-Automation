@@ -56,8 +56,9 @@ public class CLI {
 	public static void main(String[] args)
 			throws ParseException, IOException, org.apache.commons.cli.ParseException, EmailException {
 
-		String[] params = {"-properties","/Users/miguelgd/Desktop/goesProperties.json",
+		String[] params = {"-properties","/home/greendev/goesProperties.json",
 				"-start","2014/03/03","-end","2014/03/03"};
+	
 
 		//Create options object to receive params from command line
 		Options options = createOptions();
@@ -96,7 +97,6 @@ public class CLI {
 			System.exit(1);
 		}
 
-		System.out.println("inside last else");
 		//Get path to properties file
 		String properties = cli.getOptionValue("properties");
 
