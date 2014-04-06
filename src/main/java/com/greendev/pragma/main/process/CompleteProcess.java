@@ -1,5 +1,9 @@
 package main.java.com.greendev.pragma.main.process;
 
+import java.io.IOException;
+
+import org.apache.commons.mail.EmailException;
+import org.apache.log4j.LogMF;
 import org.apache.log4j.Logger;
 
 import main.java.com.greendev.pragma.main.AutomateGoes;
@@ -30,12 +34,24 @@ public class CompleteProcess extends GoesProcess {
 
 		final Logger logger = Logger
 				.getLogger(CompleteProcess.class);
-
+		LogMF.info(logger,"Making directory structure. ","SYSTEM");
 		goes.makeDirs();
+		LogMF.info(logger,"Downloading hydro-climate data. ","SYSTEM");
 		goes.download();
+		LogMF.info(logger,"Degribbing hydro-climate data. ","SYSTEM");
 		goes.degrib();
+		LogMF.info(logger,"Executing MATLAB GOES-PRWEB algorithm ","SYSTEM");
 		goes.matlab();
+		LogMF.info(logger,"Storing OUTPUT data to database ","SYSTEM");
 		if(goes.waitForFinishedFile())
 			goes.insertToDb();
+		try {
+			LogMF.info(logger,"Emaling LOG file ","SYSTEM");
+			goes.emailLog();
+		} catch (IOException e) {
+			logger.error("Could not locate log directory ", e);
+		} catch (EmailException e) {
+			logger.error("Could not send log file via email", e);
+		}
 	}
 }
