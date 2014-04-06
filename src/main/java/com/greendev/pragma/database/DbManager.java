@@ -158,9 +158,10 @@ public class DbManager {
 		QueryRunner runner = new QueryRunner();
 		int[] result;
 		//Execute batch inserts
+		LogMF.info(logger,"Going to execute GoesData batch insertion query",null);
 		try{
 			LogMF.info(logger,"Database connection for GoesData started at {0}",DateTime.now());
-			LogMF.info(logger,"Going to execute GoesData batch insertion query",null);
+			
 			//Run batch query
 			result = runner.batch(this.conn,INSERT_GOES_DATA_QUERY,params); 
 

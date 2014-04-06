@@ -375,13 +375,13 @@ public class AutomateGoes {
 			String csvName = GoesUtils.stringFormatTime(variable+CSV_DATE_FORMAT, 
 					this.fromDate.toDate())+".csv";
 			File csvFile = FileUtils.getFile(outFolder,csvName);
-
+			logger.info("Going to execute dbManager's storeGoesData insertion for " + variable);
 			try {
 				this.dbManager.storeGoesData(variable, csvFile, this.fromDate);
 			} catch (FileNotFoundException e) {
 				logger.error("Error locating csv file",e);
 			} catch (SQLException e) {
-				logger.error("Error storing does data in database",e);
+				logger.error("Error storing does data in database for "+variable,e);
 			}
 		}
 
