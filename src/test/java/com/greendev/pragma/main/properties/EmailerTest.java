@@ -29,7 +29,7 @@ import com.google.gson.Gson;
  */
 public class EmailerTest {
 
-	private static final String CONFIGURATION_PATH = "src/test/com/greendev/pragma/main/properties/goesProperties.json";
+	private static final String CONFIGURATION_PATH = "src/test/java/com/greendev/pragma/main/properties/goesProperties.json";
 	private static GoesProperties goesProp;
 	private static EmailProperties emailProp;
 	private static final String ATTACHMENT = CONFIGURATION_PATH;

@@ -23,7 +23,7 @@ import org.junit.Test;
 public class DirectoryManagerTest {
 
 	private static DirectoryManager manager;
-	private static String rootDirectory = "src/test/com/greendev/pragma/main/temp";
+	private static String rootDirectory = "src/test/java/com/greendev/pragma/main/temp";
 	private DateTime date;
 
 

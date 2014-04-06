@@ -52,7 +52,7 @@ public class DegribTest {
 		degrib = new Degribber();
 		variable = new DegribVariable();
 		//Location of bin files to degrib
-		degribDirectory = new File("src/test/com/greendev/pragma/degrib/resources/");
+		degribDirectory = new File("src/test/java/com/greendev/pragma/degrib/resources/");
 		//Output the degrib results in the same folder
 		outputDirectory = degribDirectory;
 		messages = new ArrayList<Integer>();

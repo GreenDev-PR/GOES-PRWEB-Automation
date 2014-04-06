@@ -36,7 +36,7 @@ public class GoesImageFinderTest {
 		variables.add("rainfall");
 		variables.add("actual_ET");
 		//Test directory, current directory + /OUTPUT/
-		directory = new File("src/test/com/greendev/pragma/database/OUTPUT/");
+		directory = new File("src/test/java/com/greendev/pragma/database/OUTPUT/");
 		finder = new GoesImageFinder();
 	}
 

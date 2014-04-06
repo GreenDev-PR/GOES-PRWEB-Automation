@@ -24,7 +24,7 @@ public class FileCreatedListenerTest {
 
 	private FileAlterationObserver observer;
 	private FileCreatedListener listener;
-	private static final File WATCH_DIRECTORY = new File("src/test/com/greendev/pragma/main/resources/");
+	private static final File WATCH_DIRECTORY = new File("src/test/java/com/greendev/pragma/main/resources/");
 	private static final String FINISH_FILE = "finish.txt";
 	private static final String FINISH_FILE_INCORRECT = "finish2.txt";
 

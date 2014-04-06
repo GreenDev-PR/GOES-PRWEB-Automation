@@ -30,7 +30,7 @@ public class RetryDownloaderTest {
 		Download download = new Download();
 		download.setUrl("http://10.21.35.50:8080");
 		download.setSaveLocation("src/");
-		download.setDownloadClass("main.com.greendev.pragma.download.HttpDownloader");
+		download.setDownloadClass("main.java.com.greendev.pragma.download.HttpDownloader");
 		download.setDateOffset(0);
 		
 		Downloader downloader = DownloaderFactory.getDownloader(download);

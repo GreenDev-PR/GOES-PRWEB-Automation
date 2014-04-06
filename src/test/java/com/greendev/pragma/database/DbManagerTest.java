@@ -107,7 +107,7 @@ public class DbManagerTest {
 		//int year, int monthOfYear, int dayOfMonth, int hourOfDay,
 		//int minuteOfHour, int secondOfMinute, int millisOfSecond
 		date = new DateTime(1999,11,8,15,31,2,50);
-		csvFile = new File("src/test/com/greendev/pragma/database/resources/variable20140309.csv");
+		csvFile = new File("src/test/java/com/greendev/pragma/database/resources/variable20140309.csv");
 	}
 
 	private static void initializeGoesMapsTestDependencies() {
@@ -117,7 +117,7 @@ public class DbManagerTest {
 		varNameList.add("rainfall");
 		varNameList.add("actual_ET");
 		//Test directory, current directory + /OUTPUT/
-		mapDir = new File("src/test/com/greendev/pragma/database/OUTPUT/");
+		mapDir = new File("src/test/java/com/greendev/pragma/database/OUTPUT/");
 	}
 
 	private static void initializeGoesDataIntegrityDependencies(){

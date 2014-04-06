@@ -34,8 +34,8 @@ import com.google.gson.GsonBuilder;
  */
 public class AutomateGoesTest {
 	private static final Logger logger = Logger.getLogger(AutomateGoesTest.class);
-	private static final String PROPERTIES_PATH = "src/test/com/greendev/pragma/main/properties/goesProperties.json";
-	private static final String PROPERTIES_PATH_TEST_RESULT = "src/test/com/greendev/pragma/main/properties/" +
+	private static final String PROPERTIES_PATH = "src/test/java/com/greendev/pragma/main/properties/goesProperties.json";
+	private static final String PROPERTIES_PATH_TEST_RESULT = "src/test/java/com/greendev/pragma/main/properties/" +
 																					"goesProperties2.json";
 	private static final String WAIT_FOR_FILE_DIR = "src/test/resources/";
 	private static final String WAIT_FOR_FILE_FILENAME = "waitTest.txt";

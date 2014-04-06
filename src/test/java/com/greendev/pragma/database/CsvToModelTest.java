@@ -24,7 +24,7 @@ public class CsvToModelTest {
 	 * @author miguelgd
 	 */
 
-	File inputCsv = new File("src/test/com/greendev/pragma/database/resources/variable20140309.csv");
+	File inputCsv = new File("src/test/java/com/greendev/pragma/database/resources/variable20140309.csv");
 	private String variableName = "variable";	
 	private final DateTime dataDate= new DateTime("2014-03-09");
 	private CSVReader reader;
