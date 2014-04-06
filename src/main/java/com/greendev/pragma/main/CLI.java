@@ -31,6 +31,11 @@ public class CLI {
 	private static final Logger logger = Logger.getLogger(CLI.class);
 
 	@SuppressWarnings("static-access")
+	/**
+	 * Creates an Options object based on the parameters received as input from the cli
+	 * Includes start date, end date and path to properties file
+	 * @return
+	 */
 	private static Options createOptions(){
 		Options options = new Options();
 
@@ -53,6 +58,15 @@ public class CLI {
 		return options;
 	}
 
+	/**
+	 * Main method for the command line interface (CLI) receives three parameters
+	 * start date, end date and path to properties file
+	 * @param args parsed to extract three expected parameters
+	 * @throws ParseException error in the structure of parameters received
+	 * @throws IOException properties file is invalid or not found
+	 * @throws org.apache.commons.cli.ParseException error parsing parameters by CommandLine
+	 * @throws EmailException error configuring or sending email (used for log file)
+	 */
 	public static void main(String[] args)
 			throws ParseException, IOException, org.apache.commons.cli.ParseException, EmailException {
 

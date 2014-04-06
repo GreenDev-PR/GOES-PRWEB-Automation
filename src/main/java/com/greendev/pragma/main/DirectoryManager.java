@@ -17,6 +17,11 @@ public class DirectoryManager {
 	private File rootDirectory;
 	private static String DIRECTORY_FORMAT = "%tY/%tm/%td/";
 
+	/** 
+	 * Creates an instance of the DirectoryManager
+	 * creates the root (day) directory, INPUT, OUPUT and LOG directories
+	 * @param rootDir root directory where the folder structure YYYY/MM/DD will be created
+	 */
 	public DirectoryManager(String rootDir) {
 		rootDirectory = new File(rootDir);
 		create(rootDirectory);
@@ -59,10 +64,18 @@ public class DirectoryManager {
 
 	}
 
+	/**
+	 * Returns the log directory
+	 * @return file object with the path to the LOGS directory
+	 */
 	public File getLogDirectory() {
 		return new File(getRootDirectory(), "/LOGS");
 	}
 
+	/**
+	 * Returns the root directory (day)
+	 * @return
+	 */
 	public File getRootDirectory() {
 		return rootDirectory;
 	}

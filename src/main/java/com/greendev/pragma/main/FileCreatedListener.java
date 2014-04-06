@@ -46,6 +46,11 @@ public class FileCreatedListener implements FileAlterationListener {
 	}
 
 	@Override
+	/**
+	 * Implmentation of the interface method to configure the action
+	 * that will be triggered when a file is created. Checks if the file created
+	 * is the expected flag file to signal matlab execution completed.
+	 */
 	public void onFileCreate(File file) {
 		if(file.getName().equals(fileName))
 			foundFile = true;
@@ -69,6 +74,10 @@ public class FileCreatedListener implements FileAlterationListener {
 
 	}
 	
+	/**
+	 * Returns true if the flag file has been created, false otherwise
+	 * @return boolean for flag file created
+	 */
 	public boolean isFileFound(){
 		return foundFile;
 	}

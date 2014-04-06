@@ -23,14 +23,14 @@ import org.apache.log4j.Logger;
 
 public class Degribber {
 
-	
+
 	/**
- * Degribs Grib files using provided executable.
- * Requires the specification of the input and output directories.
- * 
- * @author miguelgd	
- */
-	
+	 * Degribs Grib files using provided executable.
+	 * Requires the specification of the input and output directories.
+	 * 
+	 * @author miguelgd	
+	 */
+
 	private List<DegribVariable> variables;
 	private String executable;
 	private File outputDirectory;
@@ -52,42 +52,81 @@ public class Degribber {
 		,"-C","-msg","${message}","-Csv","-Unit", "m", "-Decimal", "2"
 	};
 
+	/**
+	 * Empty constructor, used to create a new Degribber instance
+	 */
 	public Degribber(){
-		
-	}
 
+	}
+	
+	/**
+	 * Returns the list of variables to degrib
+	 * @return list of strings with variable names
+	 */
 	public List<DegribVariable> getVariables() {
 		return variables;
 	}
 
+	/**
+	 * Configures the list of variables to degrib
+	 * @param variables list of strings with variables to degrib
+	 */
 	public void setVariables(List<DegribVariable> variables) {
 		this.variables = variables;
 	}
 
+	/**
+	 * Returns the output directory where the degrib output will be saved 
+	 * @return file object for the output directory
+	 */
 	public File getOutputDirectory() {
 		return outputDirectory;
 	}
 
+	/**
+	 * Configure the output directory where the degrib output will be saved
+	 * @param outputDirectory
+	 */
 	public void setOutputDirectory(File outputDirectory) {
 		this.outputDirectory = outputDirectory;
 	}
 
+	/**
+	 * Returns the degrib directory where the files to degrib can be found
+	 * @return file object for the degrib directory
+	 */
 	public File getDegribDirectory() {
 		return degribDirectory;
 	}
 
+	/**
+	 * Configure the degrib directory where the files to degrib can be found
+	 * @param degribDirectory
+	 */
 	public void setDegribDirectory(File degribDirectory) {
 		this.degribDirectory = degribDirectory;
 	}
 
+	/**
+	 * Returns the absolute path to the degrib (NOAA) executable
+	 * @return path to degrib executable
+	 */
 	public String getExecutable() {
 		return executable;
 	}
 
+	/**
+	 * Configures the absolute path to the degrib (NOAA) executable
+	 * @param executable
+	 */
 	public void setExecutable(String executable) {
 		this.executable = executable;
 	}
 
+	/**
+	 * Method to degrib all the configured variables (list), uses helper methods for actual degribbing
+	 * @throws IOException 
+	 */
 	public void degribVariables() throws IOException{		
 		for(DegribVariable variable : variables){
 			logger.info(variable.getName());
@@ -108,7 +147,7 @@ public class Degribber {
 				try{
 					returnCode = degribFile(file, message, variable);
 					if(returnCode != 0)
-							logger.error("Error degribbing file, error code not 0 for file: " + file.getAbsolutePath());
+						logger.error("Error degribbing file, error code not 0 for file: " + file.getAbsolutePath());
 				} catch (IOException e){
 					logger.error("IOException while degribing file: " + file.getAbsolutePath(),e);
 					throw new IOException();
@@ -120,7 +159,7 @@ public class Degribber {
 	/**
 	 * Degribs a single file for a given variable using the executable specified.
 	 * @param inputFile file to degrib
-	 * @param message error message
+	 * @param message message to degrib
 	 * @param variable
 	 * @return exit code from the command execution, for error detection
 	 * @throws ExecuteException
@@ -133,7 +172,7 @@ public class Degribber {
 		output += message;
 		File outputFile = new File(outputDirectory, output);
 		map.put(OUTPUT_FILE, outputFile);
-		
+
 		//Creates the command line to execute GRIB executable
 		CommandLine cmd = new CommandLine(executable);
 		//Passes arguments array to the command line
@@ -149,11 +188,11 @@ public class Degribber {
 		executor.setStreamHandler(streamHandler);
 		logger.info(cmd.toString());
 		int exitCode = executor.execute(cmd);
-		
+
 		LogMF.info(logger, "Degrib output {0}", IOUtils.toString(inStream));
 		IOUtils.closeQuietly(inStream);
 		return exitCode;
-		
+
 	}
 
 	/**
