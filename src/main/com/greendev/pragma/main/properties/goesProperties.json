@@ -39,7 +39,7 @@
         ]
       }
     ],
-    "executable": "/home/greendev/degrib/bin/degrib"
+    "executable": "/usr/local/bin/degrib/bin/degrib"
   },
   "downloads": [
     {
@@ -73,7 +73,7 @@
       "downloadClass": "main.com.greendev.pragma.download.HttpDownloader"
     }
   ],
-  "goesDir": "./src/test/resources/GOES-PRWEB/DAILY_DATA/",
+  "goesDir": "./src/test/resources/GOES-PRWEB/",
   "logLayout": "%r [%t] %p %c %x - %m%n",
   "variables": [],
   "email": {
@@ -102,7 +102,7 @@
   },
   "matlab": {
     "matlabCmd": "matlab -r \"startup ",
-    "matlabWorkingDirectory": null,
+    "matlabWorkingDirectory": "/home/greendev/GOES-PRWEB/",
     "retryAttempts": 2
   }
 }

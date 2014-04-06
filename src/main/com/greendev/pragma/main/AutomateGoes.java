@@ -274,15 +274,16 @@ public class AutomateGoes {
 
 		//  In case matlab processing is interrupted
 		//	Fallback mechanism is in place.
-		while( matlabCounter < MATLAB_ATTEMPTS && !finished)
-		{
+//		while( matlabCounter < MATLAB_ATTEMPTS && !finished)
+//		{
 			//clean up previous attempted data.
-			try {
-				logger.info("Performing matlab output directory cleanup");
-				this.dirManager.cleanUp(fromDate);
-			} catch (IOException e1) {
-				logger.error("Error trying to clean up /OUTPUT directory ",e1);
-			}
+//			
+//			try {
+//				logger.info("Performing matlab output directory cleanup");
+//				this.dirManager.cleanUp(fromDate);
+//			} catch (IOException e1) {
+//				logger.error("Error trying to clean up /OUTPUT directory ",e1);
+//			}
 
 			try {
 				//execute matlab 
@@ -297,7 +298,7 @@ public class AutomateGoes {
 			finished = waitForFinishedFile();
 			//if not finished, it will re-attempt the download until 
 			//max number of tries is reached.
-		}
+		
 		logger.info("Matlab completed with successStatus: "+finished);
 
 		return finished;

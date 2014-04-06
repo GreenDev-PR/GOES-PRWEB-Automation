@@ -56,7 +56,10 @@ public class CLI {
 	public static void main(String[] args)
 			throws ParseException, IOException, org.apache.commons.cli.ParseException, EmailException {
 
-		String[] params = {"-properties","/home/greendev/goesProperties.json",
+//		String[] params = {"-properties","/home/greendev/goesProperties.json",
+//				"-start","2014/03/03","-end","2014/03/03"};
+		
+		String[] params = {"-properties","src/main/com/greendev/pragma/main/properties/goesProperties.json",
 				"-start","2014/03/03","-end","2014/03/03"};
 	
 

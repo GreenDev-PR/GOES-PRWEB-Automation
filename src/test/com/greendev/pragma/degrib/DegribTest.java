@@ -14,6 +14,7 @@ import main.com.greendev.pragma.degrib.Degribber;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -62,6 +63,7 @@ public class DegribTest {
 		//Create sample messages to degrib (1-4)
 		for(int i=1; i<5; i++)
 			messages.add(i);
+		
 	}
 
 	/**
@@ -105,6 +107,7 @@ public class DegribTest {
 
 		assertEquals(messages.size(),actualCount);
 		for(Integer m : messages){
+			System.out.println(m);
 			String currentFile = outputDirectory.getPath()+"/"+OUTPUT_VARIABLE_NAME+m+".csv";
 			System.out.println(currentFile);
 			try {
