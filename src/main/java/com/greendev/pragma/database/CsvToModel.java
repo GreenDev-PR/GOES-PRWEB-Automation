@@ -54,8 +54,14 @@ public class CsvToModel {
 		while(reader.hasNext()){
 
 			Object[] row = reader.next();
-			for(int column = 0; column < row.length; column++){			
-				Double value = (Double) Double.parseDouble((String) row[column]);
+			for(int column = 0; column < row.length; column++){	
+				Double value;
+				try{
+					value = (Double) Double.parseDouble((String) row[column]);
+				}catch(NumberFormatException e){
+					logger.info("Found a value other than NaN or double");
+					value = Double.NaN;
+				}
 				GoesVariable element = new GoesVariable(variableName, dataDate, rowNum,column,value);
 				output.add(element);
 			}
