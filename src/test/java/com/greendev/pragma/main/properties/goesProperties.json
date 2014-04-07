@@ -73,7 +73,7 @@
       "downloadClass": "main.java.com.greendev.pragma.download.HttpDownloader"
     }
   ],
-  "goesDir": "/home/greendev/GOES-PRWEB/DAILY_DATA/",
+  "goesDir": "./src/test/java/com/greendev/pragma/main/properties/",
   "logLayout": "%r [%t] %p %c %x - %m%n",
   "variables": [],
   "email": {
@@ -86,7 +86,7 @@
   "finished": {
     "fileName": "finish.mat",
     "tries": 240,
-    "seconds": 30
+    "seconds": 5
   },
   "database": {
     "username": "postgres",
