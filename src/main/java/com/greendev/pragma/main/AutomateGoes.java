@@ -179,7 +179,7 @@ public class AutomateGoes {
 		for(Download download : goesProperties.getDownloads()){
 			//By convention one must add the offset of the download
 			DateTime workDate = this.fromDate.plusDays(download.getDateOffset());
-
+			
 			Download tempDownload = new Download(download);
 
 			tempDownload.setUrl(this.format(workDate.toDate(), download.getUrl()) );
