@@ -4,7 +4,6 @@ package main.java.com.greendev.pragma.main.properties;
  * Properties used to determine that matlab
  * is finished, including retries and interval
  * @author miguelgd
- *
  */
 public class FinishProperties {
 	
@@ -25,27 +24,45 @@ public class FinishProperties {
 	public FinishProperties() {
 		super();
 	}
-
+	/**
+	 * Gets the finished file flag name.
+	 * @return the finished file string name 
+	 */
 	public String getFileName() {
 		return fileName;
 	}
-
+	/**
+	 * Sets the finished file name flag name
+	 * @param fileName The name of the file to set.
+	 */
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
-
+	/**
+	 * Gets the number of tries to run MATLAB
+	 * @return The number of tries.
+	 */
 	public int getTries() {
 		return tries;
 	}
-
+	/**
+	 * Sets the number of tries to perform MATLAB
+	 * @param tries
+	 */
 	public void setTries(int tries) {
 		this.tries = tries;
 	}
-
+	/**
+	 * Get the seconds to wait for MATLAB execution
+	 * @return
+	 */
 	public int getSeconds() {
 		return seconds;
 	}
-
+	/**
+	 * Sets the seconds to wait for MATLAB
+	 * @param seconds
+	 */
 	public void setSeconds(int seconds) {
 		this.seconds = seconds;
 	}

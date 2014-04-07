@@ -17,32 +17,28 @@ public class FileCreatedListener implements FileAlterationListener {
 	private boolean foundFile = false;
 	private String fileName;
 	
+	/**
+	 * Constructs a FileCreatedListener with specified file
+	 * @param filename The file to listen for.
+	 */
 	public FileCreatedListener(String filename){
 		this.fileName = filename;
 	};
 	
 	@Override
 	public void onStart(FileAlterationObserver observer) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void onDirectoryCreate(File directory) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void onDirectoryChange(File directory) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void onDirectoryDelete(File directory) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -58,20 +54,14 @@ public class FileCreatedListener implements FileAlterationListener {
 
 	@Override
 	public void onFileChange(File file) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void onFileDelete(File file) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void onStop(FileAlterationObserver observer) {
-		// TODO Auto-generated method stub
-
 	}
 	
 	/**

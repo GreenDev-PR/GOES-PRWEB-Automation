@@ -4,7 +4,8 @@ package main.java.com.greendev.pragma.download;
 import org.apache.log4j.Logger;
 
 /**
- * Determines the type of downloader required for the specified download.
+ * Determines the type of downloader required for the specified download. 
+ * It instantiates the correct downloader inferring the class type.
  * @author josediaz
  *
  */
@@ -13,9 +14,9 @@ public class DownloaderFactory {
 	private static Logger logger = Logger.getLogger(Downloader.class);
 	
 	/**
-	 * Determines the appropriate downlaoder for given downlaod
-	 * @param download - the download supplied to determine its downloader
-	 * @return the appropriate downloader
+	 * Determines the appropriate downloader for given download
+	 * @param download The download supplied to determine its downloader
+	 * @return The appropriate downloader
 	 */
 	public static Downloader getDownloader(Download download){
 		Class<?> clazz;

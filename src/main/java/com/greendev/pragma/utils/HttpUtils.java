@@ -10,19 +10,18 @@ import org.apache.log4j.LogMF;
 import org.apache.log4j.Logger;
 
 /**
- * Provides http utilitiy methods such as verifying the existance of an URL
- * or downloading data from a URL.
+ * Provides http utility methods such as verifying the existence of an URL 
+ * and downloading a file from an URL.
  * @author josediaz
- *
  */
 public class HttpUtils {
 	
 	private static Logger logger = Logger.getLogger(HttpUtils.class);
 	
 	/**
-	 * Determine if url exists.
-	 * @param url - the url to test 
-	 * @return true if the url exists
+	 * Determine if a url exists.
+	 * @param url the url to test 
+	 * @return true, if the url exists
 	 */
 	public static boolean urlExists(URL url){
 		if(url == null){
@@ -52,7 +51,7 @@ public class HttpUtils {
 	}
 	
 	/**
-	 * Perform downlaod of data located at specified URL
+	 * Perform download of data located at specified URL.
 	 * @param url - location of data to download
 	 * @param file - file to download the data to.
 	 * @throws IOException - thrown if I/O Exception occurs

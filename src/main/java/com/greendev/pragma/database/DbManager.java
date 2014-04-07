@@ -22,8 +22,10 @@ import main.java.com.greendev.pragma.database.databaseModel.GoesVariable;
 
 
 /**
- * DBMananger: Provides communication with database.   
- * Postgres JDBC driver required
+ * DBMananger: Provides communication with a database. This class provides methods for 
+ * reading goes variables from, and store goes data sets and store goes maps image paths
+ * in the database. The use of this class works with a connection object so it is database
+ * driver independent. 
  * @author josediaz
  *
  */
@@ -103,12 +105,14 @@ public class DbManager {
 	}
 
 	/**
-	 * Stores  GOES variable records in the database.
-	 * @param variableName 
-	 * @param inputReader
+	 * Stores  GOES variable records in the database. It requires a goes variable name and 
+	 * corresponding csv file in order to insert.
+	 * @param goesVariableName The name of the goes variable to insert.
+	 * @param csvFile The csv file to insert in database
+	 * @param date The date for which the storeGoesData method was ran
 	 * @return true if storing the data was successful
-	 * @throws SQLException 
-	 * @throws FileNotFoundException 
+	 * @throws SQLException Error inserting the records in database
+	 * @throws FileNotFoundException Error working with the CSV
 	 */
 	public int storeGoesData(String goesVariableName, File csvFile, DateTime date) throws SQLException, FileNotFoundException{
 
@@ -176,7 +180,8 @@ public class DbManager {
 	}
 
 	/**
-	 * Insert GoesMaps in database. 
+	 * Store GoesMaps in database. It requires a list of variables of which maps will be
+	 * generated for and inserted in the database.  
 	 * @param variableList Variables for which maps will be inserted into the database
 	 * @param directory The directory path to the map images
 	 * @param date The date of the insertion

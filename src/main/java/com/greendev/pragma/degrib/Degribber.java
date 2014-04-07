@@ -21,15 +21,12 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.log4j.LogMF;
 import org.apache.log4j.Logger;
 
+/**
+ * Degribs Grib files using provided executable.
+ * Requires the specification of the input and output directories.
+ * @author miguelgd	
+ */
 public class Degribber {
-
-
-	/**
-	 * Degribs Grib files using provided executable.
-	 * Requires the specification of the input and output directories.
-	 * 
-	 * @author miguelgd	
-	 */
 
 	private List<DegribVariable> variables;
 	private String executable;

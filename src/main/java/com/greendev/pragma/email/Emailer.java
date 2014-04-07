@@ -13,10 +13,8 @@ import org.apache.commons.mail.SimpleEmail;
 
 /**
  * Sends an email with properties specified from {Email Properties}
- * 
  * To send an email, construct the object and select from one of the two methods to send an email.
  * @author josediaz
- *
  */
 public class Emailer {
 

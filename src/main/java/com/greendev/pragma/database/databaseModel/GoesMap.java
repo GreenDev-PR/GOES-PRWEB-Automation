@@ -7,7 +7,6 @@ import org.joda.time.DateTime;
  * Includes variable name, date and map image path
  * @author miguelgd
  */
-
 public class GoesMap{
 
 	private String variableName;

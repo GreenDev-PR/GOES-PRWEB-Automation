@@ -5,7 +5,6 @@ import java.util.Date;
 /**
  * Provides utility functions to GoesAutomation class
  * @author josediaz
- *
  */
 public class GoesUtils {
 

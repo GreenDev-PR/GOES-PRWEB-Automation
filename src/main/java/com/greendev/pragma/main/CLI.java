@@ -23,9 +23,7 @@ import org.joda.time.DateTime;
  * Command line interface for the GOES-PRWEB automation
  * Takes in the following parameter for execution:
  * @author miguelgd
- *
  */
-
 public class CLI {
 
 	private static final Logger logger = Logger.getLogger(CLI.class);

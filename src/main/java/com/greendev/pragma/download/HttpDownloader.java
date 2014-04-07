@@ -12,9 +12,9 @@ import org.apache.log4j.LogMF;
 import org.apache.log4j.Logger;
 
 /**
- * Http downloader 
+ * This class represnets an Http Downloader. It is capable of downloading files
+ * whose name is known in advance and URL exists. 
  * @author josediaz
- *
  */
 public class HttpDownloader implements Downloader {
 	

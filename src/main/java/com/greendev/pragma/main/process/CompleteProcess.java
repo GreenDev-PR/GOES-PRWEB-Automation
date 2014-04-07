@@ -11,7 +11,6 @@ import main.java.com.greendev.pragma.main.AutomateGoes;
 /**
  * Goes process, extends GoesProcess which implements runnable interface
  * @author miguelgd
- *
  */
 public class CompleteProcess extends GoesProcess {
 

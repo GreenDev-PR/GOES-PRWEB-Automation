@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * This class can be implemented to download from any source.
+ * This class defines the interface Downloader object. Every downloader
+ * should contain a mechanism for download existance verification, a 
+ * mechanism to actually perform a download along with pertinent setters/
+ * getters.
  * @author josediaz
  *
  */
@@ -17,20 +20,20 @@ public interface Downloader {
 	public boolean downloadExists();
 	/**
 	 * Perform a download
-	 * @return the file download 
+	 * @return The downloaded file
 	 * @throws IOException
 	 */
 	public File download() throws IOException;
 	
 	/**
 	 * Sets the download to perform
- 	 * @param download - the download to perform 
+ 	 * @param download The download to perform 
 	 */
 	public void setDownload(Download download);
 	
 	/**
 	 * Get the download
-	 * @return the download to be performed
+	 * @return The download to be performed
 	 */
 	public Download getDownload();
 }

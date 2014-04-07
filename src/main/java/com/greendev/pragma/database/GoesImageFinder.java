@@ -14,7 +14,6 @@ import main.java.com.greendev.pragma.database.databaseModel.GoesMap;
  * Creates a list of GoesMap objects containing the maps for each variable
  * with the map image paths inside the OUTPUT directory
  * @author miguelgd
- *
  */
 public class GoesImageFinder {
 

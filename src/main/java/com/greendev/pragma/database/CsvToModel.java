@@ -14,9 +14,7 @@ import main.java.com.greendev.pragma.database.databaseModel.GoesVariable;
 /**
  * Utility class to construct GoesVariable objects from a specified CSV file
  * @author miguelgd
- *
  */
-
 public class CsvToModel {
 
 	//Maximum number of rows in csv matrix (0-100)

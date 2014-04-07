@@ -14,9 +14,7 @@ import com.google.gson.GsonBuilder;
  * This properties file can be modified to reflect actual system
  * configuration. This file is consumed by AutomateGoes (loadProperties).
  * @author miguelgd
- *
  */
-
 public class GoesPropertiesToJson {
 	
 	public static void main(String[] args) throws IOException{

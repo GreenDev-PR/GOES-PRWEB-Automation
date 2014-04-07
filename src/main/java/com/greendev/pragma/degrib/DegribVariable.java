@@ -2,13 +2,12 @@ package main.java.com.greendev.pragma.degrib;
 
 import java.util.List;
 
+/**
+ * Container class for a variable inside a file in grib format
+ * @author miguelgd
+ */
 public class DegribVariable {
 
-	/**
-	 * Container class for a variable inside a file in grib format
-	 * @author miguelgd
-	 */
-	
 	/**
 	 * Name of the variable
 	 */

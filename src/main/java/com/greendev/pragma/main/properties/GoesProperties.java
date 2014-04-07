@@ -9,9 +9,7 @@ import main.java.com.greendev.pragma.download.Download;
 /**
  * Collection of properties necessary for program execution
  * @author miguelgd
- *
  */
-
 public class GoesProperties {
 
 	private Degribber degribber;

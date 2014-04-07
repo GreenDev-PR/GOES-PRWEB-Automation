@@ -8,7 +8,7 @@ import org.joda.time.DateTime;
 
 /**
  * RetryDownloader provides re-attempt feature for apparent non existent downloads.
- * The re-attempt mechanism is blocking. Follows Decorator Design Pattern.
+ * The re-attempt mechanism is blocking. This design follows Decorator Design Pattern.
  * @author josediaz
  *
  */
@@ -21,7 +21,7 @@ public class RetryDownloader implements Downloader {
 	private Downloader downloader;
 	
 	/**
-	 * Constructor
+	 * Constucts a RetryDownloader based on a downloader object. 
 	 * @param downloader The Downloader to utilize for downloads.
 	 * @param attempts Number of attempts to make.
 	 * @param interval The time to wait until next re-try attempt.
@@ -33,7 +33,9 @@ public class RetryDownloader implements Downloader {
 		this.INTERVAL = interval;
 		this.LAST_DOWNLOAD_ATTEMPT_TIME = endOfDay;
 	}
-
+	/**
+	 * Verifies if the download exists.
+	 */
 	@Override
 	public boolean downloadExists() {
 		boolean exists = false;
@@ -65,18 +67,24 @@ public class RetryDownloader implements Downloader {
 
 		return exists;
 	}
-	
+	/**
+	 * Performs the file download and returns it.
+	 */
 	@Override
 	public File download() throws IOException {
 		//attempt to download
 		return downloader.download();
 	}
-
+	/**
+	 * Sets the download to perform.
+	 */
 	@Override
 	public void setDownload(Download download) {
 		downloader.setDownload(download);
 	}
-
+/**
+ * Gets the download to perform.
+ */
 	@Override
 	public Download getDownload() {
 		return downloader.getDownload();
