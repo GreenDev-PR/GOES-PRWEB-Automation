@@ -39,7 +39,7 @@
         ]
       }
     ],
-    "executable": "/usr/local/bin/degrib/bin/degrib"
+    "executable": "/home/greendev/degrib/bin/degrib"
   },
   "downloads": [
     {
@@ -73,13 +73,13 @@
       "downloadClass": "main.java.com.greendev.pragma.download.HttpDownloader"
     }
   ],
-  "goesDir": "./src/test/resources/GOES-PRWEB/",
+  "goesDir": "/home/greendev/GOES-PRWEB/DAILY_DATA/",
   "logLayout": "%r [%t] %p %c %x - %m%n",
   "variables": [],
   "email": {
-    "from": "jrd.palacios@gmail.com",
-    "to": "jrd.palacios@gmail.com",
-    "password": "",
+    "from": "pragma.greendev@gmail.com",
+    "to": "pragma.greendev@gmail.com",
+    "password": "pragma1234",
     "hostname": "smtp.googlemail.com",
     "port": "465"
   },

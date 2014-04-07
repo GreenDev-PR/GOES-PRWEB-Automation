@@ -39,47 +39,47 @@
         ]
       }
     ],
-    "executable": "/usr/local/bin/degrib/bin/degrib"
+    "executable": "/home/greendev/degrib/bin/degrib"
   },
   "downloads": [
     {
       "url": "http://nomads.ncdc.noaa.gov/data/ndfd/%tY%tm/%tY%tm%td/YCAZ98_KWBN_%tY%tm%td00",
       "saveLocation": "wind_%tY%tm%td.bin",
       "dateOffset": 0,
-      "downloadClass": "main.com.greendev.pragma.download.LastDigitsChangerDownloader"
+      "downloadClass": "main.java.com.greendev.pragma.download.LastDigitsChangerDownloader"
     },
     {
       "url": "http://nomads.ncdc.noaa.gov/data/ndfd/%tY%tm/%tY%tm%td/YEAZ98_KWBN_%tY%tm%td00",
       "saveLocation": "airtemp_%tY%tm%td.bin",
       "dateOffset": 0,
-      "downloadClass": "main.com.greendev.pragma.download.LastDigitsChangerDownloader"
+      "downloadClass": "main.java.com.greendev.pragma.download.LastDigitsChangerDownloader"
     },
     {
       "url": "http://nomads.ncdc.noaa.gov/data/ndfd/%tY%tm/%tY%tm%td/YFAZ98_KWBN_%tY%tm%td00",
       "saveLocation": "dewpoint_%tY%tm%td.bin",
       "dateOffset": 0,
-      "downloadClass": "main.com.greendev.pragma.download.LastDigitsChangerDownloader"
+      "downloadClass": "main.java.com.greendev.pragma.download.LastDigitsChangerDownloader"
     },
     {
       "url": "http://water.weather.gov/precip/p_download_new/%tY/%tm/%td/nws_precip_1day_observed_shape_%tY%tm%td.tar.gz",
       "saveLocation": "precip_%tY%tm%td.tar.gz",
       "dateOffset": 1,
-      "downloadClass": "main.com.greendev.pragma.download.HttpDownloader"
+      "downloadClass": "main.java.com.greendev.pragma.download.HttpDownloader"
     },
     {
       "url": "http://academic.uprm.edu/hdc/solar/INSOLRICO.%tY%tj.gz",
       "saveLocation": "solar_%tY%tm%td.tar.gz",
       "dateOffset": 0,
-      "downloadClass": "main.com.greendev.pragma.download.HttpDownloader"
+      "downloadClass": "main.java.com.greendev.pragma.download.HttpDownloader"
     }
   ],
-  "goesDir": "./src/test/resources/GOES-PRWEB/DAILY_DATA/",
+  "goesDir": "/home/greendev/GOES-PRWEB/DAILY_DATA/",
   "logLayout": "%r [%t] %p %c %x - %m%n",
   "variables": [],
   "email": {
-    "from": "jrd.palacios@gmail.com",
-    "to": "jrd.palacios@gmail.com",
-    "password": "",
+    "from": "pragma.greendev@gmail.com",
+    "to": "pragma.greendev@gmail.com",
+    "password": "pragma1234",
     "hostname": "smtp.googlemail.com",
     "port": "465"
   },
@@ -101,8 +101,8 @@
     "lastDownloadAttemptTime": 78000
   },
   "matlab": {
-    "matlabCmd": "matlab -r \"startup(",
-    "matlabWorkingDirectory": null,
+    "matlabCmd": "matlab -r \"startup ",
+    "matlabWorkingDirectory": "/home/greendev/GOES-PRWEB/",
     "retryAttempts": 2
   }
 }
