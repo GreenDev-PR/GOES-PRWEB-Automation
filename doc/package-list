@@ -1,0 +1,14 @@
+main.java.com.greendev.pragma.database
+main.java.com.greendev.pragma.database.databaseModel
+main.java.com.greendev.pragma.degrib
+main.java.com.greendev.pragma.download
+main.java.com.greendev.pragma.email
+main.java.com.greendev.pragma.main
+main.java.com.greendev.pragma.main.process
+main.java.com.greendev.pragma.main.properties
+main.java.com.greendev.pragma.utils
+test.java.com.greendev.pragma.database
+test.java.com.greendev.pragma.degrib
+test.java.com.greendev.pragma.download
+test.java.com.greendev.pragma.main
+test.java.com.greendev.pragma.main.properties
