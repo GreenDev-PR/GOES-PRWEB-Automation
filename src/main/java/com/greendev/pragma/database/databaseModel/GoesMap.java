@@ -35,7 +35,7 @@ public class GoesMap{
 
 	/**
 	 * Sets the name of the configured GOES-PRWEB variable
-	 * @param variable name
+	 * @param variableName Name of variable corresponding to the map
 	 */
 	public void setVariableName(String variableName) {
 		this.variableName = variableName;

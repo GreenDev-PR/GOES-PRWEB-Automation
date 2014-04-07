@@ -16,15 +16,15 @@ public class MatlabProperties {
 		super();
 	}
 	/**
-	 * Gets the string representation of the matlab command to run
-	 * @return The string representation of the matlab command to run
+	 * Gets the string representation of the Matlab command to run
+	 * @return The string representation of the Matlab command to run
 	 */
 	public String getMatlabCmd() {
 		return matlabCmd;
 	}
 	/**
-	 * Sets the matlab command to run
-	 * @param The matlab command to run  
+	 * Sets the Matlab command to run
+	 * @param matlabCmd Matlab command to run  
 	 */
 	public void setMatlabCmd(String matlabCmd) {
 		this.matlabCmd = matlabCmd;

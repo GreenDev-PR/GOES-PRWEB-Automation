@@ -74,7 +74,7 @@ public class DirectoryManager {
 
 	/**
 	 * Returns the root directory (day)
-	 * @return
+	 * @return Root directory for the given day
 	 */
 	public File getRootDirectory() {
 		return rootDirectory;

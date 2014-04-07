@@ -71,7 +71,7 @@ public class GoesVariable {
 	}
 	/**
 	 * Sets the row number for the current data point
-	 * @param row
+	 * @param row Row number, zero based
 	 */
 	public void setRow(int row) {
 		this.row = row;
@@ -85,7 +85,7 @@ public class GoesVariable {
 	}
 	/**
 	 * Sets the column number for the current data point
-	 * @param row
+	 * @param column Column number, zero based
 	 */
 	public void setColumn(int column) {
 		this.column = column;

@@ -86,7 +86,7 @@ public class Emailer {
 	
 	/**
 	 * Gets email properties 
-	 * @return
+	 * @return instance of EmailProperties class 
 	 */
 	public EmailProperties getEmailPropertiess(){
 		return this.emailProperties;

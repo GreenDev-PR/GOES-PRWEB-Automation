@@ -39,22 +39,22 @@ public class FinishProperties {
 		this.fileName = fileName;
 	}
 	/**
-	 * Gets the number of tries to run MATLAB
+	 * Gets the number of tries to run Matlab process
 	 * @return The number of tries.
 	 */
 	public int getTries() {
 		return tries;
 	}
 	/**
-	 * Sets the number of tries to perform MATLAB
-	 * @param tries
+	 * Sets the number of tries to perform Matlab
+	 * @param tries Number of tries to perform Matlab process
 	 */
 	public void setTries(int tries) {
 		this.tries = tries;
 	}
 	/**
-	 * Get the seconds to wait for MATLAB execution
-	 * @return
+	 * Get the seconds to wait for Matlab execution
+	 * @return Time to wait for Matlab execution
 	 */
 	public int getSeconds() {
 		return seconds;

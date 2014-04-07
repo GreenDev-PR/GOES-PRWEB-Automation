@@ -122,7 +122,7 @@ public class GoesProperties {
 
 	/**
 	 * Returns the root directory for automation execution
-	 * @return
+	 * @return Name of application root directory
 	 */
 	public String getGoesDir() {
 		return goesDir;
