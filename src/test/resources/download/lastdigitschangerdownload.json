@@ -1,7 +1,7 @@
 {
 	
 	"url":"http://nomads.ncdc.noaa.gov/data/ndfd/201403/20140310/LABZ97_KNHC_2014031003",
-	"saveLocation":"src/test/resources/download/lastdigitchangerdownload",
+	"saveLocation":"src/test/resources/lastdigitchangerdownload.bin",
 	"dateOffset":1
 	
 }

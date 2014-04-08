@@ -1,5 +1,5 @@
 {
-	"saveLocation":"src/test/resources/outdownload.txt",
+	"saveLocation":"src/test/resources/outtdownload.txt",
 	"url":"http://wordpress.org/extend/plugins/about/readme.txt",
 	"dateOffset":1
 

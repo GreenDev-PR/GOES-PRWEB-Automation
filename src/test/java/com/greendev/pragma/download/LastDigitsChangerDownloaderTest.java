@@ -28,7 +28,7 @@ public class LastDigitsChangerDownloaderTest extends DownloaderTest {
 
 	@AfterClass
 	public static void tearDown() throws Exception{
-		FileUtils.deleteQuietly(downloaded);
+		//FileUtils.deleteQuietly(downloaded);
 	}
 	
 	@Test

@@ -34,7 +34,7 @@ public class HttpDownloaderTest extends DownloaderTest {
 	@AfterClass
 	public static void tearDown() throws Exception {
 		System.out.println("Executing @AfterClass Annotation");
-		FileUtils.deleteQuietly(downloaded);
+		//FileUtils.deleteQuietly(downloaded);
 		
 	}
 	
@@ -59,9 +59,10 @@ public class HttpDownloaderTest extends DownloaderTest {
 			downloader.download();
 		} catch (IOException e1){
 			e1.printStackTrace();
+			System.out.println("Error downloading!");
 		}
 		expected = new File("src/test/resources/expecteddownload.txt");
-		downloaded = new File("src/test/resources/outdownload.txt");
+		downloaded = new File("src/test/resources/outtdownload.txt");
 		
 		boolean result = false;
 		try{

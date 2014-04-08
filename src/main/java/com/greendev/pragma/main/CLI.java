@@ -126,9 +126,12 @@ public class CLI {
 
 			SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat);
 			String startOptionValue = cli.getOptionValue("start");
+			logger.info("start option value: "+startOptionValue);
 			String endOptionValue = cli.getOptionValue("end");
+			logger.info("start option value: "+endOptionValue);
 			start = new DateTime(dateFormatter.parse(startOptionValue));
 			end = new DateTime(dateFormatter.parse(endOptionValue));
+			
 
 			//Error out if either start or end date is after today
 			if(start.isAfterNow() || end.isAfterNow()){
