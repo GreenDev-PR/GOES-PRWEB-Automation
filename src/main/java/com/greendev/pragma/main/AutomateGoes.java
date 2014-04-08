@@ -258,7 +258,6 @@ public class AutomateGoes {
 	 */
 	public boolean matlab(){
 		boolean finished = false;
-		int matlabCounter = 0;
 
 		String command = "matlab";
 		
@@ -322,7 +321,7 @@ public class AutomateGoes {
 		int tries = 0;
 		int numberOfTries = goesProperties.getFinished().getTries();
 		boolean found = false;
-
+		found = listener.isFileFound();
 		while (!found && numberOfTries >= tries) {
 			observer.checkAndNotify(); 		//verify for file existance
 			found = listener.isFileFound(); //update found value
