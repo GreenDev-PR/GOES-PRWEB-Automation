@@ -131,7 +131,8 @@ public class CLI {
 			logger.info("start option value: "+endOptionValue);
 			start = new DateTime(dateFormatter.parse(startOptionValue));
 			end = new DateTime(dateFormatter.parse(endOptionValue));
-			
+			logger.info("Joda Time start: "+start);
+			logger.info("Joda Time end: "+end);
 
 			//Error out if either start or end date is after today
 			if(start.isAfterNow() || end.isAfterNow()){
@@ -146,12 +147,12 @@ public class CLI {
 			}
 
 		}
-
+		
 		LogMF.info(logger, "Going to work from {0} to {1}", start, end);
 
 		AutomateGoes goes = new AutomateGoes(properties);
 		process(start.minusDays(1), end.minusDays(1), new CompleteProcess(goes), goes);
-
+		
 		time.stop();
 		logger.info("Finished in: "+time.toString());
 	}
