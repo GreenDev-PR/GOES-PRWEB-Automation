@@ -67,12 +67,6 @@ public class CLI {
 	 */
 	public static void main(String[] args)
 			throws ParseException, IOException, org.apache.commons.cli.ParseException, EmailException {
-//
-//		String[] params = {"-properties","/home/greendev/goesProperties.json",
-//				"-start","2014/03/03","-end","2014/03/03"};
-		
-//		String[] params = {"-properties","src/main/com/greendev/pragma/main/properties/goesProperties.json",
-//				"-start","2014/03/03","-end","2014/03/03"};
 	
 
 		//Create options object to receive params from command line
@@ -81,7 +75,6 @@ public class CLI {
 		//Create the command line parser, to extract parameters
 		CommandLineParser parser = new PosixParser();
 		//Extract parameters from args into options
-//		CommandLine cli = parser.parse(options, params);
 		CommandLine cli = parser.parse(options, args);
 		
 		final String dateFormat = "yyyy/MM/dd";

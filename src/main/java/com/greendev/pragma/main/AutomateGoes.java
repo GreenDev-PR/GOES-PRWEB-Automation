@@ -259,7 +259,8 @@ public class AutomateGoes {
 	public boolean matlab(){
 		boolean finished = false;
 
-		String command = "matlab";
+//		String command = "matlab";
+		String command = goesProperties.getMatlab().getMatlabCmd();
 		
 		CommandLine cmd = CommandLine.parse(command);
 		
