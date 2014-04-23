@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 
 import main.java.com.greendev.pragma.database.databaseModel.GoesMap;
+import main.java.com.greendev.pragma.utils.GoesUtils;
 
 /**
  * Creates a list of GoesMap objects containing the maps for each variable
@@ -18,6 +19,9 @@ import main.java.com.greendev.pragma.database.databaseModel.GoesMap;
 public class GoesImageFinder {
 
 	List<GoesMap> maps;
+	private static final String MAP_DATE_FORMAT = "%tY/%tm/%td/";
+	private static final String CSV_DATE_FORMAT = "%tY%tm%td";
+
 	
 	private static final Logger logger = Logger.getLogger(GoesImageFinder.class);
 
@@ -33,8 +37,11 @@ public class GoesImageFinder {
 		maps = new ArrayList<GoesMap>();
 		
 		for(String variable : variables){
-			String imagePath = FileUtils.getFile(directory, variable).getAbsolutePath()+".jpg";
+			String dataDirectory = "/DAILY_DATA/"+GoesUtils.stringFormatTime(MAP_DATE_FORMAT, date.toDate());
+			//System.out.println(dataDirectory);
+			String imagePath = dataDirectory+variable+GoesUtils.stringFormatTime(CSV_DATE_FORMAT, date.toDate())+".jpg";
 			GoesMap map = new GoesMap(variable,date,imagePath);
+			//System.out.println(imagePath);
 			maps.add(map);
 		}
 		

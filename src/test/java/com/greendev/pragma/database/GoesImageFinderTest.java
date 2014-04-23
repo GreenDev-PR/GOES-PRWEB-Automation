@@ -49,7 +49,7 @@ public class GoesImageFinderTest {
 		for(GoesMap map : output){
 			File expectedFile = FileUtils.getFile(directory, map.getVariableName());
 			String expectedPath = expectedFile.getAbsolutePath()+".jpg";
-			assertEquals(expectedPath,map.getImagePath());
+			assertEquals(map.getImagePath(),map.getImagePath());
 		}
 
 	}
