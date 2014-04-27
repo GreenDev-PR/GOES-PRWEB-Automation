@@ -39,9 +39,10 @@ public class GoesImageFinder {
 		for(String variable : variables){
 			String dataDirectory = "/DAILY_DATA/"+GoesUtils.stringFormatTime(MAP_DATE_FORMAT, date.toDate());
 			//System.out.println(dataDirectory);
-			String imagePath = dataDirectory+variable+GoesUtils.stringFormatTime(CSV_DATE_FORMAT, date.toDate())+".jpg";
+			//String imagePath = dataDirectory+variable+GoesUtils.stringFormatTime(CSV_DATE_FORMAT, date.toDate())+".jpg";
+			String imagePath = dataDirectory + "OUTPUT/" +variable+GoesUtils.stringFormatTime(CSV_DATE_FORMAT, date.toDate())+".jpg";
 			GoesMap map = new GoesMap(variable,date,imagePath);
-			//System.out.println(imagePath);
+			System.out.println(imagePath);
 			maps.add(map);
 		}
 		
