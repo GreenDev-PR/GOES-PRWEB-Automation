@@ -33,12 +33,12 @@ public class CompleteProcess extends GoesProcess {
 
 		final Logger logger = Logger
 				.getLogger(CompleteProcess.class);
-		LogMF.info(logger,"Making directory structure. ","SYSTEM");
-		goes.makeDirs();
-		LogMF.info(logger,"Downloading hydro-climate data. ","SYSTEM");
-		goes.download();
-		LogMF.info(logger,"Degribbing hydro-climate data. ","SYSTEM");
-		goes.degrib();
+//		LogMF.info(logger,"Making directory structure. ","SYSTEM");
+//		goes.makeDirs();
+//		LogMF.info(logger,"Downloading hydro-climate data. ","SYSTEM");
+//		goes.download();
+//		LogMF.info(logger,"Degribbing hydro-climate data. ","SYSTEM");
+//		goes.degrib();
 		LogMF.info(logger,"Executing MATLAB GOES-PRWEB algorithm ","SYSTEM");
 		goes.matlab();
 		LogMF.info(logger,"Storing OUTPUT data to database ","SYSTEM");
